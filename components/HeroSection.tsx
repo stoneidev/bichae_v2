@@ -16,7 +16,7 @@ export default function HeroSection() {
           fontSize: '0.8rem', fontWeight: 600, color: 'var(--brand-rose)', marginBottom: '16px'
         }}>
           <Sparkles size={14} />
-          <span>TODAY&apos;S SINGLE FEATURED CURATION • JUNE 28, 2026</span>
+          <span>TODAY&apos;S FEATURED CURATION</span>
         </div>
 
         {/* Hero Title focused purely on product curation */}
@@ -33,12 +33,12 @@ export default function HeroSection() {
           fontSize: '1.05rem', color: 'var(--text-secondary)', maxWidth: '680px',
           margin: '0 auto 24px auto', fontWeight: 400, lineHeight: 1.6
         }}>
-          Below is today&apos;s verified single-product deep dive—featuring an exhaustive INCI breakdown, high-density global price tracking matrix, and community consensus.
+          Today&apos;s single-product deep dive—a full ingredient breakdown, a global price comparison across trusted retailers, and what the community actually thinks.
         </p>
 
         {/* Smooth Scroll Indicator */}
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-          <span>Scroll For Today&apos;s Magazine Report</span>
+          <span>Scroll to read today&apos;s report</span>
           <ArrowDown size={14} className="animate-bounce" />
         </div>
 

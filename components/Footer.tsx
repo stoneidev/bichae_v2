@@ -40,7 +40,7 @@ export default function Footer() {
         </div>
 
         <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', fontSize: '0.8rem', color: '#9CA3AF' }}>
-          <div>© 2026 BICHAE v2. Built with Next.js & Cloudflare Pages.</div>
+          <div>© 2026 BICHAE. Independent K-Beauty editorial.</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             Curated with <Heart size={14} color="#E07A5F" fill="#E07A5F" /> for K-Beauty & Science Enthusiasts
           </div>

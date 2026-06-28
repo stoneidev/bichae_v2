@@ -1,13 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap');
-
 :root {
   /* Color Tokens - K-Beauty Editorial Aesthetic */
   --bg-main: #FAFAFB;
   --bg-card: #FFFFFF;
   --bg-card-hover: #FFFFFF;
   --text-primary: #121316;
-  --text-secondary: #5A5E6B;
-  --text-muted: #8E93A4;
+  --text-secondary: #4F5360;
+  --text-muted: #6E7382;
   
   --brand-rose: #E07A5F;
   --brand-rose-light: #FDF0ED;
@@ -32,8 +30,10 @@
   --radius-lg: 24px;
   --radius-full: 9999px;
   
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-serif: 'Playfair Display', Georgia, serif;
+  /* Pretendard Variable is imported in layout.tsx head */
+  --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-sans-fallback: var(--font-pretendard);
+  --font-serif-fallback: Georgia, serif;
 }
 
 [data-theme='dark'] {
@@ -67,11 +67,18 @@ html, body {
   min-height: 100vh;
   background-color: var(--bg-main);
   color: var(--text-primary);
-  font-family: var(--font-sans);
+  font-family: var(--font-pretendard);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   line-height: 1.6;
+}
+
+/* Visible keyboard focus for accessibility */
+:focus-visible {
+  outline: 2px solid var(--brand-rose);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 a {
@@ -141,8 +148,55 @@ button {
   50% { opacity: 0.8; }
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -800px 0; }
+  100% { background-position: 800px 0; }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 0.8s linear infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1.4s ease-in-out infinite;
+}
+
+/* Skeleton loading shimmer */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-main) 0%,
+    var(--border-subtle) 50%,
+    var(--bg-main) 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Badge Styles */

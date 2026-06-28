@@ -52,9 +52,9 @@ export default function AboutPage() {
               <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--brand-sage-light)', color: 'var(--brand-sage)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                 <DollarSign size={22} />
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-primary)' }}>High-Density Price Tracking Matrix</h3>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-primary)' }}>Global Price Comparison</h3>
               <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                Our real-time Cloudflare D1 price tracking engine continuously monitors major global authorized retailers including Stylevana, Olive Young, StyleKorean, and YesStyle to identify verified lowest global deals.
+                We continuously track prices across major authorized retailers including Stylevana, Olive Young, StyleKorean, and YesStyle to surface the verified lowest global deal for every featured product.
               </p>
             </div>
 

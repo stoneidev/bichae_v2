@@ -2,18 +2,36 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Sparkles, Moon, Sun, ShieldCheck, Info } from 'lucide-react';
+import { Sparkles, Moon, Sun, FlaskConical, Info } from 'lucide-react';
 
 export default function Header() {
+  // Starts false on the server; the effect reconciles with the theme the
+  // anti-FOUC script (in layout.tsx) already applied before hydration.
   const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (isDark) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-  }, [isDark]);
+    // Read the theme the anti-FOUC script already committed to the DOM so the
+    // toggle icon matches reality after hydration.
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setMounted(true);
+    setIsDark(document.documentElement.getAttribute('data-theme') === 'dark');
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => {
+      const next = !prev;
+      if (next) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      }
+      return next;
+    });
+  };
 
   return (
     <header className="glass-panel" style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--border-subtle)' }}>
@@ -34,7 +52,7 @@ export default function Header() {
               BICHAE <span style={{ color: 'var(--brand-rose)', fontSize: '1.1rem', fontFamily: 'var(--font-sans)', fontWeight: 800 }}>v2</span>
             </span>
             <div style={{ fontSize: '0.675rem', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-              Daily K-Beauty Science & Price Matrix
+              Daily K-Beauty Science & Pricing
             </div>
           </div>
         </Link>
@@ -51,36 +69,34 @@ export default function Header() {
               padding: '6px 12px', borderRadius: 'var(--radius-full)', transition: 'all 0.2s'
             }}
           >
-            <Info size={16} /> About Science
+            <Info size={16} /> How It Works
           </Link>
 
-          <button 
-            onClick={() => setIsDark(!isDark)}
+          <button
+            onClick={toggleTheme}
             style={{
               padding: '8px', borderRadius: 'var(--radius-full)',
               border: '1px solid var(--border-subtle)', background: 'var(--bg-card)',
               color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', transition: 'all 0.2s'
             }}
-            aria-label="Toggle Theme"
+            aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+            aria-pressed={isDark}
           >
-            {isDark ? <Sun size={16} color="#F59E0B" /> : <Moon size={16} color="#6B7280" />}
+            {mounted && isDark ? <Sun size={16} color="#F59E0B" /> : <Moon size={16} color="#6B7280" />}
           </button>
 
-          <a 
-            href="https://github.com/stoneidev/bichae_v2" 
-            target="_blank" 
-            rel="noreferrer"
+          <span
             style={{
               padding: '8px 16px', borderRadius: 'var(--radius-full)',
               background: 'var(--brand-obsidian)', color: '#FFF',
               fontSize: '0.825rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px',
-              boxShadow: 'var(--shadow-sm)', textDecoration: 'none'
+              boxShadow: 'var(--shadow-sm)'
             }}
           >
-            <ShieldCheck size={15} color="var(--brand-rose)" />
-            Verified #042
-          </a>
+            <FlaskConical size={15} color="var(--brand-rose)" />
+            Independently Reviewed
+          </span>
         </div>
 
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, Calendar, Loader2 } from 'lucide-react';
+import { ArrowUpRight, Calendar } from 'lucide-react';
 import { ArchiveReportItem } from '@/lib/db';
 
 const CATEGORIES = ['All Categories', 'Sun Care', 'Essence & Serum', 'Toner & Mist'];
@@ -41,8 +41,8 @@ export default function ArchiveSection() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--brand-rose)', fontWeight: 700, fontSize: '0.8rem', marginBottom: '4px' }}>
               <Calendar size={14} /> PAST DAILY INTELLIGENCE ARCHIVES
             </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', fontWeight: 700, marginBottom: '4px' }}>Historical Deep Dive Archives</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem' }}>Explore past verified K-beauty single-product deep dives and historical price metrics in Cloudflare D1.</p>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', fontWeight: 700, marginBottom: '4px' }}>Past Deep Dives</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem' }}>Browse previous K-beauty single-product reviews and their price history.</p>
           </div>
 
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -67,9 +67,15 @@ export default function ArchiveSection() {
 
         {/* Reports Grid */}
         {loading ? (
-          <div style={{ padding: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px' }}>
-            <Loader2 className="animate-spin" style={{ width: '22px', height: '22px', color: 'var(--brand-rose)' }} />
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Querying D1 Relational Archives...</span>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }} aria-busy="true">
+            {[0, 1, 2].map((i) => (
+              <div key={i} style={{ padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div className="skeleton" style={{ height: '14px', width: '40%' }} />
+                <div className="skeleton" style={{ height: '20px', width: '90%' }} />
+                <div className="skeleton" style={{ height: '20px', width: '70%' }} />
+                <div className="skeleton" style={{ height: '32px', width: '100%', marginTop: '8px' }} />
+              </div>
+            ))}
           </div>
         ) : reports.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>

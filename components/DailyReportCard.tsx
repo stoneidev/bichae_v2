@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  ExternalLink, CheckCircle2, Shield, ArrowUpRight, Loader2, BookOpen, Package
+import {
+  ExternalLink, CheckCircle2, Shield, ArrowUpRight, BookOpen, Package,
+  Leaf, Sun, Lightbulb, Microscope, ScrollText, Camera, MapPin, Sparkles
 } from 'lucide-react';
 import { FullDailyReportPayload } from '@/lib/db';
 
@@ -30,15 +31,26 @@ export default function DailyReportCard() {
 
   if (loading || !reportData) {
     return (
-      <section style={{ padding: '20px 0 60px 0' }}>
-        <div className="container">
+      <section style={{ padding: '20px 0 60px 0' }} aria-busy="true" aria-live="polite">
+        <div className="container" style={{ maxWidth: '1080px' }}>
           <div style={{
             background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-subtle)', padding: '60px',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px'
+            border: '1px solid var(--border-subtle)', boxShadow: 'var(--shadow-md)',
+            padding: '36px 40px', overflow: 'hidden'
           }}>
-            <Loader2 className="animate-spin" style={{ width: '32px', height: '32px', color: 'var(--brand-rose)' }} />
-            <p style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Loading Cloudflare D1 Real-Time Analysis Payload...</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', alignItems: 'center' }}>
+              <div className="skeleton" style={{ width: '100%', aspectRatio: '1 / 1', maxWidth: '280px', borderRadius: 'var(--radius-md)' }} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div className="skeleton" style={{ height: '20px', width: '60%' }} />
+                <div className="skeleton" style={{ height: '36px', width: '90%' }} />
+                <div className="skeleton" style={{ height: '16px', width: '100%' }} />
+                <div className="skeleton" style={{ height: '16px', width: '80%' }} />
+              </div>
+              <div className="skeleton" style={{ height: '180px', width: '100%', borderRadius: 'var(--radius-md)' }} />
+            </div>
+            <span style={{ position: 'absolute', width: '1px', height: '1px', overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+              Loading today&apos;s report…
+            </span>
           </div>
         </div>
       </section>
@@ -78,17 +90,20 @@ export default function DailyReportCard() {
                   borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border-subtle)',
                   boxShadow: 'var(--shadow-md)', background: '#FFF'
                 }}>
-                  <img 
-                    src={product.image_url || '/images/beauty_of_joseon_sunscreen.jpg'} 
-                    alt={product.name}
-                    style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
+                  <img
+                    src={product.image_url || '/images/beauty_of_joseon_sunscreen.jpg'}
+                    alt={`${product.brand_name} ${product.name}`}
+                    width={280}
+                    height={280}
+                    style={{ width: '100%', height: 'auto', aspectRatio: '1 / 1', display: 'block', objectFit: 'cover' }}
                   />
                   <div style={{
                     position: 'absolute', bottom: '12px', left: '12px',
                     padding: '4px 10px', borderRadius: 'var(--radius-full)', background: 'rgba(0,0,0,0.75)',
-                    color: '#FFF', fontSize: '0.75rem', fontWeight: 700, backdropFilter: 'blur(4px)'
+                    color: '#FFF', fontSize: '0.75rem', fontWeight: 700, backdropFilter: 'blur(4px)',
+                    display: 'inline-flex', alignItems: 'center', gap: '5px'
                   }}>
-                    📷 Verified Studio Shot
+                    <Camera size={12} /> Product Photo
                   </div>
                 </div>
               </div>
@@ -96,9 +111,11 @@ export default function DailyReportCard() {
               {/* Middle Title & Metadata */}
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                  <span className="badge badge-trending" style={{ fontWeight: 700 }}>Featured Curation #{report.id}</span>
-                  <span className="badge badge-verified"><CheckCircle2 size={12} /> {product.is_authentic ? '100% Authentic Verified' : 'Standard'}</span>
-                  <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>Published: {report.publish_date}</span>
+                  <span className="badge badge-trending" style={{ fontWeight: 700 }}>No. {report.id}</span>
+                  {product.is_authentic ? (
+                    <span className="badge badge-verified"><CheckCircle2 size={12} /> Authenticity Verified</span>
+                  ) : null}
+                  <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>{report.publish_date}</span>
                 </div>
 
                 <h2 style={{ fontSize: 'clamp(1.75rem, 3vw, 2.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '12px', lineHeight: 1.25 }}>
@@ -111,10 +128,10 @@ export default function DailyReportCard() {
 
                 {/* Quick Specs Pill Tags */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  <span style={{ padding: '5px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}>📦 {product.volume}</span>
-                  <span style={{ padding: '5px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}>🌱 {report.ewg_status}</span>
-                  <span style={{ padding: '5px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}>☀️ {product.category}</span>
-                  {product.origin && <span style={{ padding: '5px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}>{product.origin}</span>}
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}><Package size={13} /> {product.volume}</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}><Leaf size={13} /> {report.ewg_status}</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}><Sun size={13} /> {product.category}</span>
+                  {product.origin && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '5px 12px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}><MapPin size={13} /> {product.origin}</span>}
                 </div>
               </div>
 
@@ -172,10 +189,10 @@ export default function DailyReportCard() {
             <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
               <div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--brand-rose)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>Chapter 01 • Global Pricing</div>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--brand-obsidian)' }}>High-Density Cross-Platform Price Matrix Table</h3>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Real-time comparative tracking & specific retailer package options</p>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--brand-obsidian)' }}>Price Comparison Across Trusted Retailers</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Verified prices and pack options from authorized global sellers</p>
               </div>
-              <span className="badge badge-trending" style={{ fontSize: '0.775rem' }}>Cloudflare D1 Real-Time Sync</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>Updated {report.publish_date}</span>
             </div>
 
             {/* Compact Dense Table Layout */}
@@ -322,7 +339,7 @@ export default function DailyReportCard() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
               {product.detailed_story && (
                 <div style={{ padding: '24px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px', color: 'var(--brand-obsidian)' }}>✨ Formulation & Heritage Narrative</h4>
+                  <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 700, marginBottom: '8px', color: 'var(--brand-obsidian)' }}><Sparkles size={16} color="var(--brand-rose)" /> Formulation &amp; Heritage</h4>
                   <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
                     {product.detailed_story}
                   </p>
@@ -331,7 +348,7 @@ export default function DailyReportCard() {
 
               {product.how_to_use && (
                 <div style={{ padding: '24px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px', color: 'var(--brand-obsidian)' }}>💡 Dermatologist Application Protocol</h4>
+                  <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 700, marginBottom: '8px', color: 'var(--brand-obsidian)' }}><Lightbulb size={16} color="var(--brand-rose)" /> How to Use</h4>
                   <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
                     {product.how_to_use}
                   </p>
@@ -355,7 +372,7 @@ export default function DailyReportCard() {
             </div>
 
             {/* Key Active Ingredients Breakdown */}
-            <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '16px', color: 'var(--brand-obsidian)' }}>🔬 Active Components Breakdown</h4>
+            <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 700, marginBottom: '16px', color: 'var(--brand-obsidian)' }}><Microscope size={16} color="var(--brand-rose)" /> Active Components Breakdown</h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '28px' }}>
               {keyIngredients.map((ing) => (
                 <div key={ing.id} style={{ padding: '20px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
@@ -366,7 +383,7 @@ export default function DailyReportCard() {
             </div>
 
             {/* Full INCI List */}
-            <h4 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '10px' }}>📜 Complete INCI Declaration List (English)</h4>
+            <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 700, marginBottom: '10px' }}><ScrollText size={16} color="var(--brand-rose)" /> Complete INCI Declaration List</h4>
             <div style={{
               padding: '20px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)',
               fontSize: '0.825rem', lineHeight: 1.8, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)',
