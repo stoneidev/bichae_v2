@@ -139,7 +139,6 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       stock_status: 'In Stock',
       shipping_info: 'Free Express Shipping over $48',
       price_usd: 12.60,
-      promo_code: 'INF10BOJ (-10%)',
       discount_text: '34% OFF',
       buy_url: 'https://www.stylevana.com/en_US/beauty-of-joseon-relief-sun-rice-probiotic-spf50-pa-50ml27138.html',
       is_lowest: 1
@@ -154,7 +153,6 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       stock_status: 'Official Authorized Retailer',
       shipping_info: 'DHL Express 3-5 Days',
       price_usd: 23.50,
-      promo_code: 'OYSUMMER5',
       discount_text: '25% OFF',
       buy_url: 'https://global.oliveyoung.com/product/detail?prdtNo=GA220615265',
       is_lowest: 0
@@ -169,7 +167,6 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       stock_status: 'In Stock',
       shipping_info: 'Global Direct Dispatch',
       price_usd: 14.00,
-      promo_code: 'BEAUTY10',
       discount_text: '22% OFF',
       buy_url: 'https://www.stylekorean.com/shop/beauty-of-joseon-relief-sun-rice-probiotics-50ml/1635737523/',
       is_lowest: 0
@@ -184,7 +181,6 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       stock_status: 'In Stock',
       shipping_info: 'Standard International',
       price_usd: 12.93,
-      promo_code: 'YESSTYLE2026',
       discount_text: '18% OFF',
       buy_url: 'https://www.yesstyle.com/en/beauty-of-joseon-relief-sun-rice-probiotics-50ml/info.html/pid.1137908658',
       is_lowest: 0
@@ -199,7 +195,6 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       stock_status: 'Prime Fulfillment',
       shipping_info: 'Free Prime 2-Day Shipping',
       price_usd: 15.30,
-      promo_code: 'AMZPRIME',
       discount_text: '15% OFF',
       buy_url: 'https://www.amazon.com/Sunscreen-Probiotics-Nourishing-Protection-Moisturizing/dp/B0GF7SFV4K/',
       is_lowest: 0

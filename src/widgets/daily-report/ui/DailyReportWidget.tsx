@@ -4,19 +4,19 @@ import React, { useState, useEffect } from 'react';
 import {
   ExternalLink, CheckCircle2, ArrowUpRight, Package,
   Leaf, Sun, Microscope, ScrollText, Camera, Sparkles, Quote, Award,
-  Copy, ThumbsUp, Globe, ShieldCheck, FlaskRound, X, MessageSquare, Play, Heart,
+  ThumbsUp, Globe, ShieldCheck, FlaskRound, X, MessageSquare, Play, Heart,
   Lock, Database, Scale, BadgeCheck
 } from 'lucide-react';
 import type { FullDailyReportPayload } from '@/entities/report';
 import type { CommunityReview } from '@/shared';
 import { useReveal } from '@/shared/lib/useReveal';
+import { getBuyingGuide } from '../model/buyingGuides';
 
 export function DailyReportWidget() {
   const [reportData, setReportData] = useState<FullDailyReportPayload | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [socialFilter, setSocialFilter] = useState<'ALL' | 'REDDIT' | 'YOUTUBE' | 'INSTAGRAM'>('ALL');
   const [inciTab, setInciTab] = useState<'ACTIVES' | 'FULL'>('ACTIVES');
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [selectedReview, setSelectedReview] = useState<CommunityReview | null>(null);
 
   // Attach scroll-reveal once the report content has rendered.
@@ -39,14 +39,6 @@ export function DailyReportWidget() {
     fetchDailyReport();
   }, []);
 
-  const handleCopyPromo = (code: string) => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(code);
-      setCopiedCode(code);
-      setTimeout(() => setCopiedCode(null), 2000);
-    }
-  };
-
   if (loading) {
     return (
       <section style={{ padding: '40px 0 80px 0' }}>
@@ -66,6 +58,7 @@ export function DailyReportWidget() {
     : socialReviews.filter((r) => r.platform.toUpperCase() === socialFilter);
 
   const cleanOrigin = product.origin ? product.origin.replace('🇰🇷', '').trim() : 'Made in South Korea';
+  const guide = getBuyingGuide(product.category);
 
   // Distinct two-letter monogram so similarly-named retailers don't collide
   // (e.g. "Stylevana" → SV, "StyleKorean" → SK).
@@ -267,7 +260,6 @@ export function DailyReportWidget() {
                     <th style={{ padding: '16px 20px', fontWeight: 800 }}>Platform</th>
                     <th style={{ padding: '16px 20px', fontWeight: 800 }}>Option / Pack Details</th>
                     <th style={{ padding: '16px 20px', fontWeight: 800 }}>Stock &amp; Dispatch</th>
-                    <th style={{ padding: '16px 20px', fontWeight: 800 }}>Promo Code</th>
                     <th style={{ padding: '16px 20px', fontWeight: 800 }}>Discount</th>
                     <th style={{ padding: '16px 20px', fontWeight: 800 }}>Verified Price</th>
                     <th style={{ padding: '16px 20px', fontWeight: 800, textAlign: 'right' }}>Direct Link</th>
@@ -305,7 +297,7 @@ export function DailyReportWidget() {
                         </div>
                       </td>
 
-                      <td style={{ padding: '18px 20px', fontWeight: 600, color: 'var(--brand-obsidian)' }}>
+                      <td style={{ padding: '18px 20px', fontWeight: 600, color: 'var(--text-primary)' }}>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                           <Package size={14} color="var(--brand-rose)" />
                           <span>{item.variant_option || 'Standard Pack'}</span>
@@ -315,37 +307,6 @@ export function DailyReportWidget() {
                       <td style={{ padding: '18px 20px', color: 'var(--text-secondary)', fontSize: '0.825rem' }}>
                         <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{item.stock_status}</div>
                         <div style={{ color: 'var(--text-muted)' }}>{item.shipping_info}</div>
-                      </td>
-
-                      <td style={{ padding: '18px 20px' }}>
-                        {item.promo_code ? (
-                          <div style={{ position: 'relative', display: 'inline-block' }}>
-                            <button
-                              onClick={() => handleCopyPromo(item.promo_code!)}
-                              title="Click to copy promo code"
-                              style={{
-                                padding: '4px 10px', borderRadius: '4px', background: 'var(--bg-main)',
-                                border: '1px solid var(--border-subtle)', fontSize: '0.775rem', fontWeight: 800,
-                                color: 'var(--brand-rose)', fontFamily: 'monospace', display: 'inline-flex',
-                                alignItems: 'center', gap: '6px', cursor: 'pointer', transition: 'all 0.2s'
-                              }}
-                            >
-                              {item.promo_code} <Copy size={12} />
-                            </button>
-                            {copiedCode === item.promo_code && (
-                              <span style={{
-                                position: 'absolute', top: '-28px', left: '50%', transform: 'translateX(-50%)',
-                                background: 'var(--brand-obsidian)', color: '#FFF', padding: '2px 8px',
-                                borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700, whiteSpace: 'nowrap',
-                                zIndex: 10, boxShadow: 'var(--shadow-sm)'
-                              }}>
-                                Copied!
-                              </span>
-                            )}
-                          </div>
-                        ) : (
-                          <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>—</span>
-                        )}
                       </td>
 
                       <td style={{ padding: '18px 20px', fontWeight: 800, color: item.is_lowest ? 'var(--brand-rose)' : 'var(--brand-sage)' }}>
@@ -432,50 +393,21 @@ export function DailyReportWidget() {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '4px' }}>
-                    {item.promo_code ? (
-                      <div style={{ position: 'relative', display: 'inline-block' }}>
-                        <button
-                          onClick={() => handleCopyPromo(item.promo_code!)}
-                          title="Click to copy promo code"
-                          style={{
-                            padding: '6px 12px', borderRadius: '6px', background: 'var(--bg-main)',
-                            border: '1px solid var(--border-subtle)', fontSize: '0.8rem', fontWeight: 800,
-                            color: 'var(--brand-rose)', fontFamily: 'monospace', display: 'inline-flex',
-                            alignItems: 'center', gap: '6px', cursor: 'pointer'
-                          }}
-                        >
-                          {item.promo_code} <Copy size={13} />
-                        </button>
-                        {copiedCode === item.promo_code && (
-                          <span style={{
-                            position: 'absolute', top: '-28px', left: '50%', transform: 'translateX(-50%)',
-                            background: 'var(--brand-obsidian)', color: '#FFF', padding: '3px 10px',
-                            borderRadius: '4px', fontSize: '0.725rem', fontWeight: 700, whiteSpace: 'nowrap',
-                            zIndex: 10, boxShadow: 'var(--shadow-sm)'
-                          }}>
-                            Copied!
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>No code required</span>
-                    )}
-
-                    <a 
-                      href={item.buy_url} 
-                      target="_blank" 
-                      rel="noreferrer" 
+                  <div style={{ paddingTop: '4px' }}>
+                    <a
+                      href={item.buy_url}
+                      target="_blank"
+                      rel="noreferrer"
                       className="btn-pdp"
-                      style={{ 
-                        padding: '10px 20px', borderRadius: 'var(--radius-full)', 
-                        background: item.is_lowest ? 'var(--brand-rose)' : 'var(--brand-obsidian)', 
-                        color: '#FFF', 
-                        fontWeight: 700, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px',
+                      style={{
+                        padding: '12px 20px', borderRadius: 'var(--radius-full)', width: '100%',
+                        background: item.is_lowest ? 'var(--brand-rose)' : 'var(--brand-obsidian)',
+                        color: '#FFF',
+                        fontWeight: 700, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
                         textDecoration: 'none', boxShadow: 'var(--shadow-sm)'
                       }}
                     >
-                      {item.is_lowest ? 'Shop Lowest' : 'View Deal'} <ArrowUpRight size={15} />
+                      {item.is_lowest ? 'Shop Lowest Price' : `View at ${item.platform_name}`} <ArrowUpRight size={15} />
                     </a>
                   </div>
                 </div>
@@ -645,11 +577,40 @@ export function DailyReportWidget() {
 
           <hr className="rule" />
 
-          {/* CHAPTER V: REDDIT & SOCIAL CONSENSUS */}
+          {/* CHAPTER V: BUYER'S GUIDE (category-aware) */}
+          <div data-reveal className="chapter">
+            <div style={{ marginBottom: '32px', maxWidth: '720px' }}>
+              <div className="eyebrow">{guide.eyebrow}</div>
+              <h3 className="chapter-title">{guide.title}</h3>
+              <p className="lead" style={{ marginTop: '12px', fontSize: '1.05rem' }}>{guide.standfirst}</p>
+            </div>
+
+            <div className="guide-grid">
+              {guide.columns.map((col) => (
+                <div key={col.title}>
+                  <div className="guide-col-title">{col.title}</div>
+                  {col.points.map((pt, idx) => (
+                    <div key={pt.label} className="guide-point">
+                      <span className="num">{String(idx + 1).padStart(2, '0')}</span>
+                      <div>
+                        <div className="label">{pt.label}</div>
+                        <div className="detail">{pt.detail}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+
+          <hr className="rule" />
+
+          {/* CHAPTER VI: REDDIT & SOCIAL CONSENSUS */}
           <div data-reveal className="chapter">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '28px', flexWrap: 'wrap', gap: '14px' }}>
               <div>
-                <div className="eyebrow">Chapter V — Community Consensus</div>
+                <div className="eyebrow">Chapter VI — Community Consensus</div>
                 <h3 className="chapter-title">What People Actually Say</h3>
                 <p className="measure-wide" style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginTop: '8px', lineHeight: 1.6 }}>Verified voices from r/AsianBeauty, YouTube dermatologists, and Instagram editors.</p>
               </div>
@@ -734,7 +695,7 @@ export function DailyReportWidget() {
                           <span style={{ padding: '5px 12px', borderRadius: '4px', background: rev.badge_color, color: '#FFF', fontSize: '0.725rem', fontWeight: 800, letterSpacing: '0.06em' }}>
                             {rev.platform}
                           </span>
-                          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--brand-obsidian)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                             <ThumbsUp size={13} color="var(--brand-rose)" /> {rev.metrics}
                           </span>
                         </div>
@@ -768,7 +729,8 @@ export function DailyReportWidget() {
 
           {/* CHAPTER VI: BRAND ORIGIN & VERIFICATION */}
           <div data-reveal className="chapter">
-            <div className="eyebrow">Chapter VI — The Maker</div>
+            <div className="eyebrow">Chapter VII — The Maker</div>
+
             <h3 className="chapter-title" style={{ marginBottom: '20px' }}>Brand Heritage &amp; Supply Chain</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
