@@ -137,6 +137,119 @@ button {
   padding: 0 24px;
 }
 
+/* ============================================================
+   EDITORIAL TYPOGRAPHY SYSTEM
+   Magazine-grade hierarchy: high contrast, controlled measure,
+   refined numerals, balanced wrapping.
+   ============================================================ */
+
+/* Tabular, lining numerals so prices align in columns and never jitter. */
+.tnum {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* Balanced headline wrapping; pretty body wrapping (no orphans). */
+h1, h2, h3, h4 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+/* Constrain body copy measure for comfortable editorial reading. */
+.measure { max-width: 85ch; }
+.measure-wide { max-width: 110ch; }
+
+/* Section eyebrow: small caps label above a chapter title. */
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--brand-rose);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 12px;
+}
+
+/* Serif chapter title with tight tracking. */
+.chapter-title {
+  font-family: var(--font-serif), var(--font-serif-fallback);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* Lead paragraph — larger, lighter, sets the editorial tone. */
+.lead {
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Drop cap for the opening of a long-form passage. */
+.dropcap::first-letter {
+  font-family: var(--font-serif), var(--font-serif-fallback);
+  float: left;
+  font-size: 3.4em;
+  line-height: 0.78;
+  font-weight: 700;
+  padding: 0.05em 0.12em 0 0;
+  color: var(--brand-rose);
+}
+
+/* Hairline divider used between editorial chapters. */
+.rule {
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Specification list: two columns of hairline-separated label/value rows. */
+.spec-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 48px;
+}
+.spec-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+@media (max-width: 600px) {
+  .spec-list { grid-template-columns: 1fr; column-gap: 0; }
+}
+
+/* Consistent vertical rhythm for editorial chapters (8px base grid). */
+.chapter {
+  padding: 64px 56px;
+}
+@media (max-width: 760px) {
+  .chapter { padding: 40px 24px; }
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   Subtle fade + rise as sections enter the viewport.
+   ============================================================ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Product hero: large editorial photo + content column.
    The content column uses minmax(0, 1fr) so the long product title wraps
    naturally instead of breaking word-by-word in a cramped track. */
@@ -186,6 +299,131 @@ button {
 /* Keep currency amounts on a single line so "USD" never wraps or clips. */
 .price-amount {
   white-space: nowrap;
+}
+
+/* ============================================================
+   TRUST SIGNALS & CONVERSION
+   ============================================================ */
+
+/* Horizontal strip of trust guarantees beneath the price summary. */
+.trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+}
+.trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.trust-item svg { color: var(--brand-sage); flex-shrink: 0; }
+
+/* Meta line above the price table: timestamp + basis note. */
+.price-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.price-meta .live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+  animation: live-pulse 2s ease-out infinite;
+  display: inline-block;
+}
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Retailer monogram chip — distinct, legible identity in the price table. */
+.retailer-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+
+/* "How we verify" transparency cards. */
+.verify-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px;
+}
+.verify-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.verify-item .verify-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-rose-light);
+  color: var(--brand-rose);
+  margin-bottom: 4px;
+}
+
+/* Primary retailer CTA: filled, lifts on hover. Secondary: outline. */
+.cta-primary {
+  padding: 9px 20px;
+  border-radius: var(--radius-full);
+  background: var(--brand-rose);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s;
+}
+.cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(128, 0, 32, 0.28);
+}
+.cta-secondary {
+  padding: 9px 18px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-hover);
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+.cta-secondary:hover {
+  background: var(--text-primary);
+  color: var(--bg-card);
 }
 
 /* Header responsiveness: drop non-essential bits before they overflow. */
@@ -304,3 +542,175 @@ button {
   color: var(--brand-sage);
   border: 1px solid rgba(82, 121, 111, 0.2);
 }
+
+/* Lowest-price row: restrained burgundy wash + left accent (no gold). */
+.row-champagne-glaze {
+  background: var(--brand-rose-light) !important;
+  box-shadow: inset 3px 0 0 var(--brand-rose);
+}
+
+.btn-pdp {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-pdp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(10, 10, 12, 0.2);
+}
+
+/* Issue #17: EWG Glow Dots & Lab Cards */
+.ewg-glow-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #10B981;
+  box-shadow: 0 0 10px #10B981;
+  display: inline-block;
+}
+
+/* Archive cards: top-rule editorial style with restrained hover. */
+.archive-card .archive-card-cta {
+  transition: gap 0.25s ease;
+}
+.archive-card:hover {
+  transform: translateY(-3px);
+}
+.archive-card:hover .archive-card-cta {
+  gap: 9px;
+  color: var(--brand-rose);
+}
+
+/* Issue #18: Social Platform Accent (Frameless high-fashion style, zero borders) */
+.platform-accent-reddit,
+.platform-accent-youtube,
+.platform-accent-instagram {
+  border: none !important;
+}
+
+/* Issue #21: Responsive Price Matrix Utilities & Mobile Retailer Cards */
+.price-matrix-desktop {
+  display: block;
+}
+.price-matrix-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .price-matrix-desktop {
+    display: none !important;
+  }
+  .price-matrix-mobile {
+    display: flex !important;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.retailer-card {
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: var(--bg-main);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.retailer-card-lowest {
+  background: var(--brand-rose-light);
+  border: 1px solid rgba(128, 0, 32, 0.2);
+  box-shadow: inset 4px 0 0 var(--brand-rose);
+}
+
+/* Issue #22: Interactive Review Preview Cards & Modal Overlay */
+.review-preview-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+.review-preview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(10, 10, 12, 0.1);
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(10, 10, 12, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 640px;
+  width: 100%;
+  padding: 36px;
+  position: relative;
+  animation: modal-fade-in 0.25s ease-out forwards;
+}
+
+/* Media Preview Card Enhancements */
+.media-thumb-container {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #0A0A0C;
+}
+
+.media-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.review-preview-card:hover .media-thumb-img {
+  transform: scale(1.05);
+}
+
+.play-btn-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 0, 0, 0.9);
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(255, 0, 0, 0.4);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.review-preview-card:hover .play-btn-circle {
+  transform: scale(1.1);
+  background: #FF0000;
+}
+
+
+
+

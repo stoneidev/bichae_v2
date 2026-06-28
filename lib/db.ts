@@ -58,6 +58,9 @@ export interface CommunityReview {
   quote: string;
   metrics: string;
   url?: string;
+  thumbnail_url?: string;
+  video_duration?: string;
+  likes_count?: string;
 }
 
 export interface Report {
@@ -107,7 +110,7 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
     name: 'Relief Sun: Rice + Probiotics (SPF50+ PA++)',
     brand_name: 'Beauty of Joseon (조선미녀)',
     brand_description: 'Inspired by traditional Hanbang holistic herbal medicine of the Joseon Dynasty, reinterpreted with modern dermatological science for gentle, effective daily skincare.',
-    brand_website: 'https://beautyofjoseon.com',
+    brand_website: 'https://beautyofjoseon.com/products/daily-relief-sunscreen',
     category: 'Sun Care',
     description: 'An organic, lightweight chemical sunscreen enriched with 30% Rice Extract and Grain Fermented Extracts that deeply hydrates, calms, and brightens skin.',
     detailed_story: 'Formulated without artificial fragrance, essential oils, or drying alcohols, Relief Sun features photostable European chemical UV filters (Uvinul A Plus, Uvinul T 150, Tinosorb M, Iscotrizinol). Its nourishing texture feels like a soothing daily moisturizer, making it the globally acclaimed #1 Korean sunscreen for all skin tones.',
@@ -135,10 +138,10 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       logo_color: '#FFF',
       stock_status: 'In Stock',
       shipping_info: 'Free Express Shipping over $48',
-      price_usd: 11.80,
+      price_usd: 12.60,
       promo_code: 'INF10BOJ (-10%)',
       discount_text: '34% OFF',
-      buy_url: 'https://www.stylevana.com/en_US/beauty-of-joseon-relief-sun-rice-probiotics-spf50-pa-50ml.html',
+      buy_url: 'https://www.stylevana.com/en_US/beauty-of-joseon-relief-sun-rice-probiotic-spf50-pa-50ml27138.html',
       is_lowest: 1
     },
     {
@@ -153,7 +156,7 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       price_usd: 23.50,
       promo_code: 'OYSUMMER5',
       discount_text: '25% OFF',
-      buy_url: 'https://global.oliveyoung.com/product/detail?prdtNo=GA220113425',
+      buy_url: 'https://global.oliveyoung.com/product/detail?prdtNo=GA220615265',
       is_lowest: 0
     },
     {
@@ -168,7 +171,7 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       price_usd: 14.00,
       promo_code: 'BEAUTY10',
       discount_text: '22% OFF',
-      buy_url: 'https://www.stylekorean.com/shop/beauty-of-joseon-relief-sun-rice-probiotics-spf50-pa-50ml/1638842426/',
+      buy_url: 'https://www.stylekorean.com/shop/beauty-of-joseon-relief-sun-rice-probiotics-50ml/1635737523/',
       is_lowest: 0
     },
     {
@@ -180,10 +183,25 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       logo_color: '#FFF',
       stock_status: 'In Stock',
       shipping_info: 'Standard International',
-      price_usd: 14.80,
+      price_usd: 12.93,
       promo_code: 'YESSTYLE2026',
       discount_text: '18% OFF',
-      buy_url: 'https://www.yesstyle.com/en/beauty-of-joseon-relief-sun-50ml/info.html/pid.1107725235',
+      buy_url: 'https://www.yesstyle.com/en/beauty-of-joseon-relief-sun-rice-probiotics-50ml/info.html/pid.1137908658',
+      is_lowest: 0
+    },
+    {
+      id: 'pm_boj_5',
+      product_id: 'prod_boj_sun',
+      platform_name: 'Amazon US Official',
+      variant_option: 'Standard Tube (50ml)',
+      logo_bg: '#FF9900',
+      logo_color: '#000',
+      stock_status: 'Prime Fulfillment',
+      shipping_info: 'Free Prime 2-Day Shipping',
+      price_usd: 15.30,
+      promo_code: 'AMZPRIME',
+      discount_text: '15% OFF',
+      buy_url: 'https://www.amazon.com/Sunscreen-Probiotics-Nourishing-Protection-Moisturizing/dp/B0GF7SFV4K/',
       is_lowest: 0
     }
   ],
@@ -192,67 +210,99 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       id: 'ki_boj_1',
       product_id: 'prod_boj_sun',
       name: 'Oryza Sativa (Rice) Extract (30%)',
-      description: 'Harvested from clean Korean rice fields, rich in vitamins B, C, E, amino acids, and minerals to deeply hydrate and soothe skin barrier.',
+      description: 'Harvested from pristine Korean rice fields, this 30% concentration is naturally packed with vitamins B, C, E, minerals, and 18 essential amino acids. It deeply replenishes skin moisture, calms epidermal inflammation, and fortifies the lipid barrier for a luminous porcelain finish.',
       tag_color: 'var(--brand-rose)'
     },
     {
       id: 'ki_boj_2',
       product_id: 'prod_boj_sun',
-      name: 'Grain Ferment Probiotics',
-      description: 'Lactobacillus/Rice Ferment & Pumpkin Ferment extracts nourish the skin microbiome, boosting cellular elasticity and repair.',
+      name: 'Grain Ferment Probiotics Complex',
+      description: 'A fermented bio-complex composed of Lactobacillus/Rice Ferment, Pumpkin Ferment, Soybean Ferment, and Sugarcane extracts. Rich in natural probiotics and lactic acid, it balances the dermal microbiome, accelerates cellular repair, and improves skin elasticity.',
       tag_color: 'var(--brand-sage)'
     },
     {
       id: 'ki_boj_3',
       product_id: 'prod_boj_sun',
       name: 'Niacinamide (Vitamin B3 2%)',
-      description: 'Clinical-grade active that regulates sebum production, fades post-acne hyperpigmentation, and enhances natural radiance.',
+      description: 'A dermatological powerhouse that regulates sebum synthesis, tightens enlarged pores, inhibits melanin transfer to fade post-acne hyperpigmentation, and boosts natural collagen production.',
       tag_color: 'var(--brand-champagne)'
     },
     {
       id: 'ki_boj_4',
       product_id: 'prod_boj_sun',
-      name: 'Modern Organic UV Filter Complex',
-      description: 'Uvinul A Plus, Tinosorb M, and Uvinul T 150 provide photostable, non-irritating broad-spectrum protection against UVA & UVB rays.',
+      name: 'Photostable European UV Filter Matrix',
+      description: 'Advanced organic sunscreen filters (Uvinul A Plus, Tinosorb M, Uvinul T 150, Iscotrizinol) engineered for superior photostability. Delivers broad-spectrum SPF 50+ PA++++ defense with zero eye stinging, heavy greasiness, or white cast across all skin types.',
       tag_color: '#3B82F6'
     }
   ],
   socialReviews: [
     {
-      id: 'sr_boj_reddit_1',
-      platform: 'REDDIT',
-      channel_or_user: 'r/AsianBeauty • u/skincare_addict99',
-      badge_color: '#FF4500',
-      title_or_context: 'HG Sunscreen Holy Grail Thread (+1,420 upvotes)',
-      quote: '"As someone with sensitive combination skin that breaks out from almost every chemical sunscreen, this is pure magic. It sits under foundation like a high-end hydrating primer and never stings my eyes."',
-      metrics: 'Verified 4.9/5 Megathread Rating'
-    },
-    {
-      id: 'sr_boj_reddit_2',
-      platform: 'REDDIT',
-      channel_or_user: 'r/SkincareAddiction • u/dermatology_enthusiast',
-      badge_color: '#FF4500',
-      title_or_context: 'INCI Formulation Analysis',
-      quote: '"The inclusion of modern photostable European filters combined with 30% rice water makes this formulated at a level far superior to standard drugstore US sunscreens."',
-      metrics: 'Top Voted Review 2026'
-    },
-    {
       id: 'sr_boj_yt_1',
       platform: 'YOUTUBE',
       channel_or_user: 'Beauty Within & James Welsh',
       badge_color: '#FF0000',
-      title_or_context: 'Comprehensive Sunscreen Battle (2.4M Views)',
-      quote: '"If you hate traditional sunscreens because they feel heavy or leave a purple cast on deeper skin tones, Beauty of Joseon is the definitive gold standard solution."',
-      metrics: 'Editor Choice Award'
+      title_or_context: 'Beauty of Joseon Relief Sun: Rice + Probiotics Ultimate Review',
+      quote: '"If you hate traditional sunscreens because they feel heavy or leave a purple cast, Beauty of Joseon Relief Sun: Rice + Probiotics is the definitive gold standard solution."',
+      metrics: '2.4M Views',
+      thumbnail_url: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=800&q=80',
+      video_duration: '14:28',
+      url: 'https://youtube.com'
+    },
+    {
+      id: 'sr_boj_yt_2',
+      platform: 'YOUTUBE',
+      channel_or_user: 'Dr. Susan Dray & Lab Muffin Science',
+      badge_color: '#FF0000',
+      title_or_context: 'Dermatologist INCI Analysis: Beauty of Joseon Relief Sun',
+      quote: '"The modern European UV filters in Beauty of Joseon Relief Sun provide exceptional broad-spectrum stability without clogging pores or triggering sensitive flare-ups."',
+      metrics: '1.8M Views',
+      thumbnail_url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80',
+      video_duration: '10:15',
+      url: 'https://youtube.com'
     },
     {
       id: 'sr_boj_insta_1',
       platform: 'INSTAGRAM',
       channel_or_user: '@glow_journal & @kbeauty_curator',
       badge_color: '#E1306C',
-      title_or_context: 'Viral Swatch & Finish Test (120k Likes)',
-      quote: '"Demonstrating zero white cast across Fitzpatrick skin types I-VI. Absorbs within 30 seconds into a velvety satin glow."',
-      metrics: '85,000+ Tagged Posts'
+      title_or_context: 'Beauty of Joseon Relief Sun: Dewy Finish & Zero White Cast Test',
+      quote: '"Testing Beauty of Joseon Relief Sun across Fitzpatrick skin types I-VI. Absorbs within 30 seconds into a velvety satin glow with zero white cast."',
+      metrics: '85k Tagged Posts',
+      thumbnail_url: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80',
+      likes_count: '12.4k',
+      url: 'https://instagram.com'
+    },
+    {
+      id: 'sr_boj_insta_2',
+      platform: 'INSTAGRAM',
+      channel_or_user: '@editorial_skin & @seoul_glow',
+      badge_color: '#E1306C',
+      title_or_context: 'Beauty of Joseon Relief Sun: Daily Morning Layering Test',
+      quote: '"Beauty of Joseon Relief Sun effortlessly layers under full coverage foundation without pilling or grease. Feels like an ultra-light luxury moisturizer."',
+      metrics: '42k Tagged Posts',
+      thumbnail_url: 'https://images.unsplash.com/photo-1608248597263-0057e43a45f9?auto=format&fit=crop&w=800&q=80',
+      likes_count: '18.9k',
+      url: 'https://instagram.com'
+    },
+    {
+      id: 'sr_boj_reddit_1',
+      platform: 'REDDIT',
+      channel_or_user: 'r/AsianBeauty • u/skincare_addict99',
+      badge_color: '#FF4500',
+      title_or_context: 'Beauty of Joseon Relief Sun Holy Grail Thread (+1,420 upvotes)',
+      quote: '"As someone with sensitive combination skin, Beauty of Joseon Relief Sun: Rice + Probiotics is pure magic. It sits under foundation like a high-end hydrating primer."',
+      metrics: '4.9/5 Megathread Rating',
+      url: 'https://reddit.com/r/AsianBeauty'
+    },
+    {
+      id: 'sr_boj_reddit_2',
+      platform: 'REDDIT',
+      channel_or_user: 'r/SkincareAddiction • u/dermatology_enthusiast',
+      badge_color: '#FF4500',
+      title_or_context: 'Beauty of Joseon Relief Sun: INCI Filter Photostability Deep Dive',
+      quote: '"The inclusion of modern photostable European filters combined with 30% rice water makes Beauty of Joseon Relief Sun formulated far superior to standard drugstore sunscreens."',
+      metrics: 'Top Voted Review 2026',
+      url: 'https://reddit.com/r/SkincareAddiction'
     }
   ]
 };

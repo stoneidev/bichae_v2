@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, Calendar } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import type { ArchiveReportItem } from '@/entities/report';
+import { useReveal } from '@/shared/lib/useReveal';
 
 const CATEGORIES = ['All Categories', 'Sun Care', 'Essence & Serum', 'Toner & Mist'];
 
@@ -10,6 +11,8 @@ export function ArchiveWidget() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All Categories');
   const [reports, setReports] = useState<ArchiveReportItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  useReveal(reports);
 
   useEffect(() => {
     async function fetchArchive() {
@@ -33,16 +36,14 @@ export function ArchiveWidget() {
   }, [selectedCategory]);
 
   return (
-    <section style={{ padding: '48px 0 80px 0', borderTop: '1px solid var(--border-subtle)' }}>
-      <div className="container">
-        
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px', flexWrap: 'wrap', gap: '20px' }}>
+    <section className="chapter" style={{ borderTop: '1px solid var(--border-subtle)', paddingBottom: '88px' }}>
+      <div className="container" style={{ padding: 0 }}>
+
+        <div data-reveal style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '36px', flexWrap: 'wrap', gap: '20px' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--brand-rose)', fontWeight: 800, fontSize: '0.775rem', marginBottom: '6px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              <Calendar size={14} color="var(--brand-rose)" /> PAST DAILY INTELLIGENCE ARCHIVES
-            </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', fontWeight: 700, marginBottom: '4px' }}>Past Deep Dives</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Browse previous K-beauty single-product reviews and their price history.</p>
+            <div className="eyebrow">The Archive</div>
+            <h3 className="chapter-title">Past Deep Dives</h3>
+            <p className="measure-wide" style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginTop: '8px', lineHeight: 1.6 }}>Browse previous K-beauty single-product reviews and their price history.</p>
           </div>
 
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -82,35 +83,38 @@ export function ArchiveWidget() {
             No reports found for category &quot;{selectedCategory}&quot;.
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
-            {reports.map((item) => (
-              <div 
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+            {reports.map((item, i) => (
+              <a
                 key={item.id}
-                className="glass-panel glow-effect"
+                href="#"
+                data-reveal
+                className="archive-card"
                 style={{
-                  padding: '26px', borderRadius: 'var(--radius-md)', transition: 'all 0.3s ease',
+                  padding: '28px 0', transition: 'transform 0.3s ease',
                   display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                  border: '1px solid var(--border-subtle)', boxShadow: 'var(--shadow-sm)'
+                  borderTop: '2px solid var(--text-primary)', color: 'inherit',
+                  transitionDelay: `${i * 60}ms`,
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                    <span style={{ fontSize: '0.775rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>EDITION #{item.id}</span>
-                    <span style={{ padding: '4px 10px', borderRadius: '4px', background: 'var(--bg-main)', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>{item.category}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--brand-rose)', textTransform: 'uppercase', letterSpacing: '0.14em' }}>No. {item.id}</span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{item.category}</span>
                   </div>
-                  <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', fontWeight: 700, marginBottom: '16px', lineHeight: 1.35, color: 'var(--text-primary)' }}>{item.title}</h4>
+                  <h4 style={{ fontFamily: 'var(--font-serif), var(--font-serif-fallback)', fontSize: '1.3rem', fontWeight: 700, marginBottom: '20px', lineHeight: 1.3, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>{item.title}</h4>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '18px', borderTop: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <span style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--brand-obsidian)' }}>{item.price}</span>
-                    <span style={{ fontSize: '0.775rem', color: 'var(--brand-sage)', fontWeight: 800, marginLeft: '8px' }}>{item.discount}</span>
+                    <span className="tnum" style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>{item.price}</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--brand-sage)', fontWeight: 700, marginLeft: '8px' }}>{item.discount}</span>
                   </div>
-                  <button style={{ padding: '8px 16px', borderRadius: 'var(--radius-full)', background: 'var(--brand-obsidian)', fontSize: '0.775rem', fontWeight: 700, border: 'none', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', color: '#FFF', boxShadow: 'var(--shadow-sm)' }}>
-                    Read Dossier <ArrowUpRight size={14} />
-                  </button>
+                  <span className="archive-card-cta" style={{ fontSize: '0.78rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '5px', color: 'var(--text-primary)' }}>
+                    Read <ArrowUpRight size={14} />
+                  </span>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         )}
