@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  ExternalLink, CheckCircle2, Shield, ArrowUpRight, Loader2, BookOpen
+  ExternalLink, CheckCircle2, Shield, ArrowUpRight, Loader2, BookOpen, Package
 } from 'lucide-react';
 import { FullDailyReportPayload } from '@/lib/db';
 
@@ -53,7 +53,7 @@ export default function DailyReportCard() {
 
   return (
     <section style={{ padding: '10px 0 60px 0' }}>
-      <div className="container" style={{ maxWidth: '1040px' }}>
+      <div className="container" style={{ maxWidth: '1080px' }}>
         
         {/* Flat Editorial Magazine Outer Wrapper */}
         <div style={{
@@ -63,27 +63,49 @@ export default function DailyReportCard() {
         }}>
           
           {/* ==========================================
-              CHAPTER 01: PRODUCT OVERVIEW & CURATOR NOTE
+              CHAPTER 01: PRODUCT OVERVIEW & PHOTO
              ========================================== */}
           <div style={{
             padding: '36px 40px', borderBottom: '1px solid var(--border-subtle)',
             background: 'linear-gradient(180deg, var(--bg-main) 0%, var(--bg-card) 100%)'
           }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px', alignItems: 'center', marginBottom: '28px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', alignItems: 'center', marginBottom: '28px' }}>
               
-              {/* Left Title & Metadata */}
+              {/* Product Photo Showcase */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  position: 'relative', display: 'inline-block', width: '100%', maxWidth: '280px',
+                  borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border-subtle)',
+                  boxShadow: 'var(--shadow-md)', background: '#FFF'
+                }}>
+                  <img 
+                    src={product.image_url || '/images/beauty_of_joseon_sunscreen.jpg'} 
+                    alt={product.name}
+                    style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
+                  />
+                  <div style={{
+                    position: 'absolute', bottom: '12px', left: '12px',
+                    padding: '4px 10px', borderRadius: 'var(--radius-full)', background: 'rgba(0,0,0,0.75)',
+                    color: '#FFF', fontSize: '0.75rem', fontWeight: 700, backdropFilter: 'blur(4px)'
+                  }}>
+                    📷 Verified Studio Shot
+                  </div>
+                </div>
+              </div>
+
+              {/* Middle Title & Metadata */}
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                  <span className="badge badge-trending" style={{ fontWeight: 700 }}>Featured Daily Curation #{report.id}</span>
+                  <span className="badge badge-trending" style={{ fontWeight: 700 }}>Featured Curation #{report.id}</span>
                   <span className="badge badge-verified"><CheckCircle2 size={12} /> {product.is_authentic ? '100% Authentic Verified' : 'Standard'}</span>
                   <span style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>Published: {report.publish_date}</span>
                 </div>
 
-                <h2 style={{ fontSize: 'clamp(1.85rem, 3.2vw, 2.4rem)', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '12px', lineHeight: 1.25 }}>
+                <h2 style={{ fontSize: 'clamp(1.75rem, 3vw, 2.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '12px', lineHeight: 1.25 }}>
                   {report.title}
                 </h2>
 
-                <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', marginBottom: '20px', lineHeight: 1.6 }}>
+                <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '20px', lineHeight: 1.6 }}>
                   {product.description}
                 </p>
 
@@ -98,7 +120,7 @@ export default function DailyReportCard() {
 
               {/* Right Price Highlight Card */}
               <div style={{
-                background: 'var(--bg-main)', padding: '28px', borderRadius: 'var(--radius-md)',
+                background: 'var(--bg-main)', padding: '24px', borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '16px'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -151,7 +173,7 @@ export default function DailyReportCard() {
               <div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--brand-rose)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>Chapter 01 • Global Pricing</div>
                 <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--brand-obsidian)' }}>High-Density Cross-Platform Price Matrix Table</h3>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Real-time comparative tracking across verified global distributors</p>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Real-time comparative tracking & specific retailer package options</p>
               </div>
               <span className="badge badge-trending" style={{ fontSize: '0.775rem' }}>Cloudflare D1 Real-Time Sync</span>
             </div>
@@ -162,11 +184,12 @@ export default function DailyReportCard() {
                 <thead>
                   <tr style={{ background: 'var(--bg-main)', borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-secondary)', fontSize: '0.775rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     <th style={{ padding: '14px 18px', fontWeight: 700 }}>Platform</th>
+                    <th style={{ padding: '14px 18px', fontWeight: 700 }}>Retailer Option / Pack</th>
                     <th style={{ padding: '14px 18px', fontWeight: 700 }}>Stock & Dispatch</th>
                     <th style={{ padding: '14px 18px', fontWeight: 700 }}>Promo Code</th>
                     <th style={{ padding: '14px 18px', fontWeight: 700 }}>Discount</th>
                     <th style={{ padding: '14px 18px', fontWeight: 700 }}>Verified Price</th>
-                    <th style={{ padding: '14px 18px', fontWeight: 700, textAlign: 'right' }}>Direct Deal</th>
+                    <th style={{ padding: '14px 18px', fontWeight: 700, textAlign: 'right' }}>Direct PDP Deal</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -193,6 +216,13 @@ export default function DailyReportCard() {
                             <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{item.platform_name}</div>
                             {item.is_lowest ? <span style={{ fontSize: '0.7rem', color: 'var(--brand-rose)', fontWeight: 800 }}>★ LOWEST PRICE</span> : null}
                           </div>
+                        </div>
+                      </td>
+
+                      <td style={{ padding: '16px 18px', fontWeight: 600, color: 'var(--brand-obsidian)' }}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <Package size={14} color="var(--brand-rose)" />
+                          <span>{item.variant_option || 'Standard Pack'}</span>
                         </div>
                       </td>
 
@@ -235,7 +265,7 @@ export default function DailyReportCard() {
                             textDecoration: 'none', transition: 'transform 0.15s'
                           }}
                         >
-                          {item.is_lowest ? 'Buy Lowest' : 'Get Deal'} <ArrowUpRight size={14} />
+                          {item.is_lowest ? 'Buy Direct PDP' : 'Go to Direct PDP'} <ArrowUpRight size={14} />
                         </a>
                       </td>
                     </tr>

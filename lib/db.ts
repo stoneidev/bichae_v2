@@ -9,6 +9,7 @@ export interface Product {
   category: string;
   description: string;
   detailed_story?: string;
+  image_url?: string;
   volume?: string;
   skin_type?: string;
   texture?: string;
@@ -28,6 +29,7 @@ export interface PriceItem {
   id: string;
   product_id: string;
   platform_name: string;
+  variant_option?: string;
   logo_bg?: string;
   logo_color?: string;
   stock_status: string;
@@ -109,6 +111,7 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
     category: 'Sun Care',
     description: 'An organic, lightweight chemical sunscreen enriched with 30% Rice Extract and Grain Fermented Extracts that deeply hydrates, calms, and brightens skin.',
     detailed_story: 'Formulated without artificial fragrance, essential oils, or drying alcohols, Relief Sun features photostable European chemical UV filters (Uvinul A Plus, Uvinul T 150, Tinosorb M, Iscotrizinol). Its nourishing texture feels like a soothing daily moisturizer, making it the globally acclaimed #1 Korean sunscreen for all skin tones.',
+    image_url: '/images/beauty_of_joseon_sunscreen.jpg',
     volume: '50ml / 1.69 fl. oz.',
     skin_type: 'All Skin Types (Ideal for Sensitive, Combination & Dry)',
     texture: 'Lightweight, silky fluid lotion cream',
@@ -127,6 +130,7 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       id: 'pm_boj_1',
       product_id: 'prod_boj_sun',
       platform_name: 'Stylevana Global',
+      variant_option: 'Standard Tube (50ml)',
       logo_bg: '#111827',
       logo_color: '#FFF',
       stock_status: 'In Stock',
@@ -134,27 +138,29 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       price_usd: 11.80,
       promo_code: 'INF10BOJ (-10%)',
       discount_text: '34% OFF',
-      buy_url: 'https://stylevana.com',
+      buy_url: 'https://www.stylevana.com/en_US/beauty-of-joseon-relief-sun-rice-probiotics-spf50-pa-50ml.html',
       is_lowest: 1
     },
     {
       id: 'pm_boj_2',
       product_id: 'prod_boj_sun',
       platform_name: 'Olive Young Global',
+      variant_option: 'Special Duo Set (50ml + 50ml)',
       logo_bg: '#99E334',
       logo_color: '#000',
       stock_status: 'Official Authorized Retailer',
       shipping_info: 'DHL Express 3-5 Days',
-      price_usd: 13.50,
+      price_usd: 23.50,
       promo_code: 'OYSUMMER5',
       discount_text: '25% OFF',
-      buy_url: 'https://global.oliveyoung.com',
+      buy_url: 'https://global.oliveyoung.com/product/detail?prdtNo=GA220113425',
       is_lowest: 0
     },
     {
       id: 'pm_boj_3',
       product_id: 'prod_boj_sun',
       platform_name: 'StyleKorean',
+      variant_option: 'Single Unit Pack (50ml)',
       logo_bg: '#E31B23',
       logo_color: '#FFF',
       stock_status: 'In Stock',
@@ -162,13 +168,14 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       price_usd: 14.00,
       promo_code: 'BEAUTY10',
       discount_text: '22% OFF',
-      buy_url: 'https://stylekorean.com',
+      buy_url: 'https://www.stylekorean.com/shop/beauty-of-joseon-relief-sun-rice-probiotics-spf50-pa-50ml/1638842426/',
       is_lowest: 0
     },
     {
       id: 'pm_boj_4',
       product_id: 'prod_boj_sun',
       platform_name: 'YesStyle Beauty',
+      variant_option: 'Standard 50ml Box',
       logo_bg: '#FF6F61',
       logo_color: '#FFF',
       stock_status: 'In Stock',
@@ -176,7 +183,7 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       price_usd: 14.80,
       promo_code: 'YESSTYLE2026',
       discount_text: '18% OFF',
-      buy_url: 'https://yesstyle.com',
+      buy_url: 'https://www.yesstyle.com/en/beauty-of-joseon-relief-sun-50ml/info.html/pid.1107725235',
       is_lowest: 0
     }
   ],
