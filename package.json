@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "d1:init:local": "wrangler d1 execute bichae-db --local --file=./migrations/schema.sql && wrangler d1 execute bichae-db --local --file=./migrations/seed.sql",
+    "d1:query:local": "wrangler d1 execute bichae-db --local --command=\"SELECT * FROM products;\"",
+    "d1:init:remote": "wrangler d1 execute bichae-db --remote --file=./migrations/schema.sql && wrangler d1 execute bichae-db --remote --file=./migrations/seed.sql",
     "start": "next start",
     "lint": "eslint"
   },
