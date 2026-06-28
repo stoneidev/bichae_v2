@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Search, Globe, Moon, Sun, ShieldCheck } from 'lucide-react';
+import { Sparkles, Moon, Sun, ShieldCheck } from 'lucide-react';
 
 export default function Header() {
   const [isDark, setIsDark] = useState(false);
@@ -16,24 +16,24 @@ export default function Header() {
 
   return (
     <header className="glass-panel" style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--border-subtle)' }}>
-      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px' }}>
+      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '68px' }}>
         
         {/* Brand Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
-            width: '40px', height: '40px', borderRadius: '12px',
+            width: '38px', height: '38px', borderRadius: '10px',
             background: 'var(--accent-gradient)', display: 'flex',
             alignItems: 'center', justifyContent: 'center', color: '#FFF',
             boxShadow: 'var(--shadow-sm)'
           }}>
-            <Sparkles size={22} />
+            <Sparkles size={20} />
           </div>
           <div>
-            <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
-              BICHAE <span style={{ color: 'var(--brand-rose)', fontSize: '1.2rem', fontFamily: 'var(--font-sans)', fontWeight: 800 }}>v2</span>
+            <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
+              BICHAE <span style={{ color: 'var(--brand-rose)', fontSize: '1.1rem', fontFamily: 'var(--font-sans)', fontWeight: 800 }}>v2</span>
             </span>
-            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              Global K-Beauty Intelligence
+            <div style={{ fontSize: '0.675rem', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              Daily K-Beauty Science & Price Matrix
             </div>
           </div>
         </div>
@@ -41,28 +41,28 @@ export default function Header() {
         {/* Global Live Ticker */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: '8px',
-          padding: '6px 16px', background: 'var(--bg-main)', borderRadius: 'var(--radius-full)',
-          fontSize: '0.825rem', border: '1px solid var(--border-subtle)'
+          padding: '5px 14px', background: 'var(--bg-main)', borderRadius: 'var(--radius-full)',
+          fontSize: '0.8rem', border: '1px solid var(--border-subtle)'
         }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }}></span>
-          <span style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>Daily Featured:</span>
+          <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }}></span>
+          <span style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>Today's Single Feature:</span>
           <span style={{ fontWeight: 700, color: 'var(--brand-obsidian)' }}>Beauty of Joseon Relief Sun</span>
-          <span className="badge badge-trending" style={{ marginLeft: '6px' }}>#1 Trending</span>
+          <span className="badge badge-trending" style={{ marginLeft: '4px', fontSize: '0.7rem' }}>Verified #042</span>
         </div>
 
         {/* Action Items */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button 
             onClick={() => setIsDark(!isDark)}
             style={{
-              padding: '10px', borderRadius: 'var(--radius-full)',
+              padding: '8px', borderRadius: 'var(--radius-full)',
               border: '1px solid var(--border-subtle)', background: 'var(--bg-card)',
               color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'all 0.2s'
+              cursor: 'pointer', transition: 'all 0.2s'
             }}
             aria-label="Toggle Theme"
           >
-            {isDark ? <Sun size={18} color="#F59E0B" /> : <Moon size={18} color="#6B7280" />}
+            {isDark ? <Sun size={16} color="#F59E0B" /> : <Moon size={16} color="#6B7280" />}
           </button>
 
           <a 
@@ -70,13 +70,13 @@ export default function Header() {
             target="_blank" 
             rel="noreferrer"
             style={{
-              padding: '10px 20px', borderRadius: 'var(--radius-full)',
+              padding: '8px 16px', borderRadius: 'var(--radius-full)',
               background: 'var(--brand-obsidian)', color: '#FFF',
-              fontSize: '0.875rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px',
-              boxShadow: 'var(--shadow-sm)', transition: 'transform 0.2s'
+              fontSize: '0.825rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px',
+              boxShadow: 'var(--shadow-sm)', textDecoration: 'none'
             }}
           >
-            <ShieldCheck size={16} color="var(--brand-rose)" />
+            <ShieldCheck size={15} color="var(--brand-rose)" />
             Verified Report #042
           </a>
         </div>

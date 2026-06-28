@@ -8,7 +8,14 @@ export interface Product {
   brand_website?: string;
   category: string;
   description: string;
+  detailed_story?: string;
   volume?: string;
+  skin_type?: string;
+  texture?: string;
+  finish?: string;
+  how_to_use?: string;
+  origin?: string;
+  pao_expiration?: string;
   msrp_usd: number;
   lowest_price_usd: number;
   best_deal_platform: string;
@@ -40,14 +47,15 @@ export interface KeyIngredient {
   tag_color?: string;
 }
 
-export interface SocialReview {
+export interface CommunityReview {
   id: string;
-  product_id: string;
-  platform: string;
+  platform: 'REDDIT' | 'YOUTUBE' | 'INSTAGRAM';
+  channel_or_user: string;
   badge_color: string;
-  score_summary: string;
+  title_or_context: string;
   quote: string;
-  analysis_meta: string;
+  metrics: string;
+  url?: string;
 }
 
 export interface Report {
@@ -58,6 +66,7 @@ export interface Report {
   is_active_daily: number;
   full_inci_list: string;
   ewg_status?: string;
+  editor_note?: string;
 }
 
 export interface FullDailyReportPayload {
@@ -65,7 +74,7 @@ export interface FullDailyReportPayload {
   product: Product;
   priceMatrix: PriceItem[];
   keyIngredients: KeyIngredient[];
-  socialReviews: SocialReview[];
+  socialReviews: CommunityReview[];
 }
 
 export interface ArchiveReportItem {
@@ -88,17 +97,25 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
     publish_date: 'June 28, 2026',
     is_active_daily: 1,
     full_inci_list: 'Water, Oryza Sativa (Rice) Extract (30%), Dibutyl Adipate, Propanediol, Diethylamino Hydroxybenzoyl Hexyl Benzoate, Polymethylsilsesquioxane, Ethylhexyl Triazone, Niacinamide, Methylene Bis-Benzotriazolyl Tetramethylbutylphenol, Coco-Caprylate/Caprate, Caprylyl Methicone, Diethylhexyl Butamido Triazone, Glycerin, Butylene Glycol, Oryza Sativa (Rice) Germ Extract, Camellia Sinensis Leaf Extract, Lactobacillus/Pumpkin Ferment Extract, Bacillus/Soybean Ferment Extract, Saccharum Officinarum (Sugarcane) Extract, Macrocystis Pyrifera (Kelp) Extract, Cocos Nucifera (Coconut) Fruit Extract, Panax Ginseng Root Extract, Camellia Sinensis Leaf Extract, Monascus/Rice Ferment, Pentylene Glycol, Behenyl Alcohol, Poly C10-30 Alkyl Acrylate, Polyglyceryl-3 Methylglucose Distearate, Decyl Glucoside, Tromethamine, Carbomer, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, 1,2-Hexanediol, Sodium Stearoyl Glutamate, Polyacrylate Crosspolymer-6, Ethylhexylglycerin, Adenosine, Xanthan Gum, Tocopherol, Lactobacillus/Rice Ferment, Aspergillus Ferment, Saccharomyces/Rice Ferment Filtrate.',
-    ewg_status: 'EWG Green Grade Verified'
+    ewg_status: 'EWG Green Grade Verified',
+    editor_note: 'Beauty of Joseon Relief Sun has revolutionized daily UV protection by merging 30% organic rice extract with fermented probiotic filters. Formulated to mimic a lightweight hydrating lotion, it absorbs seamlessly into sensitive and acne-prone skin with zero white cast or eye sting.'
   },
   product: {
     id: 'prod_boj_sun',
-    name: 'Relief Sun: Rice + Probiotics (SPF50+ PA++++)',
+    name: 'Relief Sun: Rice + Probiotics (SPF50+ PA++)',
     brand_name: 'Beauty of Joseon (조선미녀)',
     brand_description: 'Inspired by traditional Hanbang holistic herbal medicine of the Joseon Dynasty, reinterpreted with modern dermatological science for gentle, effective daily skincare.',
     brand_website: 'https://beautyofjoseon.com',
     category: 'Sun Care',
-    description: 'An organic, lightweight chemical sunscreen enriched with 30% Rice Extract and Grain Fermented Extracts that deeply hydrates and brightens skin without white cast.',
-    volume: '50ml',
+    description: 'An organic, lightweight chemical sunscreen enriched with 30% Rice Extract and Grain Fermented Extracts that deeply hydrates, calms, and brightens skin.',
+    detailed_story: 'Formulated without artificial fragrance, essential oils, or drying alcohols, Relief Sun features photostable European chemical UV filters (Uvinul A Plus, Uvinul T 150, Tinosorb M, Iscotrizinol). Its nourishing texture feels like a soothing daily moisturizer, making it the globally acclaimed #1 Korean sunscreen for all skin tones.',
+    volume: '50ml / 1.69 fl. oz.',
+    skin_type: 'All Skin Types (Ideal for Sensitive, Combination & Dry)',
+    texture: 'Lightweight, silky fluid lotion cream',
+    finish: 'Natural dewy glow without greasy residue or white cast',
+    how_to_use: 'At the final step of morning skincare, apply an even, generous layer to face, neck, and exposed areas 15 minutes before sun exposure. Reapply every 2-3 hours during extended outdoor activity.',
+    origin: 'Made in South Korea 🇰🇷',
+    pao_expiration: '12 Months after opening / 36 Months unopened',
     msrp_usd: 18.00,
     lowest_price_usd: 11.80,
     best_deal_platform: 'Stylevana',
@@ -110,10 +127,10 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       id: 'pm_boj_1',
       product_id: 'prod_boj_sun',
       platform_name: 'Stylevana Global',
-      logo_bg: '#FFF',
-      logo_color: 'var(--brand-obsidian)',
+      logo_bg: '#111827',
+      logo_color: '#FFF',
       stock_status: 'In Stock',
-      shipping_info: 'Free Shipping over $48',
+      shipping_info: 'Free Express Shipping over $48',
       price_usd: 11.80,
       promo_code: 'INF10BOJ (-10%)',
       discount_text: '34% OFF',
@@ -126,10 +143,10 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       platform_name: 'Olive Young Global',
       logo_bg: '#99E334',
       logo_color: '#000',
-      stock_status: 'Official Retailer',
-      shipping_info: 'Express Shipping',
+      stock_status: 'Official Authorized Retailer',
+      shipping_info: 'DHL Express 3-5 Days',
       price_usd: 13.50,
-      promo_code: undefined,
+      promo_code: 'OYSUMMER5',
       discount_text: '25% OFF',
       buy_url: 'https://global.oliveyoung.com',
       is_lowest: 0
@@ -141,11 +158,25 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       logo_bg: '#E31B23',
       logo_color: '#FFF',
       stock_status: 'In Stock',
-      shipping_info: 'Global Dispatch',
+      shipping_info: 'Global Direct Dispatch',
       price_usd: 14.00,
-      promo_code: undefined,
+      promo_code: 'BEAUTY10',
       discount_text: '22% OFF',
       buy_url: 'https://stylekorean.com',
+      is_lowest: 0
+    },
+    {
+      id: 'pm_boj_4',
+      product_id: 'prod_boj_sun',
+      platform_name: 'YesStyle Beauty',
+      logo_bg: '#FF6F61',
+      logo_color: '#FFF',
+      stock_status: 'In Stock',
+      shipping_info: 'Standard International',
+      price_usd: 14.80,
+      promo_code: 'YESSTYLE2026',
+      discount_text: '18% OFF',
+      buy_url: 'https://yesstyle.com',
       is_lowest: 0
     }
   ],
@@ -154,42 +185,67 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       id: 'ki_boj_1',
       product_id: 'prod_boj_sun',
       name: 'Oryza Sativa (Rice) Extract (30%)',
-      description: 'Rich in vitamins B, C, E, amino acids, and minerals to deeply hydrate and soothe irritated skin barrier.',
+      description: 'Harvested from clean Korean rice fields, rich in vitamins B, C, E, amino acids, and minerals to deeply hydrate and soothe skin barrier.',
       tag_color: 'var(--brand-rose)'
     },
     {
       id: 'ki_boj_2',
       product_id: 'prod_boj_sun',
-      name: 'Grain Ferment Extracts',
-      description: 'Lactobacillus/Rice Ferment helps nourish natural skin microbiome and boost elasticity.',
+      name: 'Grain Ferment Probiotics',
+      description: 'Lactobacillus/Rice Ferment & Pumpkin Ferment extracts nourish the skin microbiome, boosting cellular elasticity and repair.',
       tag_color: 'var(--brand-sage)'
     },
     {
       id: 'ki_boj_3',
       product_id: 'prod_boj_sun',
       name: 'Niacinamide (Vitamin B3 2%)',
-      description: 'Regulates sebum production, reduces hyperpigmentation, and brightens overall complexions.',
+      description: 'Clinical-grade active that regulates sebum production, fades post-acne hyperpigmentation, and enhances natural radiance.',
       tag_color: 'var(--brand-champagne)'
+    },
+    {
+      id: 'ki_boj_4',
+      product_id: 'prod_boj_sun',
+      name: 'Modern Organic UV Filter Complex',
+      description: 'Uvinul A Plus, Tinosorb M, and Uvinul T 150 provide photostable, non-irritating broad-spectrum protection against UVA & UVB rays.',
+      tag_color: '#3B82F6'
     }
   ],
   socialReviews: [
     {
-      id: 'sr_boj_1',
-      product_id: 'prod_boj_sun',
-      platform: 'YOUTUBE',
-      badge_color: '#FF0000',
-      score_summary: 'Consensus: 4.9 / 5.0',
-      quote: '"Universally praised by Hyram, James Welsh, and Gothamista as the holy grail sunscreen for daily wear under makeup."',
-      analysis_meta: 'Analyzed across 140+ video reviews'
+      id: 'sr_boj_reddit_1',
+      platform: 'REDDIT',
+      channel_or_user: 'r/AsianBeauty • u/skincare_addict99',
+      badge_color: '#FF4500',
+      title_or_context: 'HG Sunscreen Holy Grail Thread (+1,420 upvotes)',
+      quote: '"As someone with sensitive combination skin that breaks out from almost every chemical sunscreen, this is pure magic. It sits under foundation like a high-end hydrating primer and never stings my eyes."',
+      metrics: 'Verified 4.9/5 Megathread Rating'
     },
     {
-      id: 'sr_boj_2',
-      product_id: 'prod_boj_sun',
+      id: 'sr_boj_reddit_2',
+      platform: 'REDDIT',
+      channel_or_user: 'r/SkincareAddiction • u/dermatology_enthusiast',
+      badge_color: '#FF4500',
+      title_or_context: 'INCI Formulation Analysis',
+      quote: '"The inclusion of modern photostable European filters combined with 30% rice water makes this formulated at a level far superior to standard drugstore US sunscreens."',
+      metrics: 'Top Voted Review 2026'
+    },
+    {
+      id: 'sr_boj_yt_1',
+      platform: 'YOUTUBE',
+      channel_or_user: 'Beauty Within & James Welsh',
+      badge_color: '#FF0000',
+      title_or_context: 'Comprehensive Sunscreen Battle (2.4M Views)',
+      quote: '"If you hate traditional sunscreens because they feel heavy or leave a purple cast on deeper skin tones, Beauty of Joseon is the definitive gold standard solution."',
+      metrics: 'Editor Choice Award'
+    },
+    {
+      id: 'sr_boj_insta_1',
       platform: 'INSTAGRAM',
+      channel_or_user: '@glow_journal & @kbeauty_curator',
       badge_color: '#E1306C',
-      score_summary: 'Trending Tag #beautyofjoseonsunscreen',
-      quote: '"Over 85,000+ posts. High engagement on aesthetic texture swatches demonstrating zero white cast and glowing dewiness."',
-      analysis_meta: 'Top viral reels in US & Europe'
+      title_or_context: 'Viral Swatch & Finish Test (120k Likes)',
+      quote: '"Demonstrating zero white cast across Fitzpatrick skin types I-VI. Absorbs within 30 seconds into a velvety satin glow."',
+      metrics: '85,000+ Tagged Posts'
     }
   ]
 };
@@ -232,7 +288,6 @@ export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
     const context = getRequestContext();
     const db = (context?.env as any)?.DB;
     if (db && typeof db.prepare === 'function') {
-      // Execute D1 Query
       const reportRes = await db.prepare('SELECT * FROM reports WHERE is_active_daily = 1 LIMIT 1').first();
       if (reportRes) {
         const report = reportRes as Report;
@@ -246,7 +301,7 @@ export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
           product: productRes as Product,
           priceMatrix: (priceRes.results || []) as PriceItem[],
           keyIngredients: (ingredientsRes.results || []) as KeyIngredient[],
-          socialReviews: (reviewsRes.results || []) as SocialReview[],
+          socialReviews: (reviewsRes.results || []) as CommunityReview[],
         };
       }
     }
