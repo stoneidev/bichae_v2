@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Moon, Sun, ShieldCheck } from 'lucide-react';
+import { Sparkles, Moon, Sun, ShieldCheck, Info } from 'lucide-react';
 
 export default function Header() {
   const [isDark, setIsDark] = useState(false);
@@ -19,7 +19,7 @@ export default function Header() {
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '68px' }}>
         
         {/* Brand Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'inherit' }}>
           <div style={{
             width: '38px', height: '38px', borderRadius: '10px',
             background: 'var(--accent-gradient)', display: 'flex',
@@ -36,22 +36,23 @@ export default function Header() {
               Daily K-Beauty Science & Price Matrix
             </div>
           </div>
-        </div>
+        </a>
 
-        {/* Global Live Ticker */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: '8px',
-          padding: '5px 14px', background: 'var(--bg-main)', borderRadius: 'var(--radius-full)',
-          fontSize: '0.8rem', border: '1px solid var(--border-subtle)'
-        }}>
-          <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }}></span>
-          <span style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>Today's Single Feature:</span>
-          <span style={{ fontWeight: 700, color: 'var(--brand-obsidian)' }}>Beauty of Joseon Relief Sun</span>
-          <span className="badge badge-trending" style={{ marginLeft: '4px', fontSize: '0.7rem' }}>Verified #042</span>
-        </div>
+        {/* Navigation & Action Items */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          
+          {/* Link to About Page */}
+          <a 
+            href="/about" 
+            style={{ 
+              fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', 
+              textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '6px 12px', borderRadius: 'var(--radius-full)', transition: 'all 0.2s'
+            }}
+          >
+            <Info size={16} /> About Science
+          </a>
 
-        {/* Action Items */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button 
             onClick={() => setIsDark(!isDark)}
             style={{
@@ -77,7 +78,7 @@ export default function Header() {
             }}
           >
             <ShieldCheck size={15} color="var(--brand-rose)" />
-            Verified Report #042
+            Verified #042
           </a>
         </div>
 
