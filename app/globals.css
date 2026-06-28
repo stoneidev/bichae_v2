@@ -759,6 +759,36 @@ p { text-wrap: pretty; }
   background: #FF0000;
 }
 
+/* Issue #28: Comprehensive Mobile Responsiveness (320px to 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  
+  .chapter {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+  
+  .product-hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  
+  .header-nav-link-label,
+  .header-logo-subtitle,
+  .header-cta-label {
+    display: none !important;
+  }
+  
+  /* Make all table wrappers swipeable gracefully */
+  table {
+    min-width: 650px;
+  }
+}
+
+
 
 
 
