@@ -290,18 +290,30 @@ const MOCK_ARCHIVE_REPORTS: ArchiveReportItem[] = [
   }
 ];
 
+function withTimeout<T>(promise: Promise<T>, ms = 1500): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error('D1 Query Timeout')), ms))
+  ]);
+}
+
 export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
   try {
-    const context = getRequestContext();
+    let context: ReturnType<typeof getRequestContext> | undefined;
+    try {
+      context = getRequestContext();
+    } catch {
+      context = undefined;
+    }
     const db = (context?.env as Record<string, unknown>)?.DB as { prepare: (q: string) => { bind: (...args: unknown[]) => { first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> }; first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> } } | undefined;
     if (db && typeof db.prepare === 'function') {
-      const reportRes = await db.prepare('SELECT * FROM reports WHERE is_active_daily = 1 LIMIT 1').first();
+      const reportRes = await withTimeout(db.prepare('SELECT * FROM reports WHERE is_active_daily = 1 LIMIT 1').first());
       if (reportRes) {
         const report = reportRes as Report;
-        const productRes = await db.prepare('SELECT * FROM products WHERE id = ?').bind(report.product_id).first();
-        const priceRes = await db.prepare('SELECT * FROM price_matrix WHERE product_id = ? ORDER BY price_usd ASC').bind(report.product_id).all();
-        const ingredientsRes = await db.prepare('SELECT * FROM key_ingredients WHERE product_id = ?').bind(report.product_id).all();
-        const reviewsRes = await db.prepare('SELECT * FROM social_reviews WHERE product_id = ?').bind(report.product_id).all();
+        const productRes = await withTimeout(db.prepare('SELECT * FROM products WHERE id = ?').bind(report.product_id).first());
+        const priceRes = await withTimeout(db.prepare('SELECT * FROM price_matrix WHERE product_id = ? ORDER BY price_usd ASC').bind(report.product_id).all());
+        const ingredientsRes = await withTimeout(db.prepare('SELECT * FROM key_ingredients WHERE product_id = ?').bind(report.product_id).all());
+        const reviewsRes = await withTimeout(db.prepare('SELECT * FROM social_reviews WHERE product_id = ?').bind(report.product_id).all());
 
         return {
           report,
@@ -321,7 +333,12 @@ export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
 
 export async function getArchiveReportsFromDb(category?: string): Promise<ArchiveReportItem[]> {
   try {
-    const context = getRequestContext();
+    let context: ReturnType<typeof getRequestContext> | undefined;
+    try {
+      context = getRequestContext();
+    } catch {
+      context = undefined;
+    }
     const db = (context?.env as Record<string, unknown>)?.DB as { prepare: (q: string) => { bind: (...args: unknown[]) => { first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> }; first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> } } | undefined;
     if (db && typeof db.prepare === 'function') {
       let query = `
@@ -338,7 +355,7 @@ export async function getArchiveReportsFromDb(category?: string): Promise<Archiv
       query += ' ORDER BY r.id DESC';
 
       const stmt = db.prepare(query);
-      const res = bindings.length > 0 ? await stmt.bind(...bindings).all() : await stmt.all();
+      const res = bindings.length > 0 ? await withTimeout(stmt.bind(...bindings).all()) : await withTimeout(stmt.all());
 
       if (res && res.results) {
         return res.results.map((row: Record<string, unknown>) => ({
@@ -365,10 +382,15 @@ export async function getArchiveReportsFromDb(category?: string): Promise<Archiv
 
 export async function getProductByIdFromDb(id: string): Promise<Product | null> {
   try {
-    const context = getRequestContext();
+    let context: ReturnType<typeof getRequestContext> | undefined;
+    try {
+      context = getRequestContext();
+    } catch {
+      context = undefined;
+    }
     const db = (context?.env as Record<string, unknown>)?.DB as { prepare: (q: string) => { bind: (...args: unknown[]) => { first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> }; first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> } } | undefined;
     if (db && typeof db.prepare === 'function') {
-      const res = await db.prepare('SELECT * FROM products WHERE id = ?').bind(id).first();
+      const res = await withTimeout(db.prepare('SELECT * FROM products WHERE id = ?').bind(id).first());
       if (res) return res as Product;
     }
   } catch (err) {
