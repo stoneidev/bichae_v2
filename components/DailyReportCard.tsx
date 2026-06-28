@@ -81,8 +81,8 @@ export default function DailyReportCard() {
             padding: '36px 40px', borderBottom: '1px solid var(--border-subtle)',
             background: 'linear-gradient(180deg, var(--bg-main) 0%, var(--bg-card) 100%)'
           }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', alignItems: 'center', marginBottom: '28px' }}>
-              
+            <div className="product-hero-grid">
+
               {/* Product Photo Showcase */}
               <div style={{ textAlign: 'center' }}>
                 <div style={{
@@ -136,22 +136,24 @@ export default function DailyReportCard() {
               </div>
 
               {/* Right Price Highlight Card */}
-              <div style={{
+              <div className="product-hero-price" style={{
                 background: 'var(--bg-main)', padding: '24px', borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '16px'
+                border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '14px'
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Lowest Verified Price</span>
-                  <span style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--brand-rose)' }}>${Number(product.lowest_price_usd).toFixed(2)} USD</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Lowest Verified Price</span>
+                  <span className="price-amount" style={{ fontSize: '1.9rem', fontWeight: 800, color: 'var(--brand-rose)', lineHeight: 1.1 }}>
+                    ${Number(product.lowest_price_usd).toFixed(2)} <span style={{ fontSize: '0.9rem', fontWeight: 700 }}>USD</span>
+                  </span>
                 </div>
                 <div style={{ height: '1px', background: 'var(--border-subtle)' }}></div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '12px' }}>
                   <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Official MSRP</span>
-                  <span style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'line-through' }}>${Number(product.msrp_usd).toFixed(2)} USD</span>
+                  <span className="price-amount" style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-muted)', textDecoration: 'line-through' }}>${Number(product.msrp_usd).toFixed(2)}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Best Deal Platform</span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--brand-sage)' }}>{product.best_deal_platform} ({product.best_deal_discount})</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '12px' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Best Deal</span>
+                  <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--brand-sage)', textAlign: 'right' }}>{product.best_deal_platform} ({product.best_deal_discount})</span>
                 </div>
               </div>
 
