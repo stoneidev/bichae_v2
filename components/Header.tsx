@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Sparkles, Moon, Sun, ShieldCheck, Info } from 'lucide-react';
 
 export default function Header() {
@@ -19,7 +20,7 @@ export default function Header() {
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '68px' }}>
         
         {/* Brand Logo */}
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'inherit' }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'inherit' }}>
           <div style={{
             width: '38px', height: '38px', borderRadius: '10px',
             background: 'var(--accent-gradient)', display: 'flex',
@@ -36,13 +37,13 @@ export default function Header() {
               Daily K-Beauty Science & Price Matrix
             </div>
           </div>
-        </a>
+        </Link>
 
         {/* Navigation & Action Items */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           
           {/* Link to About Page */}
-          <a 
+          <Link 
             href="/about" 
             style={{ 
               fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', 
@@ -51,7 +52,7 @@ export default function Header() {
             }}
           >
             <Info size={16} /> About Science
-          </a>
+          </Link>
 
           <button 
             onClick={() => setIsDark(!isDark)}

@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  DollarSign, FlaskConical, MessageSquare, Building2, 
-  ExternalLink, CheckCircle2, Shield, ArrowUpRight, Loader2, BookOpen,
-  Info, Sparkles, Check, ThumbsUp, Layers, Compass, Tag, Calendar
+  ExternalLink, CheckCircle2, Shield, ArrowUpRight, Loader2, BookOpen
 } from 'lucide-react';
 import { FullDailyReportPayload } from '@/lib/db';
 
@@ -134,7 +132,7 @@ export default function DailyReportCard() {
                 </div>
                 <div>
                   <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--brand-obsidian)', marginBottom: '4px', letterSpacing: '-0.01em' }}>
-                    Curator's Formulation Science Note
+                    Curator&apos;s Formulation Science Note
                   </h4>
                   <p style={{ fontSize: '0.925rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
                     {report.editor_note}

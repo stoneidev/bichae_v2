@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Sparkles, FlaskConical, DollarSign, Award, ShieldCheck, ArrowRight } from 'lucide-react';
@@ -82,9 +83,9 @@ export default function AboutPage() {
               Bichae v2 operates independently. We do not accept paid placements to feature products in our daily deep dive. Every product is selected strictly based on formulation integrity, clinical active efficacy, and authentic global demand.
             </p>
             <div style={{ paddingTop: '12px' }}>
-              <a href="/" style={{ padding: '10px 22px', borderRadius: 'var(--radius-full)', background: 'var(--brand-rose)', color: '#FFF', fontWeight: 700, fontSize: '0.875rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                Explore Today's Single Feature <ArrowRight size={16} />
-              </a>
+              <Link href="/" style={{ padding: '10px 22px', borderRadius: 'var(--radius-full)', background: 'var(--brand-rose)', color: '#FFF', fontWeight: 700, fontSize: '0.875rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                Explore Today&apos;s Single Feature <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
 

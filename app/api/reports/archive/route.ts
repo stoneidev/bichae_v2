@@ -9,9 +9,10 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category') || undefined;
     const data = await getArchiveReportsFromDb(category);
     return NextResponse.json({ success: true, data });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
     return NextResponse.json(
-      { success: false, error: error.message || 'Internal Server Error' },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }

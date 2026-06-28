@@ -73,7 +73,7 @@ export default function ArchiveSection() {
           </div>
         ) : reports.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
-            No reports found for category "{selectedCategory}".
+            No reports found for category &quot;{selectedCategory}&quot;.
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>

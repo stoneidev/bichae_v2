@@ -286,7 +286,7 @@ const MOCK_ARCHIVE_REPORTS: ArchiveReportItem[] = [
 export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
   try {
     const context = getRequestContext();
-    const db = (context?.env as any)?.DB;
+    const db = (context?.env as Record<string, unknown>)?.DB as { prepare: (q: string) => { bind: (...args: unknown[]) => { first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> }; first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> } } | undefined;
     if (db && typeof db.prepare === 'function') {
       const reportRes = await db.prepare('SELECT * FROM reports WHERE is_active_daily = 1 LIMIT 1').first();
       if (reportRes) {
@@ -298,10 +298,10 @@ export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
 
         return {
           report,
-          product: productRes as Product,
-          priceMatrix: (priceRes.results || []) as PriceItem[],
-          keyIngredients: (ingredientsRes.results || []) as KeyIngredient[],
-          socialReviews: (reviewsRes.results || []) as CommunityReview[],
+          product: productRes as unknown as Product,
+          priceMatrix: (priceRes.results || []) as unknown as PriceItem[],
+          keyIngredients: (ingredientsRes.results || []) as unknown as KeyIngredient[],
+          socialReviews: (reviewsRes.results || []) as unknown as CommunityReview[],
         };
       }
     }
@@ -315,7 +315,7 @@ export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
 export async function getArchiveReportsFromDb(category?: string): Promise<ArchiveReportItem[]> {
   try {
     const context = getRequestContext();
-    const db = (context?.env as any)?.DB;
+    const db = (context?.env as Record<string, unknown>)?.DB as { prepare: (q: string) => { bind: (...args: unknown[]) => { first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> }; first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> } } | undefined;
     if (db && typeof db.prepare === 'function') {
       let query = `
         SELECT r.id, r.title, p.category, p.lowest_price_usd, p.best_deal_discount, r.ewg_status, r.product_id
@@ -323,7 +323,7 @@ export async function getArchiveReportsFromDb(category?: string): Promise<Archiv
         JOIN products p ON r.product_id = p.id
         WHERE r.is_active_daily = 0
       `;
-      const bindings: any[] = [];
+      const bindings: unknown[] = [];
       if (category && category !== 'All Categories' && category !== 'All') {
         query += ' AND p.category = ?';
         bindings.push(category);
@@ -334,15 +334,15 @@ export async function getArchiveReportsFromDb(category?: string): Promise<Archiv
       const res = bindings.length > 0 ? await stmt.bind(...bindings).all() : await stmt.all();
 
       if (res && res.results) {
-        return res.results.map((row: any) => ({
-          id: row.id,
-          title: row.title,
-          category: row.category,
-          price: `$${Number(row.lowest_price_usd).toFixed(2)} USD`,
-          discount: row.best_deal_discount,
+        return res.results.map((row: Record<string, unknown>) => ({
+          id: String(row.id || ''),
+          title: String(row.title || ''),
+          category: String(row.category || ''),
+          price: `$${Number(row.lowest_price_usd || 0).toFixed(2)} USD`,
+          discount: String(row.best_deal_discount || ''),
           rating: '4.9',
           tag: row.category === 'Sun Care' ? 'Hydrating' : (row.category === 'Toner & Mist' ? 'Acne Safe' : 'EWG Green'),
-          productId: row.product_id
+          productId: String(row.product_id || '')
         }));
       }
     }
@@ -359,7 +359,7 @@ export async function getArchiveReportsFromDb(category?: string): Promise<Archiv
 export async function getProductByIdFromDb(id: string): Promise<Product | null> {
   try {
     const context = getRequestContext();
-    const db = (context?.env as any)?.DB;
+    const db = (context?.env as Record<string, unknown>)?.DB as { prepare: (q: string) => { bind: (...args: unknown[]) => { first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> }; first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> } } | undefined;
     if (db && typeof db.prepare === 'function') {
       const res = await db.prepare('SELECT * FROM products WHERE id = ?').bind(id).first();
       if (res) return res as Product;

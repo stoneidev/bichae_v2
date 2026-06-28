@@ -19,9 +19,10 @@ export async function GET(
     }
 
     return NextResponse.json({ success: true, data: product });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
     return NextResponse.json(
-      { success: false, error: error.message || 'Internal Server Error' },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
