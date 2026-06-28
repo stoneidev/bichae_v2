@@ -51,8 +51,8 @@ export default function Header() {
             <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
               BICHAE <span style={{ color: 'var(--brand-rose)', fontSize: '1.1rem', fontFamily: 'var(--font-sans)', fontWeight: 800 }}>v2</span>
             </span>
-            <div style={{ fontSize: '0.675rem', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-              Daily K-Beauty Science & Pricing
+            <div className="header-logo-subtitle">
+              Daily K-Beauty Science &amp; Pricing
             </div>
           </div>
         </Link>
@@ -69,7 +69,7 @@ export default function Header() {
               padding: '6px 12px', borderRadius: 'var(--radius-full)', transition: 'all 0.2s'
             }}
           >
-            <Info size={16} /> How It Works
+            <Info size={16} /> <span className="header-nav-link-label">How It Works</span>
           </Link>
 
           <button
@@ -91,11 +91,11 @@ export default function Header() {
               padding: '8px 16px', borderRadius: 'var(--radius-full)',
               background: 'var(--brand-obsidian)', color: '#FFF',
               fontSize: '0.825rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px',
-              boxShadow: 'var(--shadow-sm)'
+              boxShadow: 'var(--shadow-sm)', whiteSpace: 'nowrap'
             }}
           >
             <FlaskConical size={15} color="var(--brand-rose)" />
-            Independently Reviewed
+            <span className="header-cta-label">Independently Reviewed</span>
           </span>
         </div>
 

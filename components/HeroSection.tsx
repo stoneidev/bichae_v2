@@ -21,7 +21,7 @@ export default function HeroSection() {
 
         {/* Hero Title focused purely on product curation */}
         <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.2rem, 4.5vw, 3.5rem)',
+          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.75rem, 6vw, 3.5rem)',
           fontWeight: 700, lineHeight: 1.18, letterSpacing: '-0.02em',
           color: 'var(--text-primary)', maxWidth: '900px', margin: '0 auto 12px auto'
         }}>
