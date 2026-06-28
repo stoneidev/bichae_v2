@@ -12,9 +12,16 @@ import type { CommunityReview } from '@/shared';
 import { useReveal } from '@/shared/lib/useReveal';
 import { getBuyingGuide } from '../model/buyingGuides';
 
-export function DailyReportWidget() {
-  const [reportData, setReportData] = useState<FullDailyReportPayload | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+export interface DailyReportWidgetProps {
+  /** When set, fetch this specific report (permanent /report/[id] page). */
+  reportId?: string;
+  /** Server-rendered payload — skips client fetch entirely (best for SEO). */
+  initialData?: FullDailyReportPayload | null;
+}
+
+export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetProps = {}) {
+  const [reportData, setReportData] = useState<FullDailyReportPayload | null>(initialData ?? null);
+  const [loading, setLoading] = useState<boolean>(!initialData);
   const [socialFilter, setSocialFilter] = useState<'ALL' | 'REDDIT' | 'YOUTUBE' | 'INSTAGRAM'>('ALL');
   const [inciTab, setInciTab] = useState<'ACTIVES' | 'FULL'>('ACTIVES');
   const [selectedReview, setSelectedReview] = useState<CommunityReview | null>(null);
@@ -23,21 +30,24 @@ export function DailyReportWidget() {
   useReveal(reportData);
 
   useEffect(() => {
-    async function fetchDailyReport() {
+    // Already have server-rendered data — nothing to fetch.
+    if (initialData) return;
+    async function fetchReport() {
       try {
-        const res = await fetch('/api/reports/daily');
+        const endpoint = reportId ? `/api/reports/${reportId}` : '/api/reports/daily';
+        const res = await fetch(endpoint);
         const json = await res.json();
         if (json.success && json.data) {
           setReportData(json.data);
         }
       } catch (err) {
-        console.error('Failed to fetch daily report:', err);
+        console.error('Failed to fetch report:', err);
       } finally {
         setLoading(false);
       }
     }
-    fetchDailyReport();
-  }, []);
+    fetchReport();
+  }, [reportId, initialData]);
 
   if (loading) {
     return (

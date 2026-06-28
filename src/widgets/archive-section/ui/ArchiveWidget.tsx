@@ -87,7 +87,7 @@ export function ArchiveWidget() {
             {reports.map((item, i) => (
               <a
                 key={item.id}
-                href="#"
+                href={`/report/${item.id}`}
                 data-reveal
                 className="archive-card"
                 style={{

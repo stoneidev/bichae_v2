@@ -201,7 +201,7 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       price_usd: 22.00,
       discount_text: '15% OFF',
       promo_code: 'PRIME',
-      buy_url: 'https://www.amazon.com/Hyaluronic-Hydration-Moisture-Plumping-Fragrance/dp/B0DLB58CWR/ref=sr_1_5?crid=29E0YPPDPJ18G&dib=eyJ2IjoiMSJ9.TyPlwy1VxO1DCXqU7Sm5dMOimbTXUtrbd4FB9ZpJTDr8oBjzgQgdknhNCqINz95A8oMZucoVGypKnmKX2Hqn4-AZtKiaRG_6iP6vt-rJ5_fT2V_Ak4U1xbac6D_bDaicKJqtQkZBbnUPdoXHDlbcNWO-UFeNvYSbMuwoOqAQXbGoU48E9U_6AZD7KUfm3Ur0s38xFL-eU8gNIOyd1UAGcmJR1oJ4UqYGnGHclFF1ChvL6kEoHYbk5uovP6PiVoD_88uzFVNHc9-6OWGzYgDMebO3VFrmrL4QH60MAheDp0A.9Gujy8KX6L57EQF0R05QjyqZL6kCcCSG2cYNXEuDz08&dib_tag=se&keywords=Anua+PDRN+Hyaluronic+Capsule+100+Serum+30ml+Double+Set&nsdOptOutParam=true&qid=1782649369&sprefix=anua+pdrn+hyaluronic+capsule+100+serum+30ml+double+set%2Caps%2C266&sr=8-5',
+      buy_url: 'https://amzn.to/4eRn8wc',
       is_lowest: 0
     }
   ],
@@ -405,4 +405,103 @@ export async function getProductByIdFromDb(id: string): Promise<Product | null> 
   }
   if (MOCK_DAILY_REPORT.product.id === id) return MOCK_DAILY_REPORT.product;
   return null;
+}
+
+type D1Like = {
+  prepare: (q: string) => {
+    bind: (...args: unknown[]) => { first: () => Promise<unknown>; all: () => Promise<{ results: Record<string, unknown>[] }> };
+    first: () => Promise<unknown>;
+    all: () => Promise<{ results: Record<string, unknown>[] }>;
+  };
+};
+
+function getDb(): D1Like | undefined {
+  try {
+    const context = getRequestContext();
+    const db = (context?.env as Record<string, unknown>)?.DB as D1Like | undefined;
+    if (db && typeof db.prepare === 'function') return db;
+  } catch {
+    /* no request context (local/build) */
+  }
+  return undefined;
+}
+
+/**
+ * Full report payload for a specific report id — powers the permanent
+ * /report/[id] pages. Falls back to the mock report when its id matches or
+ * when no DB is available (local dev / static build).
+ */
+export async function getReportByIdFromDb(id: string): Promise<FullDailyReportPayload | null> {
+  const db = getDb();
+  if (db) {
+    try {
+      const reportRes = await withTimeout(db.prepare('SELECT * FROM reports WHERE id = ?').bind(id).first());
+      if (reportRes) {
+        const report = reportRes as Report;
+        const productRes = await withTimeout(db.prepare('SELECT * FROM products WHERE id = ?').bind(report.product_id).first());
+        const priceRes = await withTimeout(db.prepare('SELECT * FROM price_matrix WHERE product_id = ? ORDER BY price_usd ASC').bind(report.product_id).all());
+        const ingredientsRes = await withTimeout(db.prepare('SELECT * FROM key_ingredients WHERE product_id = ?').bind(report.product_id).all());
+        const reviewsRes = await withTimeout(db.prepare('SELECT * FROM social_reviews WHERE product_id = ?').bind(report.product_id).all());
+        return {
+          report,
+          product: productRes as unknown as Product,
+          priceMatrix: (priceRes.results || []) as unknown as PriceItem[],
+          keyIngredients: (ingredientsRes.results || []) as unknown as KeyIngredient[],
+          socialReviews: (reviewsRes.results || []) as unknown as CommunityReview[],
+        };
+      }
+    } catch (err) {
+      console.warn('D1 report-by-id query failed, falling back to mock:', err);
+    }
+  }
+
+  if (MOCK_DAILY_REPORT.report.id === id) return MOCK_DAILY_REPORT;
+
+  // Local/build fallback: archived ids have no full mock payload, so synthesize
+  // one from the archive summary on top of the base report shape. Real D1 has
+  // complete rows for every report, so this branch only runs without a DB.
+  const archived = MOCK_ARCHIVE_REPORTS.find((a) => a.id === id);
+  if (archived) {
+    return {
+      ...MOCK_DAILY_REPORT,
+      report: { ...MOCK_DAILY_REPORT.report, id: archived.id, title: archived.title, is_active_daily: 0 },
+      product: { ...MOCK_DAILY_REPORT.product, category: archived.category, name: archived.title },
+    };
+  }
+  return null;
+}
+
+export interface ReportSummary {
+  id: string;
+  title: string;
+  publishDate: string;
+}
+
+/**
+ * Lightweight list of every report (active + archived) for the sitemap and
+ * cross-linking. Sorted newest-first.
+ */
+export async function getAllReportSummariesFromDb(): Promise<ReportSummary[]> {
+  const db = getDb();
+  if (db) {
+    try {
+      const res = await withTimeout(db.prepare('SELECT id, title, publish_date FROM reports ORDER BY id DESC').all());
+      if (res && res.results) {
+        return res.results.map((row: Record<string, unknown>) => ({
+          id: String(row.id || ''),
+          title: String(row.title || ''),
+          publishDate: String(row.publish_date || ''),
+        }));
+      }
+    } catch (err) {
+      console.warn('D1 report-summaries query failed, falling back to mock:', err);
+    }
+  }
+
+  // Mock fallback: the active report plus the archived ones.
+  const archived = MOCK_ARCHIVE_REPORTS.map((a) => ({ id: a.id, title: a.title, publishDate: '' }));
+  return [
+    { id: MOCK_DAILY_REPORT.report.id, title: MOCK_DAILY_REPORT.report.title, publishDate: MOCK_DAILY_REPORT.report.publish_date },
+    ...archived,
+  ];
 }
