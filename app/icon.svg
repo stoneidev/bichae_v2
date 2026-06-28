@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Luxury Onyx Noir Rounded Background -->
+  <rect width="128" height="128" rx="28" fill="#0A0A0C"/>
+  <rect width="124" height="124" x="2" y="2" rx="26" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+  
+  <!-- Subtle Velvet Burgundy Radiant Accent Glow -->
+  <circle cx="64" cy="64" r="36" fill="#800020" opacity="0.3" filter="blur(8px)"/>
+  
+  <!-- High-Fashion Sparkling Diamond/Star Emblem (Sparkles) -->
+  <!-- Main Center Diamond Star -->
+  <path d="M64 20 L72 56 L108 64 L72 72 L64 108 L56 72 L20 64 L56 56 Z" fill="#FFFFFF"/>
+  
+  <!-- Accent Burgundy Inner Sparkle Core -->
+  <path d="M64 42 L67 61 L86 64 L67 67 L64 86 L61 67 L42 64 L61 61 Z" fill="#800020"/>
+  <path d="M64 48 L66 62 L80 64 L66 66 L64 80 L62 66 L48 64 L62 62 Z" fill="#FFFFFF"/>
+</svg>

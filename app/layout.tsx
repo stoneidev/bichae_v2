@@ -17,18 +17,23 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const SITE_NAME = "Bichae";
+const SITE_NAME = "Bichae Today";
 const SITE_DESCRIPTION =
   "A daily, independent deep dive into one exceptional K-beauty product — full ingredient analysis, verified global pricing, and community consensus.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bichae.pages.dev"),
+  metadataBase: new URL("https://bichae.today"),
   title: {
     default: `${SITE_NAME} — Daily K-Beauty Science & Price Intelligence`,
     template: `%s · ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
   keywords: [
     "K-beauty",
     "Korean skincare",
@@ -36,6 +41,7 @@ export const metadata: Metadata = {
     "ingredient safety",
     "price comparison",
     "skincare review",
+    "Bichae Today",
   ],
   openGraph: {
     type: "website",
