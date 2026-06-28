@@ -19,7 +19,14 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/src/*": ["./src/*"],
+      "@/widgets": ["./src/widgets/index.ts"],
+      "@/widgets/*": ["./src/widgets/*"],
+      "@/shared": ["./src/shared/index.ts"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/entities": ["./src/entities/index.ts"],
+      "@/entities/*": ["./src/entities/*"]
     }
   },
   "include": [

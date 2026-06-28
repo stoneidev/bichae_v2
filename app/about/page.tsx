@@ -2,14 +2,13 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import { HeaderWidget, FooterWidget } from '@/src/widgets';
 import { Sparkles, FlaskConical, DollarSign, Award, ShieldCheck, ArrowRight } from 'lucide-react';
 
 export default function AboutPage() {
   return (
     <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-main)' }}>
-      <Header />
+      <HeaderWidget />
       
       <section style={{ padding: '60px 0 80px 0' }}>
         <div className="container" style={{ maxWidth: '960px' }}>
@@ -19,15 +18,16 @@ export default function AboutPage() {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '6px 16px', borderRadius: 'var(--radius-full)',
-              background: 'var(--brand-rose-light)', border: '1px solid rgba(224, 122, 95, 0.2)',
-              fontSize: '0.8rem', fontWeight: 600, color: 'var(--brand-rose)', marginBottom: '16px'
+              background: 'var(--brand-rose-light)', border: '1px solid rgba(128, 0, 32, 0.15)',
+              fontSize: '0.8rem', fontWeight: 700, color: 'var(--brand-rose)', marginBottom: '16px',
+              letterSpacing: '0.06em', textTransform: 'uppercase'
             }}>
-              <Sparkles size={14} />
+              <Sparkles size={14} color="var(--brand-rose)" />
               <span>ABOUT BICHAE V2 • EDITORIAL PHILOSOPHY</span>
             </div>
 
             <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.5rem, 4vw, 3.5rem)', fontWeight: 700, marginBottom: '16px', color: 'var(--text-primary)' }}>
-              Independent Science & Price Curation
+              Independent Science &amp; Price Curation
             </h1>
             
             <p style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '720px', margin: '0 auto' }}>
@@ -59,10 +59,10 @@ export default function AboutPage() {
             </div>
 
             <div className="glass-panel" style={{ padding: '28px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(212, 163, 115, 0.15)', color: 'var(--brand-champagne)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--brand-rose-light)', color: 'var(--brand-rose)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                 <Award size={22} />
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-primary)' }}>Reddit & Multi-Platform Consensus</h3>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-primary)' }}>Reddit &amp; Multi-Platform Consensus</h3>
               <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
                 We aggregate verified community discussions from r/AsianBeauty and r/SkincareAddiction alongside trusted YouTube dermatologist reviews and Instagram beauty editor swatch tests.
               </p>
@@ -92,7 +92,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <Footer />
+      <FooterWidget />
     </main>
   );
 }
