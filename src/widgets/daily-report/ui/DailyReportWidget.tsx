@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  ExternalLink, CheckCircle2, Shield, ArrowUpRight, BookOpen, Package,
+  ExternalLink, CheckCircle2, Shield, ArrowUpRight, Package,
   Leaf, Sun, Lightbulb, Microscope, ScrollText, Camera, MapPin, Sparkles, Quote, Award
 } from 'lucide-react';
 import type { FullDailyReportPayload } from '@/entities/report';
@@ -63,35 +63,32 @@ export function DailyReportWidget() {
             padding: '40px 48px', borderBottom: '1px solid var(--border-subtle)',
             background: 'linear-gradient(180deg, var(--bg-main) 0%, var(--bg-card) 100%)'
           }}>
-            <div className="product-hero-grid" style={{ alignItems: 'center' }}>
+            <div className="product-hero-grid">
 
               {/* High-End Editorial Studio Photo Showcase */}
-              <div style={{ textAlign: 'center' }}>
+              <div style={{
+                position: 'relative', width: '100%',
+                borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid rgba(10, 10, 12, 0.12)',
+                boxShadow: '0 20px 40px rgba(10, 10, 12, 0.1)', background: '#FFF'
+              }}>
+                <img
+                  src={product.image_url || '/images/beauty_of_joseon_sunscreen.jpg'}
+                  alt={`${product.brand_name} ${product.name}`}
+                  width={340}
+                  height={340}
+                  style={{ width: '100%', height: 'auto', aspectRatio: '1 / 1', display: 'block', objectFit: 'cover' }}
+                />
                 <div style={{
-                  position: 'relative', display: 'inline-block', width: '100%', maxWidth: '290px',
-                  borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid rgba(10, 10, 12, 0.12)',
-                  boxShadow: '0 20px 40px rgba(10, 10, 12, 0.1)', background: '#FFF',
-                  transition: 'transform 0.3s ease'
+                  position: 'absolute', bottom: '14px', left: '14px',
+                  padding: '5px 12px', borderRadius: 'var(--radius-full)', background: 'rgba(10, 10, 12, 0.85)',
+                  color: '#FFF', fontSize: '0.725rem', fontWeight: 700, backdropFilter: 'blur(6px)',
+                  display: 'inline-flex', alignItems: 'center', gap: '6px', letterSpacing: '0.04em'
                 }}>
-                  <img
-                    src={product.image_url || '/images/beauty_of_joseon_sunscreen.jpg'}
-                    alt={`${product.brand_name} ${product.name}`}
-                    width={290}
-                    height={290}
-                    style={{ width: '100%', height: 'auto', aspectRatio: '1 / 1', display: 'block', objectFit: 'cover' }}
-                  />
-                  <div style={{
-                    position: 'absolute', bottom: '14px', left: '14px',
-                    padding: '5px 12px', borderRadius: 'var(--radius-full)', background: 'rgba(10, 10, 12, 0.85)',
-                    color: '#FFF', fontSize: '0.725rem', fontWeight: 700, backdropFilter: 'blur(6px)',
-                    display: 'inline-flex', alignItems: 'center', gap: '6px', letterSpacing: '0.04em'
-                  }}>
-                    <Camera size={13} color="var(--brand-rose)" /> Verified Studio Shot
-                  </div>
+                  <Camera size={13} color="var(--brand-rose)" /> Verified Studio Shot
                 </div>
               </div>
 
-              {/* Title & Editorial Metadata */}
+              {/* Title, Editorial Metadata & Price Summary */}
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
                   <span className="badge badge-trending" style={{ fontWeight: 800, letterSpacing: '0.05em' }}>EDITION NO. {report.id}</span>
@@ -101,7 +98,7 @@ export function DailyReportWidget() {
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Published: {report.publish_date}</span>
                 </div>
 
-                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.85rem, 3.2vw, 2.4rem)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '14px', lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.6rem, 2.6vw, 2.1rem)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '14px', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
                   {report.title}
                 </h2>
 
@@ -116,56 +113,60 @@ export function DailyReportWidget() {
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 14px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}><Sun size={13} color="var(--brand-rose)" /> {product.category}</span>
                   {product.origin && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 14px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', border: '1px solid var(--border-subtle)' }}><MapPin size={13} /> {product.origin}</span>}
                 </div>
-              </div>
 
-              {/* High-Fashion Price Highlight Box */}
-              <div className="product-hero-price" style={{
-                background: 'var(--brand-obsidian)', color: '#FFF', padding: '28px', borderRadius: 'var(--radius-md)',
-                border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: '16px',
-                boxShadow: 'var(--shadow-md)'
-              }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#A0A4B0', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Global Verified Lowest</span>
-                  <span className="price-amount" style={{ fontSize: '2.1rem', fontWeight: 800, color: '#FFF', lineHeight: 1.05 }}>
-                    ${Number(product.lowest_price_usd).toFixed(2)} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--brand-rose-light)' }}>USD</span>
-                  </span>
-                </div>
-                <div style={{ height: '1px', background: 'rgba(255,255,255,0.12)' }}></div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '12px' }}>
-                  <span style={{ fontSize: '0.825rem', fontWeight: 600, color: '#D1D5DB' }}>Official MSRP</span>
-                  <span className="price-amount" style={{ fontSize: '0.95rem', fontWeight: 600, color: '#9CA3AF', textDecoration: 'line-through' }}>${Number(product.msrp_usd).toFixed(2)}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '12px' }}>
-                  <span style={{ fontSize: '0.825rem', fontWeight: 600, color: '#D1D5DB' }}>Best Deal Partner</span>
-                  <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#FFF', textAlign: 'right', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                    <Award size={13} color="var(--brand-rose)" /> {product.best_deal_platform} ({product.best_deal_discount})
-                  </span>
+                {/* Horizontal Price Summary Bar */}
+                <div className="product-price-bar">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#A0A4B0', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Global Verified Lowest</span>
+                    <span className="price-amount" style={{ fontSize: '1.9rem', fontWeight: 800, color: '#FFF', lineHeight: 1.05 }}>
+                      ${Number(product.lowest_price_usd).toFixed(2)} <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--brand-rose-light)' }}>USD</span>
+                    </span>
+                  </div>
+                  <div className="price-divider" />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', justifyContent: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#A0A4B0', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Official MSRP</span>
+                    <span className="price-amount" style={{ fontSize: '1rem', fontWeight: 600, color: '#9CA3AF', textDecoration: 'line-through' }}>${Number(product.msrp_usd).toFixed(2)}</span>
+                  </div>
+                  <div className="price-divider" />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', justifyContent: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#A0A4B0', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Best Deal Partner</span>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#FFF', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                      <Award size={14} color="var(--brand-rose)" /> {product.best_deal_platform} ({product.best_deal_discount})
+                    </span>
+                  </div>
                 </div>
               </div>
 
             </div>
 
-            {/* High-Fashion Curator Science Note Pull-Quote */}
+            {/* High-Fashion Curator Science Note Pull-Quote (Bespoke Magazine Editorial) */}
             {report.editor_note && (
               <div style={{
-                marginTop: '36px', padding: '28px 32px', background: 'var(--bg-main)', borderRadius: 'var(--radius-md)',
-                borderLeft: '4px solid var(--brand-rose)', borderTop: '1px solid var(--border-subtle)',
-                borderRight: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)',
-                display: 'flex', gap: '20px', alignItems: 'flex-start'
+                marginTop: '36px', padding: '32px 36px', background: 'var(--bg-main)', borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-subtle)', position: 'relative', overflow: 'hidden'
               }}>
-                <div style={{
-                  width: '40px', height: '40px', borderRadius: '50%', background: 'var(--brand-obsidian)',
-                  color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
-                }}>
-                  <BookOpen size={18} />
-                </div>
-                <div>
-                  <h4 style={{ fontSize: '0.825rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
-                    Curator&apos;s Formulation Science Note
-                  </h4>
-                  <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', lineHeight: 1.65, fontStyle: 'italic' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      CURATOR&apos;S FORMULATION DOSSIER
+                    </span>
+                    <span style={{ fontSize: '0.725rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      VERIFIED DERMATOLOGICAL REVIEW
+                    </span>
+                  </div>
+                  
+                  <p style={{
+                    fontFamily: 'var(--font-serif)', fontSize: '1.075rem', color: 'var(--text-primary)',
+                    lineHeight: 1.7, fontStyle: 'italic', fontWeight: 400, margin: '4px 0'
+                  }}>
                     &ldquo;{report.editor_note}&rdquo;
                   </p>
+
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '6px' }}>
+                    <span style={{ fontSize: '0.775rem', fontWeight: 800, color: 'var(--brand-obsidian)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      — BICHAE EDITORIAL RESEARCH TEAM
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
