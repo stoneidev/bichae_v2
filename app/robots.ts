@@ -13,6 +13,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       },
     ],
-    sitemap: 'https://bichae-v2.pages.dev/sitemap.xml',
+    sitemap: 'https://bichae.today/sitemap.xml',
   };
 }

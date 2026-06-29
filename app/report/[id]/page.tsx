@@ -5,7 +5,7 @@ import { getReportByIdFromDb } from '@/lib/db';
 
 export const runtime = 'edge';
 
-const SITE_URL = 'https://bichae-v2.pages.dev';
+const SITE_URL = 'https://bichae.today';
 
 export async function generateMetadata({
   params,
