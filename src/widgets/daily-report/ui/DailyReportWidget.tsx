@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   ExternalLink, CheckCircle2, ArrowUpRight, Package,
   Leaf, Sun, Microscope, ScrollText, Camera, Sparkles, Quote, Award,
   ThumbsUp, Globe, ShieldCheck, FlaskRound, X, MessageSquare, Play, Heart,
-  Lock, Database, Scale, BadgeCheck
+  Lock, Database, Scale, BadgeCheck, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import type { FullDailyReportPayload } from '@/entities/report';
 import type { CommunityReview } from '@/shared';
@@ -127,7 +128,37 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
         <div style={{ display: 'flex', flexDirection: 'column' }}>
 
           {/* CHAPTER I: PRODUCT OVERVIEW & STUDIO SHOWCASE */}
-          <div data-reveal className="chapter" style={{ paddingTop: '40px' }}>
+          <div data-reveal className="chapter" style={{ paddingTop: '30px' }}>
+            
+            {/* Edition Navigation Strip (Move between Yesterday & Today) */}
+            <div style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              padding: '12px 20px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)',
+              border: '1px solid var(--border-subtle)', marginBottom: '32px', flexWrap: 'wrap', gap: '12px'
+            }}>
+              {report.id === '045' ? (
+                <Link href="/report/044" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-rose)', textDecoration: 'none' }}>
+                  <ChevronLeft size={16} /> Edition #044 (Anua PDRN Serum)
+                </Link>
+              ) : (
+                <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-secondary)', textDecoration: 'none' }}>
+                  <ChevronLeft size={16} /> Back to Featured Edition (#045)
+                </Link>
+              )}
+              <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+                Bichae Daily Intelligence Archives
+              </span>
+              {report.id === '044' ? (
+                <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-rose)', textDecoration: 'none' }}>
+                  Edition #045 (SKIN1004 Sun Serum) <ChevronRight size={16} />
+                </Link>
+              ) : (
+                <span style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-sage)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  Latest Daily Edition <CheckCircle2 size={14} />
+                </span>
+              )}
+            </div>
+
             <div className="product-hero-grid">
 
               {/* High-End Editorial Studio Photo Showcase */}
@@ -294,17 +325,17 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                           </span>
                           <div>
                             <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{item.platform_name}</div>
-                            {item.stock_status?.toLowerCase().includes('official') || item.platform_name?.toLowerCase().includes('naver') ? (
+                            {item.platform_name?.toLowerCase().includes('naver') || item.platform_name?.toLowerCase().includes('official brand') ? (
                               <span style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#03C75A', marginTop: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                                 <ShieldCheck size={12} color="#03C75A" /> Official Direct Store (공식몰)
                               </span>
                             ) : item.is_lowest ? (
                               <span style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--brand-rose)', marginTop: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                <Award size={11} color="var(--brand-rose)" /> Lowest Price
+                                <Award size={11} color="var(--brand-rose)" /> Lowest Price Deal
                               </span>
                             ) : (
                               <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--brand-sage)', marginTop: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                <BadgeCheck size={12} /> Authorized Distributor
+                                <BadgeCheck size={12} /> Authorized Global Partner (공식 파트너사)
                               </span>
                             )}
                           </div>
@@ -373,13 +404,17 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                       </span>
                       <div>
                         <div style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)' }}>{item.platform_name}</div>
-                        {item.is_lowest ? (
+                        {item.platform_name?.toLowerCase().includes('naver') || item.platform_name?.toLowerCase().includes('official brand') ? (
+                          <span style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#03C75A', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            <ShieldCheck size={12} color="#03C75A" /> Official Direct Store (공식몰)
+                          </span>
+                        ) : item.is_lowest ? (
                           <span style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--brand-rose)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                             <Award size={12} color="var(--brand-rose)" /> Lowest Price Deal
                           </span>
                         ) : (
                           <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--brand-sage)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            <BadgeCheck size={12} /> Authorized
+                            <BadgeCheck size={12} /> Authorized Global Partner (공식 파트너사)
                           </span>
                         )}
                       </div>
@@ -741,11 +776,117 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
 
           <hr className="rule" />
 
-          {/* CHAPTER VI: BRAND ORIGIN & VERIFICATION */}
+          {/* CHAPTER V: SERUM SCIENCE & FORMULATION EFFICACY */}
           <div data-reveal className="chapter">
-            <div className="eyebrow">Chapter VII — The Maker</div>
+            <div className="eyebrow">Chapter V — Dermal Science</div>
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>성분 과학 &amp; 공식 메커니즘 효능 설명</h3>
+            <p className="measure-wide" style={{ fontSize: '1.025rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '28px' }}>
+              피부과 연구진과 임상 논문에 기반한 스킨케어 유효 성분의 과학적 자극 완화 및 수분 공급 메커니즘을 설명합니다.
+            </p>
 
-            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>Brand Heritage &amp; Supply Chain</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+              <div style={{ padding: '28px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'inline-flex', padding: '10px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card)', color: 'var(--brand-rose)', marginBottom: '16px' }}>
+                  <FlaskRound size={22} />
+                </div>
+                <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>마다가스카르 센텔라 98,000ppm</h4>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                  태고의 청정 자연 마다가스카르에서 수확한 병풀추출물이 마데카소사이드(Madecassoside)와 아시아티코사이드 성분을 손실 없이 전달하여 외부 자극과 자외선으로 유발된 피부 열감 및 micro-redness(붉은기)를 빠르게 진정시킵니다.
+                </p>
+              </div>
+
+              <div style={{ padding: '28px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'inline-flex', padding: '10px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card)', color: 'var(--brand-sage)', marginBottom: '16px' }}>
+                  <Microscope size={22} />
+                </div>
+                <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>Hyalu-Cica 황금비율 수분 매트릭스</h4>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                  고분자·중분자·저분자 히알루론산과 진정 병풀 성분을 최적의 황금비율로 결합한 바이오 복합체입니다. 피부 표면의 수분 증발(TEWL)을 방지하는 진정 보호막을 형성함과 동시에 진피 깊은 곳까지 수분을 충전합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+
+          <hr className="rule" />
+
+          {/* CHAPTER VI: HOW TO CHOOSE A PREMIUM SERUM */}
+          <div data-reveal className="chapter">
+            <div className="eyebrow">Chapter VI — Buyer Guide</div>
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>좋은 세럼을 고르는 3가지 전문가 노하우</h3>
+            <p className="measure-wide" style={{ fontSize: '1.025rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '28px' }}>
+              수많은 브랜드 세럼 중 내 피부에 진정한 효능을 발휘하는 프리미엄 세럼을 구별하는 전문가 기준입니다.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {[
+                {
+                  step: '01',
+                  title: '단순 컨셉 성분이 아닌 실제 핵심 활성 성분 함량(ppm) 확인',
+                  desc: '성분표에 이름만 올린 소량 추출물이 아닌, 98,000ppm과 같이 실제 임상 효능을 발휘할 수 있는 유효 농도가 정직하게 기술되어 있는지 확인해야 합니다.'
+                },
+                {
+                  step: '02',
+                  title: '안구 자극(눈 시림) 및 비모공막힘(Non-Comedogenic) 테스트',
+                  desc: '특히 자외선 차단 기능이나 유효 성분이 결합된 선세럼/기능성 세럼의 경우 안과 전문의 테스트를 통과하여 눈 시림이 없고 모공을 막지 않는지 검증해야 합니다.'
+                },
+                {
+                  step: '03',
+                  title: '다음 단계 메이크업과의 밀착력 및 끈적임 없는 텍스처',
+                  desc: '흡수 후 밀림 현상(pilling)이나 번들거림 없이 10초 만에 흡수되어 파운데이션과 베이스 메이크업을 밀착시키는 수분 텍스처인지 확인하는 것이 핵심입니다.'
+                }
+              ].map((guide) => (
+                <div key={guide.step} style={{ display: 'flex', gap: '20px', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)' }}>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 800, color: 'var(--brand-rose)' }}>{guide.step}</span>
+                  <div>
+                    <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>{guide.title}</h4>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65, margin: 0 }}>{guide.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+
+          <hr className="rule" />
+
+          {/* CHAPTER VII: APPLICATION CLINIC */}
+          <div data-reveal className="chapter">
+            <div className="eyebrow">Chapter VII — Application Clinic</div>
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>세럼 완벽 사용법 &amp; 올바른 레이어링 가이드</h3>
+            <p className="measure-wide" style={{ fontSize: '1.025rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '28px' }}>
+              세럼의 유효 성분을 피부 속 깊은 곳까지 100% 전달하는 데일리 스킨케어 루틴입니다.
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+              <div style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 1 • 피부결 정돈</div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>토너 후 약간의 수분 잔여감</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>약산성 클렌징 후 약산성 토너로 피부결을 정돈하고, 피부에 약간의 수분감이 남아있는 상태에서 세럼을 도포합니다.</p>
+              </div>
+
+              <div style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 2 • 적량 펌핑 &amp; 흡수</div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>2~3회 펌핑 후 지긋이 누르기</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>얼굴 전체와 목 부위에 2~3회 펌핑하여 펴 바른 후, 손바닥의 체온을 이용해 지긋이 눌러 세럼을 고르게 흡수시킵니다.</p>
+              </div>
+
+              <div style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 3 • 외출 전 재도포</div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>자외선 차단 및 메이크업 밀착</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>외출 15분 전 자외선이 잘 노출되는 광대와 이마 부위에 한 번 더 얇게 레이어링 하면 들뜸 없는 유리알 광채가 완성됩니다.</p>
+              </div>
+            </div>
+          </div>
+
+
+          <hr className="rule" />
+
+          {/* CHAPTER VIII: BRAND ORIGIN & OFFICIAL DIRECT STORE */}
+          <div data-reveal className="chapter">
+            <div className="eyebrow">Chapter VIII — The Maker</div>
+
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>Brand Heritage &amp; Official Direct Store</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
@@ -755,12 +896,25 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                 </p>
               </div>
 
+              {/* Official Brand Direct Store Highlight Showcase Card */}
+              <div style={{
+                padding: '24px', borderRadius: 'var(--radius-md)', background: 'var(--bg-card)',
+                border: '1px solid #03C75A', boxShadow: '0 4px 20px rgba(3, 199, 90, 0.08)',
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px'
+              }}>
+                <div>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: 800, color: '#03C75A', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                    <ShieldCheck size={16} color="#03C75A" /> Official Direct Brand Store (공식 브랜드 직영몰)
+                  </div>
+                  <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>SKIN1004 네이버 공식 브랜드스토어</h4>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px', margin: 0 }}>본사 직영 정품 보장 · 네이버 도착보장 빠른 배송 (KRW 27,650)</p>
+                </div>
+                <a href="https://brand.naver.com/skin1004/products/10420474053" target="_blank" rel="noreferrer" className="btn-pdp" style={{ padding: '12px 24px', borderRadius: 'var(--radius-full)', background: '#03C75A', color: '#FFF', fontWeight: 800, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', boxShadow: '0 4px 12px rgba(3, 199, 90, 0.25)' }}>
+                  공식몰 바로가기 <ExternalLink size={15} />
+                </a>
+              </div>
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-                {product.brand_website && (
-                  <a href={product.brand_website} target="_blank" rel="noreferrer" className="btn-pdp" style={{ padding: '12px 26px', borderRadius: 'var(--radius-full)', background: 'var(--brand-obsidian)', color: '#FFF', fontWeight: 700, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-                    Visit Official Brand Site <ExternalLink size={15} />
-                  </a>
-                )}
                 <span style={{ fontSize: '0.85rem', color: 'var(--brand-sage)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '7px' }}>
                   <ShieldCheck size={17} /> Authentic, direct-from-manufacturer supply chain
                 </span>
