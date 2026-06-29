@@ -114,7 +114,7 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
     category: 'Sun Care',
     description: 'A non-nano chemical sun serum enriched with 98,000ppm Madagascan Centella and Hyaluronic Acid that calms skin irritation while shielding against broad-spectrum UV rays.',
     detailed_story: 'Selected as the #1 Global Sun Serum across trusted retailers, SKIN1004’s Hyalu-Cica Water-Fit Sun Serum combines advanced photostable European UV filters with 7 organic sprout extracts. Its breathable water-fit texture absorbs instantly into sensitive skin, creating a smooth, hydrated canvas under foundation without pilling.',
-    image_url: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=800&q=80',
+    image_url: '/images/skin1004_sun_serum_twin.jpg',
     volume: '50mL x 2 (Twin Pack 2ea Value Set)',
     skin_type: 'All Skin Types (Ideal for Sensitive, Dehydrated & Acne-Prone)',
     texture: 'Lightweight, ultra-hydrating water-fit fluid serum',
@@ -471,10 +471,8 @@ export async function getReportByIdFromDb(id: string): Promise<FullDailyReportPa
   }
 
   if (MOCK_DAILY_REPORT.report.id === id) return MOCK_DAILY_REPORT;
+  if (id === '044') return MOCK_ANUA_REPORT;
 
-  // Local/build fallback: archived ids have no full mock payload, so synthesize
-  // one from the archive summary on top of the base report shape. Real D1 has
-  // complete rows for every report, so this branch only runs without a DB.
   const archived = MOCK_ARCHIVE_REPORTS.find((a) => a.id === id);
   if (archived) {
     return {
@@ -485,6 +483,176 @@ export async function getReportByIdFromDb(id: string): Promise<FullDailyReportPa
   }
   return null;
 }
+
+const MOCK_ANUA_REPORT: FullDailyReportPayload = {
+  report: {
+    id: '044',
+    product_id: 'prod_anua_pdrn_serum',
+    title: 'Anua - PDRN Hyaluronic Capsule 100 Serum 30ml Double Set',
+    publish_date: 'June 28, 2026',
+    is_active_daily: 0,
+    full_inci_list: 'Water, Butylene Glycol, Propanediol, Glycerin, Hydrolyzed Hyaluronic Acid, 1,2-Hexanediol, Niacinamide, Glyceryl Oleate, Lauryl Glucoside, Myristyl Glucoside, Polyglyceryl-6 Laurate, Hydrogenated Lecithin, Glutathione, Hydrolyzed Collagen, Sodium Hyaluronate, Coptis Japonica Root Extract, Adenosine, Melia Azadirachta Leaf Extract, Melia Azadirachta Flower Extract, Coccinia Indica Fruit Extract, Sodium DNA, Solanum Melongena (Eggplant) Fruit Extract, Hyaluronic Acid, Hydrolyzed Sodium Hyaluronate, Hydroxypropyltrimonium Hyaluronate, Potassium Hyaluronate, Sodium Hyaluronate Crosspolymer, Sodium Acetylated Hyaluronate, Ocimum Sanctum Leaf Extract, Citric Acid, Curcuma Longa (Turmeric) Root Extract, Corallina Officinalis Extract, Sodium Citrate, Pentylene Glycol.',
+    ewg_status: 'EWG Green Grade Verified',
+    editor_note: 'Anua PDRN Hyaluronic Capsule 100 Serum represents a breakthrough in bio-identical dermal rejuvenation, combining Smart Encapsulated PDRN (Sodium DNA) with an 11-type Multi-Hyaluronic Acid matrix. Engineered to penetrate deep epidermal layers, it delivers instant moisture plumping and barrier repair.'
+  },
+  product: {
+    id: 'prod_anua_pdrn_serum',
+    name: 'PDRN Hyaluronic Capsule 100 Serum 30ml Double Set',
+    brand_name: 'Anua (아누아)',
+    brand_description: 'A minimalist Korean skincare pioneer focused on high-purity clinical botanical ingredients that soothe skin inflammation and reinforce natural dermal vitality.',
+    brand_website: 'https://anua.kr/product/detail.html?product_no=359&cate_no=87&display_group=1#prdDetail',
+    category: 'Essence & Serum',
+    description: 'A revolutionary bio-encapsulated hydration serum powered by Sodium DNA (PDRN) and 11 distinct molecular weights of Hyaluronic Acid for deep elasticity and glass-skin radiance.',
+    detailed_story: 'Formulated with high-purity PDRN derived from marine DNA structures, Anua’s Capsule 100 Serum utilizes micro-fluidic encapsulation technology. Upon application, the micro-capsules burst to release concentrated Glutathione, Hydrolyzed Collagen, and Niacinamide, transforming dull, dehydrated skin into a plump, radiant canvas.',
+    image_url: 'https://cafe24img.poxo.com/anuaskincare/web/product/extra/small/202412/b8dcacb2be7a287c70107966e0a1d8b4.png',
+    volume: '30mL x 2 (Double Set Duo Pack / Bundle)',
+    skin_type: 'Dehydrated, Sensitive, Aging & Loss of Elasticity',
+    texture: 'Lightweight fluid serum with dissolved micro-capsules',
+    finish: 'Intensely plump, dewy glass-skin finish with zero tackiness',
+    how_to_use: 'After cleansing and prepping skin with toner, apply 2-3 pumps of serum across face and neck. Gently press and pat until the hydrating micro-capsules dissolve completely.',
+    origin: 'Made in South Korea 🇰🇷',
+    pao_expiration: '12 Months after opening / 36 Months unopened',
+    msrp_usd: 48.00,
+    lowest_price_usd: 32.00,
+    best_deal_platform: 'Olive Young Global',
+    best_deal_discount: '33% OFF',
+    is_authentic: 1
+  },
+  priceMatrix: [
+    {
+      id: 'pm_anua_1',
+      product_id: 'prod_anua_pdrn_serum',
+      platform_name: 'Olive Young Global',
+      variant_option: '30mL Double Planning Set (Duo)',
+      logo_bg: '#99E334',
+      logo_color: '#000',
+      stock_status: 'Official Authorized Partner',
+      shipping_info: 'DHL Express 3-5 Days',
+      price_usd: 32.00,
+      discount_text: '33% OFF',
+      promo_code: 'OYGLOBAL10',
+      buy_url: 'https://global.oliveyoung.com/product/detail?prdtNo=GA260439734&dataSource=top_orders',
+      is_lowest: 1
+    },
+    {
+      id: 'pm_anua_2',
+      product_id: 'prod_anua_pdrn_serum',
+      platform_name: 'StyleKorean',
+      variant_option: '30mL Serum (Single Unit Pack)',
+      logo_bg: '#E31B23',
+      logo_color: '#FFF',
+      stock_status: 'In Stock (Direct Dispatch)',
+      shipping_info: 'Global Direct Dispatch',
+      price_usd: 19.90,
+      discount_text: '28% OFF',
+      promo_code: 'SKSPRING',
+      buy_url: 'https://www.stylekorean.com/shop/1734073142',
+      is_lowest: 0
+    },
+    {
+      id: 'pm_anua_3',
+      product_id: 'prod_anua_pdrn_serum',
+      platform_name: 'Stylevana Global',
+      variant_option: '30mL Double Set Search Match',
+      logo_bg: '#111827',
+      logo_color: '#FFF',
+      stock_status: 'In Stock (Dispatch 24h)',
+      shipping_info: 'Free Express Shipping over $48',
+      price_usd: 31.80,
+      discount_text: '30% OFF',
+      promo_code: 'SVSECRET',
+      buy_url: 'https://www.stylevana.com/en_US/catalogsearch/result/?q=Anua+PDRN+Hyaluronic+Capsule+100+Serum+30ml+Double+Set',
+      is_lowest: 0
+    },
+    {
+      id: 'pm_anua_4',
+      product_id: 'prod_anua_pdrn_serum',
+      platform_name: 'YesStyle Beauty',
+      variant_option: '30mL Bundle Set (2 pcs)',
+      logo_bg: '#FF6F61',
+      logo_color: '#FFF',
+      stock_status: 'In Stock',
+      shipping_info: 'Standard International',
+      price_usd: 33.50,
+      discount_text: '26% OFF',
+      promo_code: 'YESSTYLE2026',
+      buy_url: 'https://www.yesstyle.com/en/anua-pdrn-hyaluronic-acid-capsule-100-serum-bundle-set-2-pcs/info.html/pid.1137150340',
+      is_lowest: 0
+    },
+    {
+      id: 'pm_anua_5',
+      product_id: 'prod_anua_pdrn_serum',
+      platform_name: 'Amazon US Official Store',
+      variant_option: '30mL Bottle (Prime Fulfillment)',
+      logo_bg: '#FF9900',
+      logo_color: '#000',
+      stock_status: 'Prime Fulfillment',
+      shipping_info: 'Free Prime 2-Day Shipping',
+      price_usd: 22.00,
+      discount_text: '15% OFF',
+      promo_code: 'PRIME',
+      buy_url: 'https://amzn.to/4eRn8wc',
+      is_lowest: 0
+    }
+  ],
+  keyIngredients: [
+    {
+      id: 'ki_anua_1',
+      product_id: 'prod_anua_pdrn_serum',
+      name: 'Sodium DNA (Smart Encapsulated PDRN)',
+      description: 'Bio-identical Polydeoxyribonucleotide (PDRN) derived from marine DNA complexes that stimulates dermal cell regeneration, fortifies compromised skin barriers, and improves overall elastic density.',
+      tag_color: 'var(--brand-rose)'
+    },
+    {
+      id: 'ki_anua_2',
+      product_id: 'prod_anua_pdrn_serum',
+      name: '11-Type Multi-Hyaluronic Acid Matrix',
+      description: 'A multi-molecular weight hyaluronic complex engineered to hydrate multiple skin layers, preventing transepidermal water loss and creating a long-lasting moisture reservoir.',
+      tag_color: 'var(--brand-sage)'
+    },
+    {
+      id: 'ki_anua_3',
+      product_id: 'prod_anua_pdrn_serum',
+      name: 'Glutathione & Niacinamide Synergist',
+      description: 'A high-potency antioxidant blend that brightens hyperpigmentation, inhibits melanin synthesis, and imparts a luminous porcelain clarity to stressed skin.',
+      tag_color: '#3B82F6'
+    }
+  ],
+  socialReviews: [
+    {
+      id: 'sr_anua_yt_1',
+      platform: 'YOUTUBE',
+      channel_or_user: 'Glass Skin Science & K-Beauty Lab',
+      badge_color: '#FF0000',
+      title_or_context: 'Anua PDRN Hyaluronic Capsule 100 Serum Clinical Breakdown',
+      quote: '"Anua PDRN Capsule 100 Serum is one of the most exciting bio-tech formulations this year. The encapsulated PDRN and 11 hyaluronic acids produce immediate epidermal plumping without stickiness."',
+      metrics: '850k Views',
+      thumbnail_url: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80',
+      video_duration: '11:15',
+      url: 'https://youtube.com'
+    },
+    {
+      id: 'sr_anua_reddit_1',
+      platform: 'REDDIT',
+      channel_or_user: 'r/AsianBeauty • u/pdrn_glow_obsessed',
+      badge_color: '#FF4500',
+      title_or_context: 'Anua PDRN Serum Holy Grail Review (+940 upvotes)',
+      quote: '"If you have dehydrated skin that looks dull under makeup, Anua PDRN Hyaluronic Capsule 100 Serum is life-changing. The double pack on Olive Young is hands down the best value."',
+      metrics: '4.9/5 Glass Skin Rating',
+      url: 'https://reddit.com/r/AsianBeauty'
+    },
+    {
+      id: 'sr_anua_insta_1',
+      platform: 'INSTAGRAM',
+      channel_or_user: '@seoul_dermal_editor',
+      badge_color: '#E1306C',
+      title_or_context: 'Anua PDRN Capsule 100 Serum Layering Swatch',
+      quote: '"Watching the hydrating PDRN micro-capsules melt into the skin is super satisfying. Leaves a dewy glass-skin glow that lasts all day."',
+      metrics: '28k Tagged Posts',
+      url: 'https://instagram.com'
+    }
+  ]
+};
 
 export interface ReportSummary {
   id: string;
