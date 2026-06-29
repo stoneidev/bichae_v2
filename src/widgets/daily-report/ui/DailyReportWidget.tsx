@@ -294,13 +294,17 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                           </span>
                           <div>
                             <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{item.platform_name}</div>
-                            {item.is_lowest ? (
+                            {item.stock_status?.toLowerCase().includes('official') || item.platform_name?.toLowerCase().includes('naver') ? (
+                              <span style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#03C75A', marginTop: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                <ShieldCheck size={12} color="#03C75A" /> Official Direct Store (공식몰)
+                              </span>
+                            ) : item.is_lowest ? (
                               <span style={{ fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--brand-rose)', marginTop: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                                 <Award size={11} color="var(--brand-rose)" /> Lowest Price
                               </span>
                             ) : (
                               <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--brand-sage)', marginTop: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                <BadgeCheck size={12} /> Authorized
+                                <BadgeCheck size={12} /> Authorized Distributor
                               </span>
                             )}
                           </div>

@@ -130,6 +130,21 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
   },
   priceMatrix: [
     {
+      id: 'pm_skin1004_6',
+      product_id: 'prod_skin1004_sun_serum',
+      platform_name: 'SKIN1004 Naver Store (KR)',
+      variant_option: 'Official Brand Store Duo (공식몰)',
+      logo_bg: '#03C75A',
+      logo_color: '#FFF',
+      stock_status: 'Official Direct Brand Portal',
+      shipping_info: 'Naver Direct Shipping (KRW 27,650)',
+      price_usd: 20.00,
+      discount_text: 'MSRP (공식몰)',
+      promo_code: 'OFFICIAL',
+      buy_url: 'https://brand.naver.com/skin1004/products/10420474053',
+      is_lowest: 0
+    },
+    {
       id: 'pm_skin1004_1',
       product_id: 'prod_skin1004_sun_serum',
       platform_name: 'Stylevana Global',
@@ -202,21 +217,6 @@ const MOCK_DAILY_REPORT: FullDailyReportPayload = {
       discount_text: '12% OFF',
       promo_code: 'OYGLOBAL10',
       buy_url: 'https://global.oliveyoung.com/product/detail?prdtNo=GA230518746&dataSource=search_result',
-      is_lowest: 0
-    },
-    {
-      id: 'pm_skin1004_6',
-      product_id: 'prod_skin1004_sun_serum',
-      platform_name: 'SKIN1004 Naver Store (KR)',
-      variant_option: 'Official Brand Store Duo',
-      logo_bg: '#03C75A',
-      logo_color: '#FFF',
-      stock_status: 'Official Brand Store',
-      shipping_info: 'Naver Fast Shipping (KRW 27,650)',
-      price_usd: 20.00,
-      discount_text: 'MSRP',
-      promo_code: 'NAVER',
-      buy_url: 'https://brand.naver.com/skin1004/products/10420474053',
       is_lowest: 0
     }
   ],
