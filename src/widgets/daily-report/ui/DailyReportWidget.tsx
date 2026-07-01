@@ -136,26 +136,26 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
               padding: '12px 20px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)',
               border: '1px solid var(--border-subtle)', marginBottom: '32px', flexWrap: 'wrap', gap: '12px'
             }}>
-              {report.id === '045' ? (
-                <Link href="/report/044" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-rose)', textDecoration: 'none' }}>
-                  <ChevronLeft size={16} /> Edition #044 (Anua PDRN Serum)
+              {report.is_active_daily === 1 ? (
+                <Link href="/about" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-secondary)', textDecoration: 'none' }}>
+                  <ChevronLeft size={16} /> How It Works
                 </Link>
               ) : (
                 <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-secondary)', textDecoration: 'none' }}>
-                  <ChevronLeft size={16} /> Back to Featured Edition (#045)
+                  <ChevronLeft size={16} /> Back to Featured Edition
                 </Link>
               )}
               <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
                 Bichae Daily Intelligence Archives
               </span>
-              {report.id === '044' ? (
-                <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-rose)', textDecoration: 'none' }}>
-                  Edition #045 (SKIN1004 Sun Serum) <ChevronRight size={16} />
-                </Link>
-              ) : (
+              {report.is_active_daily === 1 ? (
                 <span style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-sage)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                  Latest Daily Edition <CheckCircle2 size={14} />
+                  Featured Daily Curation <CheckCircle2 size={14} />
                 </span>
+              ) : (
+                <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-rose)', textDecoration: 'none' }}>
+                  View Latest Curation <ChevronRight size={16} />
+                </Link>
               )}
             </div>
 
