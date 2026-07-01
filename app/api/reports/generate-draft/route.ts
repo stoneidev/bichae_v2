@@ -2,18 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-function cleanHtml(html: string): string {
-  // Slice early to prevent CPU backtracking on massive pages
-  const safeHtml = (html || '').slice(0, 80000);
-  let text = safeHtml;
-  text = text.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '');
-  text = text.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
-  text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
-  text = text.replace(/<[^>]+>/g, ' ');
-  text = text.replace(/\s+/g, ' ').trim();
-  return text.slice(0, 15000); // Limit to 15k characters
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -34,42 +22,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 1. Fetch HTML from target URL
-    let htmlContent = '';
-    try {
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      htmlContent = await response.text();
-    } catch (fetchError: unknown) {
-      const msg = fetchError instanceof Error ? fetchError.message : String(fetchError);
-      return NextResponse.json(
-        { success: false, error: `Failed to scrape the official store page: ${msg}` },
-        { status: 500 }
-      );
-    }
-
-    const scrapedText = cleanHtml(htmlContent);
-
-    // 2. Call Gemini API to parse and generate luxury english curation editorial
+    // Call Gemini API to parse and generate luxury english curation editorial using Google Search Grounding tool
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
-    const prompt = `You are a high-end global K-beauty expert editor. Analyze the product details scraped from a Korean official brand store website below.
-Extract all details and translate them into a premium luxury beauty editorial format (similar to Vogue, Chanel, or Tom Ford styling) strictly in English.
+    const prompt = `You are a high-end global K-beauty expert editor.
+Analyze the product details of the official brand product store page at this exact URL: ${url}
 
-Official Website URL: ${url}
-Scraped Content:
-${scrapedText}
+IMPORTANT: Since the server cannot crawl this page directly, use your Google Search grounding tool to look up, retrieve, and verify the exact details of this K-beauty product from this URL. Find its exact name, brand heritage, description, key ingredients, and complete INCI list.
 
-Generate a JSON object strictly matching the following schema. Do not output any markdown block wrappers or comments. Just return a clean, parseable JSON:
+Translate all details into a premium luxury beauty editorial format (similar to Vogue, Chanel, or Tom Ford styling) strictly in English.
+
+Generate a JSON object strictly matching the following schema. Do not output any markdown block wrappers, comments, or extra text. Just return a clean, parseable JSON:
 
 {
-  "reportId": "046", // Keep or increment this number
+  "reportId": "046",
   "productName": "Exact Product Name in English",
   "brandName": "Brand Name (e.g. d'Alba, SKIN1004)",
   "brandDescription": "A premium summary of the brand heritage and concept.",
@@ -79,7 +45,7 @@ Generate a JSON object strictly matching the following schema. Do not output any
   "msrpUsd": "MSRP retail price in USD (e.g. 28.00 - convert from KRW if needed, approx $1 for every 1300 KRW)",
   "productDescription": "Short description focusing on texture and key benefits.",
   "fullInciList": "Complete INCI ingredients list separated by commas, translated to English.",
-  "ewgStatus": "EWG Green Grade Verified", // Or adjust based on safety
+  "ewgStatus": "EWG Green Grade Verified",
   "editorNote": "A luxurious review of the product formulation, feel, and daily clinically routine (approx 100-150 words).",
   "ingredients": [
     {
@@ -129,6 +95,11 @@ Generate a JSON object strictly matching the following schema. Do not output any
           parts: [
             { text: prompt }
           ]
+        }
+      ],
+      tools: [
+        {
+          googleSearch: {}
         }
       ],
       generationConfig: {
