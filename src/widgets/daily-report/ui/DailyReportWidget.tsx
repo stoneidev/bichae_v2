@@ -174,14 +174,6 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                   height={340}
                   style={{ width: '100%', height: 'auto', aspectRatio: '1 / 1', display: 'block', objectFit: 'cover' }}
                 />
-                <div style={{
-                  position: 'absolute', bottom: '14px', left: '14px',
-                  padding: '5px 12px', borderRadius: 'var(--radius-full)', background: 'rgba(10, 10, 12, 0.85)',
-                  color: '#FFF', fontSize: '0.725rem', fontWeight: 700, backdropFilter: 'blur(6px)',
-                  display: 'inline-flex', alignItems: 'center', gap: '6px', letterSpacing: '0.04em'
-                }}>
-                  <Camera size={13} color="var(--brand-rose)" /> Studio Showcase
-                </div>
               </div>
 
               {/* Title, Editorial Metadata & Price Summary */}
