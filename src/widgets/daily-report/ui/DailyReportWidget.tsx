@@ -778,12 +778,12 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
 
           <hr className="rule" />
 
-          {/* CHAPTER V: SERUM SCIENCE & FORMULATION EFFICACY */}
+          {/* CHAPTER V: SUNSCREEN SCIENCE & FORMULATION EFFICACY */}
           <div data-reveal className="chapter">
             <div className="eyebrow">Chapter V — Dermal Science</div>
-            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>Clinical Mechanism &amp; Bio-Ingredient Efficacy</h3>
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>UV Defense &amp; Brightening Mechanism</h3>
             <p className="measure-wide" style={{ fontSize: '1.025rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '28px' }}>
-              Dermatological analysis explaining the active botanical mechanisms for skin soothing, barrier fortification, and cellular hydration.
+              Dermatological analysis of the triple-function actives delivering SPF50+/PA++++ UV defense, whitening, and anti-wrinkle efficacy in a single dewy formulation.
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
@@ -791,9 +791,9 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                 <div style={{ display: 'inline-flex', padding: '10px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card)', color: 'var(--brand-rose)', marginBottom: '16px' }}>
                   <FlaskRound size={22} />
                 </div>
-                <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>Madagascar Centella Asiatica (98,000ppm)</h4>
+                <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>White Truffle Extract</h4>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                  Harvested directly from untouched micro-climates in Madagascar, this 98,000ppm pure extract delivers high-potency Madecassoside and Asiaticoside to rapidly soothe thermal irritation, UV-induced inflammation, and epidermal micro-redness.
+                  Sourced from Italian white truffles, this rare botanical extract is rich in antioxidants and polysaccharides that neutralise UV-induced free radicals, suppress melanin synthesis for a luminous tone-up, and reinforce the skin's natural moisture barrier.
                 </p>
               </div>
 
@@ -801,9 +801,9 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                 <div style={{ display: 'inline-flex', padding: '10px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card)', color: 'var(--brand-sage)', marginBottom: '16px' }}>
                   <Microscope size={22} />
                 </div>
-                <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>Hyalu-Cica Golden Ratio Bio-Matrix</h4>
+                <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>Niacinamide & Hyaluronic Acid Complex</h4>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                  A bio-engineered complex fusing multi-molecular weight Hyaluronic Acid with Centella Asiatica. It forms a breathable protective barrier on the skin surface to prevent Transepidermal Water Loss (TEWL) while driving moisture deep into dermal layers.
+                  Niacinamide inhibits melanosome transfer to visibly brighten post-sun discolouration, while a multi-molecular weight Hyaluronic Acid matrix delivers 30-hour clinically verified hydration and seals in lasting dewy radiance beneath the UV filter film.
                 </p>
               </div>
             </div>
@@ -812,30 +812,30 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
 
           <hr className="rule" />
 
-          {/* CHAPTER VI: HOW TO CHOOSE A PREMIUM SERUM */}
+          {/* CHAPTER VI: HOW TO CHOOSE A TONE-UP SUNSCREEN */}
           <div data-reveal className="chapter">
             <div className="eyebrow">Chapter VI — Buyer Guide</div>
-            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>How to Select a High-Performance Serum</h3>
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>How to Select a High-Performance Tone-Up Sunscreen</h3>
             <p className="measure-wide" style={{ fontSize: '1.025rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '28px' }}>
-              Essential dermatological criteria for distinguishing clinical-grade serums from low-concentration marketing formulations.
+              Essential criteria for distinguishing clinical-grade SPF50+ formulations from low-protection, heavy-cast alternatives.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {[
                 {
                   step: '01',
-                  title: 'Verify Verified Active Ingredient Concentration (ppm)',
-                  desc: 'Ensure the formulation discloses exact high-potency concentrations (e.g. 98,000ppm) rather than trace botanical extracts listed purely for marketing claims.'
+                  title: 'Verify Triple-Function Certification (Whitening + Anti-Wrinkle + UV)',
+                  desc: 'Confirm the sunscreen carries official triple-function cosmetic certification — not just SPF marketing claims — to ensure it simultaneously addresses UV protection, brightening, and anti-ageing in a single application.'
                 },
                 {
                   step: '02',
-                  title: 'Ophthalmologist-Tested & Non-Comedogenic Safety',
-                  desc: 'For hybrid sun serums and active treatments, confirm zero eye-sting formulations and certified non-comedogenic testing that guarantees pores will not be clogged.'
+                  title: 'Reef-Friendly Formula: No Oxybenzone or Octinoxate',
+                  desc: 'Choose formulations certified free of benzophenone-3 (oxybenzone) and octinoxate. The d\'Alba Waterfull holds KOTITI reef-safe certification, making it safe for ocean ecosystems and sensitive skin alike.'
                 },
                 {
                   step: '03',
-                  title: 'Zero-Pilling Texture & Seamless Makeup Adhesion',
-                  desc: 'Select lightweight water-fit fluid textures that absorb within 10 seconds without tacky residue, creating an ideal smooth canvas for makeup foundation.'
+                  title: 'Long-Wear Hydration & Zero White Cast',
+                  desc: 'Select water-based textures with clinically verified 30-hour moisturising efficacy that deliver a natural pink radiance tone-up without white residue or a chalky cast — key for all skin tones.'
                 }
               ].map((guide) => (
                 <div key={guide.step} style={{ display: 'flex', gap: '20px', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)' }}>
@@ -855,28 +855,28 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
           {/* CHAPTER VII: APPLICATION CLINIC */}
           <div data-reveal className="chapter">
             <div className="eyebrow">Chapter VII — Application Clinic</div>
-            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>Serum Application &amp; Layering Masterclass</h3>
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>Sunscreen Application &amp; Layering Protocol</h3>
             <p className="measure-wide" style={{ fontSize: '1.025rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '28px' }}>
-              A precise step-by-step skincare protocol designed to maximize ingredient absorption and lock in glass-skin radiance.
+              A step-by-step protocol for maximum UV protection and an all-day dewy tone-up finish, from morning skincare through outdoor sun exposure.
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
               <div style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 1 • PREPARATION</div>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Apply on Damp Skin Post-Toner</h4>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>After cleansing, prep skin with a hydrating toner. Apply serum while skin retains slight dampness to accelerate hyaluronic acid moisture binding.</p>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 1 • SKINCARE FINALE</div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Apply as the Final Skincare Step</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>Complete your toner, serum, and moisturiser routine first. d'Alba Waterfull goes on last in the skincare lineup — its UV filter film must sit on top of all actives to function correctly.</p>
               </div>
 
               <div style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 2 • ABSORPTION</div>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Press 2–3 Pumps Warmly into Skin</h4>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>Dispense 2–3 pumps across face and neck. Gently press and pat with warm palms to melt active bio-capsules evenly into dermal layers.</p>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 2 • APPLICATION</div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Spread Evenly Over Face, Neck &amp; Body</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>Dispense an appropriate amount and smooth evenly across the face, neck, arms, and legs. Pat gently with fingertips on delicate eye-area skin to prevent fine lines from application pressure.</p>
               </div>
 
               <div style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 3 • UV PROTECTION &amp; LOCK</div>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Re-layer for Dewy Sun Shield</h4>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>Apply 15 minutes prior to sun exposure. Layer slightly more on high points (cheeks, forehead) for an effortless glass-skin glow under makeup.</p>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 3 • SUN TIMING &amp; REAPPLICATION</div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Apply 30 Minutes Before Sun Exposure</h4>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>Allow 30 minutes before going outdoors so the UV filter fully bonds to skin. Reapply every 2–3 hours during prolonged outdoor activity — sweat-proof coverage is tested but not unlimited.</p>
               </div>
             </div>
           </div>
@@ -892,10 +892,30 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
-                <h4 style={{ fontFamily: 'var(--font-serif), var(--font-serif-fallback)', fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>{product.brand_name}</h4>
+                <h4 style={{ fontFamily: 'var(--font-serif), var(--font-serif-fallback)', fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>d&apos;Alba — 달바 글로벌</h4>
                 <p className="measure" style={{ fontSize: '0.975rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-                  {product.brand_description}
+                  Founded in South Korea and headquartered in Mapo-gu, Seoul, d&apos;Alba (d&apos;Alba Global Co., Ltd., CEO Ban Seong-yeon) is a premium K-beauty brand built around the rare Italian white truffle. The brand's philosophy centres on combining the luxurious bioactives of the truffle — a natural antioxidant and moisture-binding ingredient — with clinically validated Korean cosmetic science. Manufactured by Korea Kolmar, one of South Korea's most trusted OEM laboratories, d&apos;Alba formulations undergo rigorous safety and efficacy testing including vegan certification by Italy's V-LABEL and reef-safe certification by KOTITI.
                 </p>
+              </div>
+
+              {/* Brand Certifications Strip */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                {[
+                  { icon: <Leaf size={14} />, label: 'Vegan Certified — Italy V-LABEL' },
+                  { icon: <ShieldCheck size={14} />, label: 'Reef-Safe — KOTITI Certified' },
+                  { icon: <Award size={14} />, label: 'Triple-Function Cosmetic (MFDS)' },
+                  { icon: <CheckCircle2 size={14} />, label: 'Low-Irritation Tested' },
+                ].map((cert) => (
+                  <span key={cert.label} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '6px',
+                    padding: '7px 14px', borderRadius: 'var(--radius-full)',
+                    background: 'var(--bg-card)', border: '1px solid var(--border-subtle)',
+                    fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)'
+                  }}>
+                    <span style={{ color: 'var(--brand-sage)' }}>{cert.icon}</span>
+                    {cert.label}
+                  </span>
+                ))}
               </div>
 
               {/* Official Brand Direct Store Highlight Showcase Card */}
@@ -908,10 +928,10 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: 800, color: '#03C75A', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
                     <ShieldCheck size={16} color="#03C75A" /> Official Direct Brand Store
                   </div>
-                  <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>SKIN1004 Naver Official Brand Store (KR)</h4>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px', margin: 0 }}>Direct Manufacturer Guarantee · Naver Fast Guaranteed Shipping (KRW 27,650)</p>
+                  <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>d&apos;Alba Official Brand Store — dalba.co.kr</h4>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px', margin: 0 }}>Direct Manufacturer Guarantee · Free shipping over KRW 30,000 · CJ Logistics 2–3 Business Days</p>
                 </div>
-                <a href="https://brand.naver.com/skin1004/products/10420474053" target="_blank" rel="noreferrer" className="btn-pdp" style={{ padding: '12px 24px', borderRadius: 'var(--radius-full)', background: '#03C75A', color: '#FFF', fontWeight: 800, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', boxShadow: '0 4px 12px rgba(3, 199, 90, 0.25)' }}>
+                <a href="https://dalba.co.kr/goods/goods_view.php?goodsNo=1000000094" target="_blank" rel="noreferrer" className="btn-pdp" style={{ padding: '12px 24px', borderRadius: 'var(--radius-full)', background: '#03C75A', color: '#FFF', fontWeight: 800, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', boxShadow: '0 4px 12px rgba(3, 199, 90, 0.25)' }}>
                   Visit Official Direct Store <ExternalLink size={15} />
                 </a>
               </div>
@@ -923,19 +943,19 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {[
-                    '💧 Intensely Hydrating',
-                    '✨ Zero White Cast',
-                    '🌿 Smooth Application',
+                    '💧 30-Hour Moisture Lock',
+                    '✨ Pink Radiance Tone-Up',
+                    '🌿 Zero White Cast',
                     '👁️ No Eye Stinging',
-                    '🛡️ Zero Sticky Feel',
+                    '🛡️ Sweat-Proof Coverage',
                     '⚡ Fast Absorbing',
-                    '🪶 Featherlight Texture',
-                    '💄 No Makeup Pilling',
-                    '🌸 Gentle & Non-Irritating',
-                    '🕊️ Mild & Soft Finish',
-                    '🌊 Deep Moisture Lock',
-                    '✨ Preps Skin for Seamless Makeup',
-                    '🧴 Lotion-like Fluid'
+                    '🪶 Lightweight Dewy Finish',
+                    '💄 Seamless Makeup Base',
+                    '🌸 Vegan & Reef-Safe',
+                    '🕊️ Low-Irritation Tested',
+                    '☀️ SPF50+/PA++++',
+                    '✨ White Truffle Brightening',
+                    '🧴 Water-Rich Texture'
                   ].map((tag) => (
                     <span key={tag} style={{
                       padding: '6px 14px', borderRadius: 'var(--radius-full)',
