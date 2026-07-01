@@ -3,12 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'edge';
 
 function cleanHtml(html: string): string {
-  let text = html.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '');
+  // Slice early to prevent CPU backtracking on massive pages
+  const safeHtml = (html || '').slice(0, 80000);
+  let text = safeHtml;
+  text = text.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, '');
   text = text.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
   text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
   text = text.replace(/<[^>]+>/g, ' ');
   text = text.replace(/\s+/g, ' ').trim();
-  return text.slice(0, 20000); // Limit to 20k characters to prevent prompt bloat
+  return text.slice(0, 15000); // Limit to 15k characters
 }
 
 export async function POST(request: NextRequest) {

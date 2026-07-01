@@ -199,7 +199,13 @@ export default function AdminPage() {
         },
         body: JSON.stringify({ url: officialUrl, geminiApiKey })
       });
-      const data = await res.json();
+      const resText = await res.text();
+      let data;
+      try {
+        data = JSON.parse(resText);
+      } catch {
+        throw new Error(`Server returned invalid response (HTML page). This usually indicates a scraper timeout or API error: ${resText.slice(0, 150)}...`);
+      }
       if (!res.ok || !data.success) {
         throw new Error(data.error || 'Failed to generate AI draft.');
       }
