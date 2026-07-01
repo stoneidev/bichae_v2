@@ -62,7 +62,7 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
 
   if (!reportData) return null;
 
-  const { report, product, priceMatrix, keyIngredients, socialReviews } = reportData;
+  const { report, product, priceMatrix, keyIngredients, socialReviews, prevReportId, nextReportId } = reportData;
 
   const filteredReviews = socialFilter === 'ALL'
     ? socialReviews
@@ -136,25 +136,29 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
               padding: '12px 20px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)',
               border: '1px solid var(--border-subtle)', marginBottom: '32px', flexWrap: 'wrap', gap: '12px'
             }}>
-              {report.is_active_daily === 1 ? (
-                <Link href="/about" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-secondary)', textDecoration: 'none' }}>
-                  <ChevronLeft size={16} /> How It Works
+              {prevReportId ? (
+                <Link href={`/report/${prevReportId}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-secondary)', textDecoration: 'none' }}>
+                  <ChevronLeft size={16} /> Edition {prevReportId}
                 </Link>
               ) : (
-                <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-secondary)', textDecoration: 'none' }}>
-                  <ChevronLeft size={16} /> Back to Featured Edition
+                <Link href="/about" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-secondary)', textDecoration: 'none' }}>
+                  <ChevronLeft size={16} /> How It Works
                 </Link>
               )}
               <span style={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
                 Bichae Daily Intelligence Archives
               </span>
-              {report.is_active_daily === 1 ? (
+              {nextReportId ? (
+                <Link href={`/report/${nextReportId}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-rose)', textDecoration: 'none' }}>
+                  Edition {nextReportId} <ChevronRight size={16} />
+                </Link>
+              ) : report.is_active_daily === 1 ? (
                 <span style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-sage)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                  Featured Daily Curation <CheckCircle2 size={14} />
+                  Latest Edition <CheckCircle2 size={14} />
                 </span>
               ) : (
                 <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.825rem', fontWeight: 700, color: 'var(--brand-rose)', textDecoration: 'none' }}>
-                  View Latest Curation <ChevronRight size={16} />
+                  View Latest <ChevronRight size={16} />
                 </Link>
               )}
             </div>

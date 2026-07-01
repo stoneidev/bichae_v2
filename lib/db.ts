@@ -80,6 +80,8 @@ export interface FullDailyReportPayload {
   priceMatrix: PriceItem[];
   keyIngredients: KeyIngredient[];
   socialReviews: CommunityReview[];
+  prevReportId?: string;
+  nextReportId?: string;
 }
 
 export interface ArchiveReportItem {
@@ -321,12 +323,16 @@ export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
         const priceRes = await withTimeout(db.prepare('SELECT * FROM price_matrix WHERE product_id = ? ORDER BY price_usd ASC').bind(report.product_id).all());
         const ingredientsRes = await withTimeout(db.prepare('SELECT * FROM key_ingredients WHERE product_id = ?').bind(report.product_id).all());
         const reviewsRes = await withTimeout(db.prepare('SELECT * FROM social_reviews WHERE product_id = ?').bind(report.product_id).all());
+        const prevRes = await withTimeout(db.prepare('SELECT id FROM reports WHERE id < ? ORDER BY id DESC LIMIT 1').bind(report.id).first()) as { id: string } | null;
+        const nextRes = await withTimeout(db.prepare('SELECT id FROM reports WHERE id > ? ORDER BY id ASC LIMIT 1').bind(report.id).first()) as { id: string } | null;
 
         return {
           report,
           product: productRes as unknown as Product,
           priceMatrix: (priceRes.results || []) as unknown as PriceItem[],
           keyIngredients: (ingredientsRes.results || []) as unknown as KeyIngredient[],
+          prevReportId: prevRes?.id,
+          nextReportId: nextRes?.id,
           socialReviews: (reviewsRes.results || []).map((r) => {
             const row = r as unknown as {
               id: string;
@@ -470,11 +476,15 @@ export async function getReportByIdFromDb(id: string): Promise<FullDailyReportPa
         const priceRes = await withTimeout(db.prepare('SELECT * FROM price_matrix WHERE product_id = ? ORDER BY price_usd ASC').bind(report.product_id).all());
         const ingredientsRes = await withTimeout(db.prepare('SELECT * FROM key_ingredients WHERE product_id = ?').bind(report.product_id).all());
         const reviewsRes = await withTimeout(db.prepare('SELECT * FROM social_reviews WHERE product_id = ?').bind(report.product_id).all());
+        const prevRes = await withTimeout(db.prepare('SELECT id FROM reports WHERE id < ? ORDER BY id DESC LIMIT 1').bind(report.id).first()) as { id: string } | null;
+        const nextRes = await withTimeout(db.prepare('SELECT id FROM reports WHERE id > ? ORDER BY id ASC LIMIT 1').bind(report.id).first()) as { id: string } | null;
         return {
           report,
           product: productRes as unknown as Product,
           priceMatrix: (priceRes.results || []) as unknown as PriceItem[],
           keyIngredients: (ingredientsRes.results || []) as unknown as KeyIngredient[],
+          prevReportId: prevRes?.id,
+          nextReportId: nextRes?.id,
           socialReviews: (reviewsRes.results || []).map((r) => {
             const row = r as unknown as {
               id: string;
