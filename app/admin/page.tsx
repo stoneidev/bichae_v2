@@ -83,11 +83,14 @@ export default function AdminPage() {
 
     setStatus({ type: 'loading' });
 
-    // Find the lowest price to set isLowest flag
-    const validMalls = malls.map((m) => ({ ...m, parsedPrice: parseFloat(m.price) || 999 }));
-    const minPrice = Math.min(...validMalls.map((m) => m.parsedPrice));
+    // Filter out malls that have no price or no URL to avoid empty entries in D1
+    const activeMalls = malls.filter((m) => m.price && m.url && parseFloat(m.price) > 0);
 
-    const priceMatrixPayload = malls.map((m) => ({
+    // Find the lowest price to set isLowest flag
+    const validMalls = activeMalls.map((m) => ({ ...m, parsedPrice: parseFloat(m.price) || 999 }));
+    const minPrice = validMalls.length > 0 ? Math.min(...validMalls.map((m) => m.parsedPrice)) : 999;
+
+    const priceMatrixPayload = activeMalls.map((m) => ({
       platformName: m.name,
       priceUsd: parseFloat(m.price) || 0,
       buyUrl: m.url || '#',
@@ -486,7 +489,7 @@ export default function AdminPage() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '16px' }}>
                     <div>
                       <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Target Price (USD)</label>
-                      <input type="number" step="0.01" value={mall.price} onChange={(e) => handleMallChange(i, 'price', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 700 }} required />
+                      <input type="number" step="0.01" value={mall.price} onChange={(e) => handleMallChange(i, 'price', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 700 }} />
                     </div>
                     <div>
                       <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Variant Option text</label>
@@ -504,7 +507,7 @@ export default function AdminPage() {
 
                   <div>
                     <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Direct Buy URL (Affiliate link is highly recommended)</label>
-                    <input type="text" placeholder="https://" value={mall.url} onChange={(e) => handleMallChange(i, 'url', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem' }} required />
+                    <input type="text" placeholder="https://" value={mall.url} onChange={(e) => handleMallChange(i, 'url', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem' }} />
                   </div>
                 </div>
               ))}
