@@ -335,15 +335,25 @@ export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
               score_summary: string;
               quote: string;
               analysis_meta: string;
+              url?: string;
+              thumbnail_url?: string;
+              title_or_context?: string;
+              channel_or_user?: string;
+              video_duration?: string;
+              likes_count?: string;
             };
             return {
               id: row.id,
               platform: row.platform,
               badge_color: row.badge_color,
-              channel_or_user: row.score_summary || '',
-              title_or_context: row.analysis_meta || '',
+              channel_or_user: row.channel_or_user || row.score_summary || '',
+              title_or_context: row.title_or_context || row.analysis_meta || '',
               quote: row.quote || '',
               metrics: row.score_summary || '',
+              url: row.url,
+              thumbnail_url: row.thumbnail_url,
+              video_duration: row.video_duration,
+              likes_count: row.likes_count,
             };
           }) as unknown as CommunityReview[],
         };
@@ -473,15 +483,25 @@ export async function getReportByIdFromDb(id: string): Promise<FullDailyReportPa
               score_summary: string;
               quote: string;
               analysis_meta: string;
+              url?: string;
+              thumbnail_url?: string;
+              title_or_context?: string;
+              channel_or_user?: string;
+              video_duration?: string;
+              likes_count?: string;
             };
             return {
               id: row.id,
               platform: row.platform,
               badge_color: row.badge_color,
-              channel_or_user: row.score_summary || '',
-              title_or_context: row.analysis_meta || '',
+              channel_or_user: row.channel_or_user || row.score_summary || '',
+              title_or_context: row.title_or_context || row.analysis_meta || '',
               quote: row.quote || '',
               metrics: row.score_summary || '',
+              url: row.url,
+              thumbnail_url: row.thumbnail_url,
+              video_duration: row.video_duration,
+              likes_count: row.likes_count,
             };
           }) as unknown as CommunityReview[],
         };

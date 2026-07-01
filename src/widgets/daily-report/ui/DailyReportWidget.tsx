@@ -686,15 +686,18 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                     ? 'platform-accent-youtube'
                     : 'platform-accent-instagram';
                 return (
-                  <div 
-                    key={rev.id} 
+                  <a
+                    key={rev.id}
+                    href={rev.url || undefined}
+                    target={rev.url ? '_blank' : undefined}
+                    rel={rev.url ? 'noreferrer' : undefined}
                     className={`review-preview-card ${accentClass}`}
-                    onClick={() => setSelectedReview(rev)}
+                    onClick={rev.url ? undefined : () => setSelectedReview(rev)}
                     style={{
                       padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)',
                       border: 'none', display: 'flex', flexDirection: 'column',
                       justifyContent: 'space-between', position: 'relative', overflow: 'hidden',
-                      boxShadow: 'var(--shadow-sm)'
+                      boxShadow: 'var(--shadow-sm)', textDecoration: 'none', cursor: 'pointer'
                     }}
                   >
                     <div>
@@ -756,10 +759,10 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                     <div style={{ paddingTop: '16px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '10px' }}>
                       <span>
                         {rev.platform === 'YOUTUBE' ? 'Watch Video Analysis' : rev.platform === 'INSTAGRAM' ? 'View Instagram Post' : 'Read Community Discussion'}
-                      </span> 
+                      </span>
                       <ArrowUpRight size={14} color="var(--brand-rose)" />
                     </div>
-                  </div>
+                  </a>
                 );
               })}
             </div>
