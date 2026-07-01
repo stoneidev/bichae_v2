@@ -10,6 +10,8 @@ export default function AdminPage() {
   const [adminToken, setAdminToken] = useState('');
   const [activeTab, setActiveTab] = useState<'basic' | 'malls' | 'editorial'>('basic');
   const [status, setStatus] = useState<{ type: 'idle' | 'loading' | 'success' | 'error'; message?: string }>({ type: 'idle' });
+  const [officialUrl, setOfficialUrl] = useState('');
+  const [geminiApiKey, setGeminiApiKey] = useState('');
 
   // 1. Basic Info & Ingredients
   const [reportId, setReportId] = useState('046');
@@ -182,6 +184,54 @@ export default function AdminPage() {
     }
   };
 
+  const generateDraftFromUrl = async () => {
+    if (!officialUrl) {
+      setStatus({ type: 'error', message: 'Please enter the Official Store URL first.' });
+      return;
+    }
+    
+    setStatus({ type: 'loading' });
+    try {
+      const res = await fetch('/api/reports/generate-draft', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: officialUrl, geminiApiKey })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to generate AI draft.');
+      }
+      
+      const draft = data.draft;
+      if (draft.reportId) setReportId(draft.reportId);
+      if (draft.productName) setProductName(draft.productName);
+      if (draft.brandName) setBrandName(draft.brandName);
+      if (draft.brandDescription) setBrandDescription(draft.brandDescription);
+      if (draft.brandWebsite) setBrandWebsite(draft.brandWebsite);
+      if (draft.category) setCategory(draft.category);
+      if (draft.volume) setVolume(draft.volume);
+      if (draft.msrpUsd) setMsrpUsd(draft.msrpUsd);
+      if (draft.productDescription) setProductDescription(draft.productDescription);
+      if (draft.fullInciList) setFullInciList(draft.fullInciList);
+      if (draft.ewgStatus) setEwgStatus(draft.ewgStatus);
+      if (draft.editorNote) setEditorNote(draft.editorNote);
+      
+      if (draft.ingredients && Array.isArray(draft.ingredients)) {
+        setIngredients(draft.ingredients);
+      }
+      if (draft.reviews && Array.isArray(draft.reviews)) {
+        setReviews(draft.reviews);
+      }
+      
+      setStatus({ type: 'success', message: 'AI Draft successfully compiled and filled in the form fields! Review, adjust shopping malls, and publish.' });
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      setStatus({ type: 'error', message: errorMsg });
+    }
+  };
+
   return (
     <div style={{ maxWidth: '1000px', margin: '40px auto', padding: '0 20px', fontFamily: 'var(--font-pretendard)' }}>
       {/* Header Back Button */}
@@ -228,6 +278,49 @@ export default function AdminPage() {
             onChange={(e) => setAdminToken(e.target.value)}
             style={{ padding: '10px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.85rem', width: '200px', fontWeight: 700 }}
           />
+        </div>
+      </div>
+
+      {/* AI Real-time Draft Generator Section */}
+      <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', marginBottom: '32px', boxShadow: 'var(--shadow-sm)' }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sparkles size={18} color="var(--brand-rose)" /> AI Curation Draft Generator (AI 초안 실시간 추출)
+        </h2>
+        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
+          Paste a Korean official store product link. The system will crawl the page, translate key details to luxury English editorial styling, and auto-populate all tabs.
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <input
+              type="text"
+              placeholder="Paste official product page URL (e.g. https://dalba.co.kr/goods/...)"
+              value={officialUrl}
+              onChange={(e) => setOfficialUrl(e.target.value)}
+              style={{ flex: 1, minWidth: '300px', padding: '12px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.85rem' }}
+            />
+            <button
+              type="button"
+              onClick={generateDraftFromUrl}
+              style={{
+                padding: '12px 24px', borderRadius: 'var(--radius-sm)', background: 'var(--brand-rose)', color: '#FFF',
+                fontSize: '0.85rem', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px',
+                boxShadow: '0 4px 12px rgba(128, 0, 32, 0.15)'
+              }}
+            >
+              <Sparkles size={16} /> Generate AI Draft
+            </button>
+          </div>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Gemini API Key (Optional if configured on server):</span>
+            <input
+              type="password"
+              placeholder="AI Studio API Key (AI Key가 서버에 없으면 여기에 입력)"
+              value={geminiApiKey}
+              onChange={(e) => setGeminiApiKey(e.target.value)}
+              style={{ padding: '8px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.8rem', width: '350px' }}
+            />
+            <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.75rem', color: 'var(--brand-rose)', fontWeight: 700, textDecoration: 'underline' }}>Get Free API Key</a>
+          </div>
         </div>
       </div>
 
