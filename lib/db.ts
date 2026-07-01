@@ -827,8 +827,8 @@ export async function createReportInDb(payload: CreateReportPayload): Promise<{ 
       statements.push(
         db.prepare(
           `INSERT INTO price_matrix (
-            id, product_id, platform_name, logo_bg, logo_color, stock_status, shipping_info, price_usd, promo_code, discount_text, buy_url, is_lowest
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+            id, product_id, platform_name, logo_bg, logo_color, stock_status, shipping_info, price_usd, promo_code, discount_text, buy_url, is_lowest, variant_option
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
         ).bind(
           `pm_${payload.reportId}_${index}`,
           productId,
@@ -841,7 +841,8 @@ export async function createReportInDb(payload: CreateReportPayload): Promise<{ 
           item.promoCode || null,
           item.discountText || null,
           item.buyUrl,
-          item.isLowest ? 1 : 0
+          item.isLowest ? 1 : 0,
+          item.variantOption || null
         ) as unknown as D1PreparedStatementLike
       );
     });

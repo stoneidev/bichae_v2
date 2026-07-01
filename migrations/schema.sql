@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS price_matrix (
   discount_text TEXT,
   buy_url TEXT NOT NULL,
   is_lowest INTEGER DEFAULT 0,
+  variant_option TEXT,
   FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
