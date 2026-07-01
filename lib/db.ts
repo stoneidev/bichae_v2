@@ -327,7 +327,25 @@ export async function getDailyReportFromDb(): Promise<FullDailyReportPayload> {
           product: productRes as unknown as Product,
           priceMatrix: (priceRes.results || []) as unknown as PriceItem[],
           keyIngredients: (ingredientsRes.results || []) as unknown as KeyIngredient[],
-          socialReviews: (reviewsRes.results || []) as unknown as CommunityReview[],
+          socialReviews: (reviewsRes.results || []).map((r) => {
+            const row = r as unknown as {
+              id: string;
+              platform: 'REDDIT' | 'YOUTUBE' | 'INSTAGRAM';
+              badge_color: string;
+              score_summary: string;
+              quote: string;
+              analysis_meta: string;
+            };
+            return {
+              id: row.id,
+              platform: row.platform,
+              badge_color: row.badge_color,
+              channel_or_user: row.score_summary || '',
+              title_or_context: row.analysis_meta || '',
+              quote: row.quote || '',
+              metrics: row.score_summary || '',
+            };
+          }) as unknown as CommunityReview[],
         };
       }
     }
@@ -447,7 +465,25 @@ export async function getReportByIdFromDb(id: string): Promise<FullDailyReportPa
           product: productRes as unknown as Product,
           priceMatrix: (priceRes.results || []) as unknown as PriceItem[],
           keyIngredients: (ingredientsRes.results || []) as unknown as KeyIngredient[],
-          socialReviews: (reviewsRes.results || []) as unknown as CommunityReview[],
+          socialReviews: (reviewsRes.results || []).map((r) => {
+            const row = r as unknown as {
+              id: string;
+              platform: 'REDDIT' | 'YOUTUBE' | 'INSTAGRAM';
+              badge_color: string;
+              score_summary: string;
+              quote: string;
+              analysis_meta: string;
+            };
+            return {
+              id: row.id,
+              platform: row.platform,
+              badge_color: row.badge_color,
+              channel_or_user: row.score_summary || '',
+              title_or_context: row.analysis_meta || '',
+              quote: row.quote || '',
+              metrics: row.score_summary || '',
+            };
+          }) as unknown as CommunityReview[],
         };
       }
     } catch (err) {
@@ -672,4 +708,203 @@ export async function getAllReportSummariesFromDb(): Promise<ReportSummary[]> {
     { id: MOCK_DAILY_REPORT.report.id, title: MOCK_DAILY_REPORT.report.title, publishDate: MOCK_DAILY_REPORT.report.publish_date },
     ...archived,
   ];
+}
+
+export interface CreateReportPayload {
+  reportId: string;
+  publishDate: string;
+  isActiveDaily: boolean;
+  fullInciList: string;
+  ewgStatus: string;
+  editorNote: string;
+  product: {
+    name: string;
+    brandName: string;
+    brandDescription: string;
+    brandWebsite: string;
+    category: string;
+    description: string;
+    volume: string;
+    msrpUsd: number;
+    image_url?: string;
+  };
+  priceMatrix: {
+    platformName: string;
+    priceUsd: number;
+    buyUrl: string;
+    variantOption: string;
+    stockStatus: string;
+    shippingInfo: string;
+    logoBg?: string;
+    logoColor?: string;
+    discountText?: string;
+    promoCode?: string;
+    isLowest?: boolean;
+  }[];
+  keyIngredients: {
+    name: string;
+    description: string;
+    tagColor?: string;
+  }[];
+  socialReviews: {
+    platform: 'REDDIT' | 'YOUTUBE' | 'INSTAGRAM';
+    badgeColor: string;
+    scoreSummary: string;
+    quote: string;
+    analysisMeta: string;
+  }[];
+}
+
+interface D1PreparedStatementLike {
+  bind: (...args: unknown[]) => D1PreparedStatementLike;
+  run: () => Promise<unknown>;
+}
+
+export async function createReportInDb(payload: CreateReportPayload): Promise<{ success: boolean; error?: string }> {
+  const db = getDb();
+  if (!db) {
+    return { success: false, error: 'Database context not available. Check your D1 binding.' };
+  }
+
+  const productId = `prod_${payload.product.brandName.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${payload.product.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`.slice(0, 50);
+
+  try {
+    const statements: D1PreparedStatementLike[] = [];
+
+    // 1. Insert product
+    statements.push(
+      db.prepare(
+        `INSERT OR REPLACE INTO products (
+          id, name, brand_name, brand_description, brand_website, category, description, volume, msrp_usd, lowest_price_usd, best_deal_platform, best_deal_discount, is_authentic
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`
+      ).bind(
+        productId,
+        payload.product.name,
+        payload.product.brandName,
+        payload.product.brandDescription || '',
+        payload.product.brandWebsite || '',
+        payload.product.category,
+        payload.product.description,
+        payload.product.volume || '',
+        payload.product.msrpUsd,
+        payload.priceMatrix.find((p) => p.isLowest)?.priceUsd || payload.product.msrpUsd,
+        payload.priceMatrix.find((p) => p.isLowest)?.platformName || 'Brand Direct',
+        payload.priceMatrix.find((p) => p.isLowest)?.discountText || '0% OFF'
+      ) as unknown as D1PreparedStatementLike
+    );
+
+    // 2. If is_active_daily is true, clear all active flags first
+    if (payload.isActiveDaily) {
+      statements.push(
+        db.prepare('UPDATE reports SET is_active_daily = 0') as unknown as D1PreparedStatementLike
+      );
+    }
+
+    // 3. Insert report
+    statements.push(
+      db.prepare(
+        `INSERT OR REPLACE INTO reports (
+          id, product_id, title, publish_date, is_active_daily, full_inci_list, ewg_status, editor_note
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(
+        payload.reportId,
+        productId,
+        `${payload.product.brandName} - ${payload.product.name}`,
+        payload.publishDate,
+        payload.isActiveDaily ? 1 : 0,
+        payload.fullInciList,
+        payload.ewgStatus || 'EWG Green Grade Verified',
+        payload.editorNote || ''
+      ) as unknown as D1PreparedStatementLike
+    );
+
+    // 4. Clear and insert price_matrix
+    statements.push(
+      db.prepare('DELETE FROM price_matrix WHERE product_id = ?').bind(productId) as unknown as D1PreparedStatementLike
+    );
+
+    payload.priceMatrix.forEach((item, index) => {
+      statements.push(
+        db.prepare(
+          `INSERT INTO price_matrix (
+            id, product_id, platform_name, logo_bg, logo_color, stock_status, shipping_info, price_usd, promo_code, discount_text, buy_url, is_lowest
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        ).bind(
+          `pm_${payload.reportId}_${index}`,
+          productId,
+          item.platformName,
+          item.logoBg || '#111827',
+          item.logoColor || '#FFF',
+          item.stockStatus || 'In Stock',
+          item.shippingInfo || 'Standard Shipping',
+          item.priceUsd,
+          item.promoCode || null,
+          item.discountText || null,
+          item.buyUrl,
+          item.isLowest ? 1 : 0
+        ) as unknown as D1PreparedStatementLike
+      );
+    });
+
+    // 5. Clear and insert key ingredients
+    statements.push(
+      db.prepare('DELETE FROM key_ingredients WHERE product_id = ?').bind(productId) as unknown as D1PreparedStatementLike
+    );
+
+    payload.keyIngredients.forEach((item, index) => {
+      statements.push(
+        db.prepare(
+          `INSERT INTO key_ingredients (
+            id, product_id, name, description, tag_color
+          ) VALUES (?, ?, ?, ?, ?)`
+        ).bind(
+          `ki_${payload.reportId}_${index}`,
+          productId,
+          item.name,
+          item.description,
+          item.tagColor || 'var(--brand-rose)'
+        ) as unknown as D1PreparedStatementLike
+      );
+    });
+
+    // 6. Clear and insert social reviews
+    statements.push(
+      db.prepare('DELETE FROM social_reviews WHERE product_id = ?').bind(productId) as unknown as D1PreparedStatementLike
+    );
+
+    payload.socialReviews.forEach((item, index) => {
+      statements.push(
+        db.prepare(
+          `INSERT INTO social_reviews (
+            id, product_id, platform, badge_color, score_summary, quote, analysis_meta
+          ) VALUES (?, ?, ?, ?, ?, ?, ?)`
+        ).bind(
+          `sr_${payload.reportId}_${index}`,
+          productId,
+          item.platform,
+          item.badgeColor || '#FF4500',
+          item.scoreSummary || 'Consensus: 4.9 / 5.0',
+          item.quote || '',
+          item.analysisMeta || 'Community voice'
+        ) as unknown as D1PreparedStatementLike
+      );
+    });
+
+    // Cloudflare D1 batch transaction execution
+    const batchDb = db as unknown as { batch: (stmts: D1PreparedStatementLike[]) => Promise<unknown> };
+    if (typeof batchDb.batch === 'function') {
+      await withTimeout(batchDb.batch(statements));
+    } else {
+      // Fallback for non-batch environments (if any)
+      for (const stmt of statements) {
+        await withTimeout(stmt.run());
+      }
+    }
+
+    return { success: true };
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error('Failed to create report in D1:', err);
+    return { success: false, error: errorMsg };
+  }
 }
