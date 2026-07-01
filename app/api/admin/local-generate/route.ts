@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
     const geminiPayload = {
       contents: [{ parts: [{ text: SCHEMA_PROMPT + pageHtml }] }],
       tools: [{ googleSearch: {} }],
-      generationConfig: { responseMimeType: 'application/json' },
+      generationConfig: {},
     };
 
     const geminiRes = await fetch(geminiUrl, {
@@ -146,7 +146,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Gemini returned no content.' }, { status: 502 });
     }
 
-    const parsed = JSON.parse(resultText);
+    // Extract JSON from response (may be wrapped in ```json ... ``` fences)
+    const jsonMatch = resultText.match(/```json\s*([\s\S]*?)```/) || resultText.match(/(\{[\s\S]*\})/);
+    const jsonStr = jsonMatch ? jsonMatch[1] : resultText;
+    const parsed = JSON.parse(jsonStr.trim());
     return NextResponse.json({ success: true, draft: parsed });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Internal Server Error';

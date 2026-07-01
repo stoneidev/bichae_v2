@@ -178,9 +178,7 @@ Generate a JSON object strictly matching the following schema. Do not output any
           googleSearch: {}
         }
       ],
-      generationConfig: {
-        responseMimeType: 'application/json'
-      }
+      generationConfig: {}
     };
 
     const geminiResponse = await fetch(geminiUrl, {
@@ -209,8 +207,10 @@ Generate a JSON object strictly matching the following schema. Do not output any
       );
     }
 
-    // Try parsing to verify it is valid JSON
-    const parsedData = JSON.parse(resultText);
+    // Extract JSON from response (may be wrapped in ```json ... ``` fences)
+    const jsonMatch = resultText.match(/```json\s*([\s\S]*?)```/) || resultText.match(/(\{[\s\S]*\})/);
+    const jsonStr = jsonMatch ? jsonMatch[1] : resultText;
+    const parsedData = JSON.parse(jsonStr.trim());
 
     return NextResponse.json({ success: true, draft: parsedData });
   } catch (error: unknown) {
