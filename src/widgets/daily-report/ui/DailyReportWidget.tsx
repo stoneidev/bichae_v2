@@ -71,6 +71,12 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
   const cleanOrigin = product.origin ? product.origin.replace('🇰🇷', '').trim() : 'Made in South Korea';
   const guide = getBuyingGuide(product.category);
 
+  // Parse per-product editorial JSON fields (fall back to null if absent/malformed)
+  const dermalScience = (() => { try { return product.dermal_science ? JSON.parse(product.dermal_science) : null; } catch { return null; } })();
+  const buyerGuideDb = (() => { try { return product.buyer_guide ? JSON.parse(product.buyer_guide) : null; } catch { return null; } })();
+  const applicationSteps = (() => { try { return product.application_steps ? JSON.parse(product.application_steps) : null; } catch { return null; } })();
+  const makerStory = (() => { try { return product.maker_story ? JSON.parse(product.maker_story) : null; } catch { return null; } })();
+
   // Distinct two-letter monogram so similarly-named retailers don't collide
   // (e.g. "Stylevana" → SV, "StyleKorean" → SK).
   const retailerMonogram = (name: string) => {
@@ -777,147 +783,116 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
 
           <hr className="rule" />
 
-          {/* CHAPTER V: SUNSCREEN SCIENCE & FORMULATION EFFICACY */}
+          {/* CHAPTER V: DERMAL SCIENCE — per-product from DB */}
+          {dermalScience && (
           <div data-reveal className="chapter">
             <div className="eyebrow">Chapter V — Dermal Science</div>
-            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>UV Defense &amp; Brightening Mechanism</h3>
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>{dermalScience.title}</h3>
             <p className="measure-wide" style={{ fontSize: '1.025rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '28px' }}>
-              Dermatological analysis of the triple-function actives delivering SPF50+/PA++++ UV defense, whitening, and anti-wrinkle efficacy in a single dewy formulation.
+              {dermalScience.description}
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
-              <div style={{ padding: '28px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ display: 'inline-flex', padding: '10px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card)', color: 'var(--brand-rose)', marginBottom: '16px' }}>
-                  <FlaskRound size={22} />
+              {(dermalScience.cards || []).map((card: { icon: string; title: string; body: string }, i: number) => (
+                <div key={i} style={{ padding: '28px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
+                  <div style={{ display: 'inline-flex', padding: '10px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card)', color: i === 0 ? 'var(--brand-rose)' : 'var(--brand-sage)', marginBottom: '16px' }}>
+                    {i === 0 ? <FlaskRound size={22} /> : <Microscope size={22} />}
+                  </div>
+                  <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>{card.title}</h4>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>{card.body}</p>
                 </div>
-                <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>White Truffle Extract</h4>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                  Sourced from Italian white truffles, this rare botanical extract is rich in antioxidants and polysaccharides that neutralise UV-induced free radicals, suppress melanin synthesis for a luminous tone-up, and reinforce the skin's natural moisture barrier.
-                </p>
-              </div>
-
-              <div style={{ padding: '28px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ display: 'inline-flex', padding: '10px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-card)', color: 'var(--brand-sage)', marginBottom: '16px' }}>
-                  <Microscope size={22} />
-                </div>
-                <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>Niacinamide & Hyaluronic Acid Complex</h4>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                  Niacinamide inhibits melanosome transfer to visibly brighten post-sun discolouration, while a multi-molecular weight Hyaluronic Acid matrix delivers 30-hour clinically verified hydration and seals in lasting dewy radiance beneath the UV filter film.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
+          )}
 
 
           <hr className="rule" />
 
-          {/* CHAPTER VI: HOW TO CHOOSE A TONE-UP SUNSCREEN */}
+          {/* CHAPTER VI: BUYER GUIDE — per-product from DB */}
+          {buyerGuideDb && (
           <div data-reveal className="chapter">
             <div className="eyebrow">Chapter VI — Buyer Guide</div>
-            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>How to Select a High-Performance Tone-Up Sunscreen</h3>
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>{buyerGuideDb.title}</h3>
             <p className="measure-wide" style={{ fontSize: '1.025rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '28px' }}>
-              Essential criteria for distinguishing clinical-grade SPF50+ formulations from low-protection, heavy-cast alternatives.
+              {buyerGuideDb.description}
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {[
-                {
-                  step: '01',
-                  title: 'Verify Triple-Function Certification (Whitening + Anti-Wrinkle + UV)',
-                  desc: 'Confirm the sunscreen carries official triple-function cosmetic certification — not just SPF marketing claims — to ensure it simultaneously addresses UV protection, brightening, and anti-ageing in a single application.'
-                },
-                {
-                  step: '02',
-                  title: 'Reef-Friendly Formula: No Oxybenzone or Octinoxate',
-                  desc: 'Choose formulations certified free of benzophenone-3 (oxybenzone) and octinoxate. The d\'Alba Waterfull holds KOTITI reef-safe certification, making it safe for ocean ecosystems and sensitive skin alike.'
-                },
-                {
-                  step: '03',
-                  title: 'Long-Wear Hydration & Zero White Cast',
-                  desc: 'Select water-based textures with clinically verified 30-hour moisturising efficacy that deliver a natural pink radiance tone-up without white residue or a chalky cast — key for all skin tones.'
-                }
-              ].map((guide) => (
-                <div key={guide.step} style={{ display: 'flex', gap: '20px', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)' }}>
-                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 800, color: 'var(--brand-rose)' }}>{guide.step}</span>
+              {(buyerGuideDb.steps || []).map((s: { step: string; title: string; desc: string }) => (
+                <div key={s.step} style={{ display: 'flex', gap: '20px', padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)' }}>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 800, color: 'var(--brand-rose)' }}>{s.step}</span>
                   <div>
-                    <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>{guide.title}</h4>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65, margin: 0 }}>{guide.desc}</p>
+                    <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>{s.title}</h4>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.65, margin: 0 }}>{s.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+          )}
 
 
           <hr className="rule" />
 
-          {/* CHAPTER VII: APPLICATION CLINIC */}
+          {/* CHAPTER VII: APPLICATION CLINIC — per-product from DB */}
+          {applicationSteps && (
           <div data-reveal className="chapter">
             <div className="eyebrow">Chapter VII — Application Clinic</div>
-            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>Sunscreen Application &amp; Layering Protocol</h3>
+            <h3 className="chapter-title" style={{ marginBottom: '20px' }}>{applicationSteps.title}</h3>
             <p className="measure-wide" style={{ fontSize: '1.025rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '28px' }}>
-              A step-by-step protocol for maximum UV protection and an all-day dewy tone-up finish, from morning skincare through outdoor sun exposure.
+              {applicationSteps.description}
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-              <div style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 1 • SKINCARE FINALE</div>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Apply as the Final Skincare Step</h4>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>Complete your toner, serum, and moisturiser routine first. d'Alba Waterfull goes on last in the skincare lineup — its UV filter film must sit on top of all actives to function correctly.</p>
-              </div>
-
-              <div style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 2 • APPLICATION</div>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Spread Evenly Over Face, Neck &amp; Body</h4>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>Dispense an appropriate amount and smooth evenly across the face, neck, arms, and legs. Pat gently with fingertips on delicate eye-area skin to prevent fine lines from application pressure.</p>
-              </div>
-
-              <div style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>STEP 3 • SUN TIMING &amp; REAPPLICATION</div>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Apply 30 Minutes Before Sun Exposure</h4>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>Allow 30 minutes before going outdoors so the UV filter fully bonds to skin. Reapply every 2–3 hours during prolonged outdoor activity — sweat-proof coverage is tested but not unlimited.</p>
-              </div>
+              {(applicationSteps.steps || []).map((s: { label: string; title: string; body: string }) => (
+                <div key={s.label} style={{ padding: '22px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)', textTransform: 'uppercase', marginBottom: '8px' }}>{s.label}</div>
+                  <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>{s.title}</h4>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>{s.body}</p>
+                </div>
+              ))}
             </div>
           </div>
+          )}
 
 
           <hr className="rule" />
 
-          {/* CHAPTER VIII: BRAND ORIGIN & OFFICIAL DIRECT STORE */}
+          {/* CHAPTER VIII: THE MAKER — per-product from DB */}
+          {makerStory && (
           <div data-reveal className="chapter">
             <div className="eyebrow">Chapter VIII — The Maker</div>
-
             <h3 className="chapter-title" style={{ marginBottom: '20px' }}>Brand Heritage &amp; Official Direct Store</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               <div>
-                <h4 style={{ fontFamily: 'var(--font-serif), var(--font-serif-fallback)', fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>d&apos;Alba — 달바 글로벌</h4>
-                <p className="measure" style={{ fontSize: '0.975rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>
-                  Founded in South Korea and headquartered in Mapo-gu, Seoul, d&apos;Alba (d&apos;Alba Global Co., Ltd., CEO Ban Seong-yeon) is a premium K-beauty brand built around the rare Italian white truffle. The brand's philosophy centres on combining the luxurious bioactives of the truffle — a natural antioxidant and moisture-binding ingredient — with clinically validated Korean cosmetic science. Manufactured by Korea Kolmar, one of South Korea's most trusted OEM laboratories, d&apos;Alba formulations undergo rigorous safety and efficacy testing including vegan certification by Italy's V-LABEL and reef-safe certification by KOTITI.
-                </p>
+                <h4 style={{ fontFamily: 'var(--font-serif), var(--font-serif-fallback)', fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>{makerStory.brandDisplayName}</h4>
+                <p className="measure" style={{ fontSize: '0.975rem', color: 'var(--text-secondary)', lineHeight: 1.75 }}>{makerStory.story}</p>
               </div>
 
               {/* Brand Certifications Strip */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                {[
-                  { icon: <Leaf size={14} />, label: 'Vegan Certified — Italy V-LABEL' },
-                  { icon: <ShieldCheck size={14} />, label: 'Reef-Safe — KOTITI Certified' },
-                  { icon: <Award size={14} />, label: 'Triple-Function Cosmetic (MFDS)' },
-                  { icon: <CheckCircle2 size={14} />, label: 'Low-Irritation Tested' },
-                ].map((cert) => (
-                  <span key={cert.label} style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '6px',
-                    padding: '7px 14px', borderRadius: 'var(--radius-full)',
-                    background: 'var(--bg-card)', border: '1px solid var(--border-subtle)',
-                    fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)'
-                  }}>
-                    <span style={{ color: 'var(--brand-sage)' }}>{cert.icon}</span>
-                    {cert.label}
-                  </span>
-                ))}
+                {(makerStory.certifications || []).map((cert: { icon: string; label: string }) => {
+                  const iconEl = cert.icon === 'leaf' ? <Leaf size={14} />
+                    : cert.icon === 'award' ? <Award size={14} />
+                    : cert.icon === 'check' ? <CheckCircle2 size={14} />
+                    : <ShieldCheck size={14} />;
+                  return (
+                    <span key={cert.label} style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '6px',
+                      padding: '7px 14px', borderRadius: 'var(--radius-full)',
+                      background: 'var(--bg-card)', border: '1px solid var(--border-subtle)',
+                      fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)'
+                    }}>
+                      <span style={{ color: 'var(--brand-sage)' }}>{iconEl}</span>
+                      {cert.label}
+                    </span>
+                  );
+                })}
               </div>
 
-              {/* Official Brand Direct Store Highlight Showcase Card */}
+              {/* Official Brand Direct Store */}
               <div style={{
                 padding: '24px', borderRadius: 'var(--radius-md)', background: 'var(--bg-card)',
                 border: '1px solid #03C75A', boxShadow: '0 4px 20px rgba(3, 199, 90, 0.08)',
@@ -927,42 +902,26 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', fontWeight: 800, color: '#03C75A', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
                     <ShieldCheck size={16} color="#03C75A" /> Official Direct Brand Store
                   </div>
-                  <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>d&apos;Alba Official Brand Store — dalba.co.kr</h4>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px', margin: 0 }}>Direct Manufacturer Guarantee · Free shipping over KRW 30,000 · CJ Logistics 2–3 Business Days</p>
+                  <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>{makerStory.storeName}</h4>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px', margin: 0 }}>{makerStory.storeShipping}</p>
                 </div>
-                <a href="https://dalba.co.kr/goods/goods_view.php?goodsNo=1000000094" target="_blank" rel="noreferrer" className="btn-pdp" style={{ padding: '12px 24px', borderRadius: 'var(--radius-full)', background: '#03C75A', color: '#FFF', fontWeight: 800, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', boxShadow: '0 4px 12px rgba(3, 199, 90, 0.25)' }}>
+                <a href={makerStory.storeUrl} target="_blank" rel="noreferrer" className="btn-pdp" style={{ padding: '12px 24px', borderRadius: 'var(--radius-full)', background: '#03C75A', color: '#FFF', fontWeight: 800, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', boxShadow: '0 4px 12px rgba(3, 199, 90, 0.25)' }}>
                   Visit Official Direct Store <ExternalLink size={15} />
                 </a>
               </div>
 
-              {/* Verified Korean Official Brand Store Customer Review Sentiment Analysis */}
+              {/* Review Sentiments */}
               <div style={{ marginTop: '12px', padding: '20px', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)' }}>
                 <div style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px' }}>
                   Verified Customer Review Sentiments (Korean Official Direct Store)
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {[
-                    '💧 30-Hour Moisture Lock',
-                    '✨ Pink Radiance Tone-Up',
-                    '🌿 Zero White Cast',
-                    '👁️ No Eye Stinging',
-                    '🛡️ Sweat-Proof Coverage',
-                    '⚡ Fast Absorbing',
-                    '🪶 Lightweight Dewy Finish',
-                    '💄 Seamless Makeup Base',
-                    '🌸 Vegan & Reef-Safe',
-                    '🕊️ Low-Irritation Tested',
-                    '☀️ SPF50+/PA++++',
-                    '✨ White Truffle Brightening',
-                    '🧴 Water-Rich Texture'
-                  ].map((tag) => (
+                  {(makerStory.reviewTags || []).map((tag: string) => (
                     <span key={tag} style={{
                       padding: '6px 14px', borderRadius: 'var(--radius-full)',
                       background: 'var(--bg-card)', border: '1px solid var(--border-subtle)',
                       fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)'
-                    }}>
-                      {tag}
-                    </span>
+                    }}>{tag}</span>
                   ))}
                 </div>
               </div>
@@ -974,6 +933,7 @@ export function DailyReportWidget({ reportId, initialData }: DailyReportWidgetPr
               </div>
             </div>
           </div>
+          )}
 
         </div>
 

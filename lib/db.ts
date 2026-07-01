@@ -22,6 +22,10 @@ export interface Product {
   best_deal_platform: string;
   best_deal_discount: string;
   is_authentic: number;
+  dermal_science?: string;
+  buyer_guide?: string;
+  application_steps?: string;
+  maker_story?: string;
   created_at?: string;
 }
 
@@ -757,6 +761,10 @@ export interface CreateReportPayload {
     volume: string;
     msrpUsd: number;
     image_url?: string;
+    dermalScience?: string;
+    buyerGuide?: string;
+    applicationSteps?: string;
+    makerStory?: string;
   };
   priceMatrix: {
     platformName: string;
@@ -805,8 +813,9 @@ export async function createReportInDb(payload: CreateReportPayload): Promise<{ 
     statements.push(
       db.prepare(
         `INSERT OR REPLACE INTO products (
-          id, name, brand_name, brand_description, brand_website, category, description, volume, msrp_usd, lowest_price_usd, best_deal_platform, best_deal_discount, is_authentic
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`
+          id, name, brand_name, brand_description, brand_website, category, description, volume, msrp_usd, lowest_price_usd, best_deal_platform, best_deal_discount, is_authentic,
+          dermal_science, buyer_guide, application_steps, maker_story
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?)`
       ).bind(
         productId,
         payload.product.name,
@@ -819,7 +828,11 @@ export async function createReportInDb(payload: CreateReportPayload): Promise<{ 
         payload.product.msrpUsd,
         payload.priceMatrix.find((p) => p.isLowest)?.priceUsd || payload.product.msrpUsd,
         payload.priceMatrix.find((p) => p.isLowest)?.platformName || 'Brand Direct',
-        payload.priceMatrix.find((p) => p.isLowest)?.discountText || '0% OFF'
+        payload.priceMatrix.find((p) => p.isLowest)?.discountText || '0% OFF',
+        payload.product.dermalScience ? JSON.stringify(payload.product.dermalScience) : null,
+        payload.product.buyerGuide ? JSON.stringify(payload.product.buyerGuide) : null,
+        payload.product.applicationSteps ? JSON.stringify(payload.product.applicationSteps) : null,
+        payload.product.makerStory ? JSON.stringify(payload.product.makerStory) : null,
       ) as unknown as D1PreparedStatementLike
     );
 

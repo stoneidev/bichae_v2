@@ -15,6 +15,10 @@ CREATE TABLE IF NOT EXISTS products (
   best_deal_discount TEXT NOT NULL,
   is_authentic INTEGER DEFAULT 1,
   image_url TEXT,
+  dermal_science TEXT,
+  buyer_guide TEXT,
+  application_steps TEXT,
+  maker_story TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

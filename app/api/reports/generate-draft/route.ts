@@ -86,7 +86,83 @@ Generate a JSON object strictly matching the following schema. Do not output any
       "quote": "A realistic aesthetic Instagram reel quote.",
       "analysisMeta": "Post/Tag count metrics"
     }
-  ]
+  ],
+  "dermalScience": {
+    "title": "Clinical Mechanism & Key Actives headline for this specific product (e.g. UV Defense & Brightening Mechanism)",
+    "description": "One paragraph explaining the clinical/dermatological mechanism of this product (2-3 sentences).",
+    "cards": [
+      {
+        "icon": "flask",
+        "title": "Key Active Ingredient 1 name",
+        "body": "Clinical efficacy explanation (2-3 sentences) specific to this product."
+      },
+      {
+        "icon": "microscope",
+        "title": "Key Active Ingredient 2 name or complex name",
+        "body": "Clinical efficacy explanation (2-3 sentences) specific to this product."
+      }
+    ]
+  },
+  "buyerGuide": {
+    "title": "How to Select [product type] — specific to this product category",
+    "description": "One sentence intro for selecting this type of product.",
+    "steps": [
+      {
+        "step": "01",
+        "title": "Selection criterion 1 specific to this product type",
+        "desc": "Explanation why this criterion matters for this product."
+      },
+      {
+        "step": "02",
+        "title": "Selection criterion 2",
+        "desc": "Explanation."
+      },
+      {
+        "step": "03",
+        "title": "Selection criterion 3",
+        "desc": "Explanation."
+      }
+    ]
+  },
+  "applicationSteps": {
+    "title": "Application protocol title specific to this product (e.g. Sunscreen Application & Layering Protocol)",
+    "description": "One sentence describing the goal of this application protocol.",
+    "steps": [
+      {
+        "label": "STEP 1 • [LABEL]",
+        "title": "Step 1 title",
+        "body": "Step 1 instruction specific to this product."
+      },
+      {
+        "label": "STEP 2 • [LABEL]",
+        "title": "Step 2 title",
+        "body": "Step 2 instruction."
+      },
+      {
+        "label": "STEP 3 • [LABEL]",
+        "title": "Step 3 title",
+        "body": "Step 3 instruction."
+      }
+    ]
+  },
+  "makerStory": {
+    "brandDisplayName": "Brand display name (e.g. d'Alba — 달바 글로벌)",
+    "story": "2-3 sentence brand heritage paragraph specific to this brand.",
+    "certifications": [
+      { "icon": "leaf", "label": "Certification or notable fact 1" },
+      { "icon": "shield", "label": "Certification or notable fact 2" },
+      { "icon": "award", "label": "Certification or notable fact 3" },
+      { "icon": "check", "label": "Certification or notable fact 4" }
+    ],
+    "storeName": "Official store name (e.g. Brand Name Official Store — website.com)",
+    "storeUrl": "Official store URL",
+    "storeShipping": "Shipping info string",
+    "reviewTags": [
+      "emoji Tag 1", "emoji Tag 2", "emoji Tag 3", "emoji Tag 4",
+      "emoji Tag 5", "emoji Tag 6", "emoji Tag 7", "emoji Tag 8",
+      "emoji Tag 9", "emoji Tag 10", "emoji Tag 11", "emoji Tag 12", "emoji Tag 13"
+    ]
+  }
 }`;
 
     const geminiPayload = {
