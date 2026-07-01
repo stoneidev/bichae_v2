@@ -25,10 +25,11 @@ CREATE TABLE IF NOT EXISTS reports (
   is_active_daily INTEGER DEFAULT 0,
   full_inci_list TEXT NOT NULL,
   ewg_status TEXT,
+  editor_note TEXT,
   FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
-CREATE TABLE IF NOT EXISTS price_items (
+CREATE TABLE IF NOT EXISTS price_matrix (
   id TEXT PRIMARY KEY,
   product_id TEXT NOT NULL,
   platform_name TEXT NOT NULL,
