@@ -292,8 +292,11 @@ export default function AdminPage() {
         <h2 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Sparkles size={18} color="var(--brand-rose)" /> AI Curation Draft Generator (AI 초안 실시간 추출)
         </h2>
-        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
+        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
           Paste a Korean official store product link. The system will crawl the page, translate key details to luxury English editorial styling, and auto-populate all tabs.
+        </p>
+        <p style={{ fontSize: '0.75rem', color: 'var(--brand-rose)', fontStyle: 'italic', marginBottom: '16px', fontWeight: 600 }}>
+          * Notice: Some brand stores (e.g. Cafe24/Cloudflare protected) block Cloudflare server scraper IPs. If you get a &apos;Server returned invalid response&apos; error, simply paste the URL to Antigravity in the chat, and the AI will scrape, write, and deploy the draft directly to your load queue.
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
