@@ -3,22 +3,52 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  Save, Lock, CheckCircle2, ArrowLeft, Sparkles, ShieldAlert
+  Save, Lock, CheckCircle2, ArrowLeft, Sparkles, ShieldAlert, Laptop
 } from 'lucide-react';
+
+type TabId = 'basic' | 'malls' | 'editorial' | 'chapters';
+
+interface DermalCard { icon: string; title: string; body: string; }
+interface GuideStep { step: string; title: string; desc: string; }
+interface AppStep { label: string; title: string; body: string; }
+interface Certification { icon: string; label: string; }
+
+interface DermalScience { title: string; description: string; cards: DermalCard[]; }
+interface BuyerGuide { title: string; description: string; steps: GuideStep[]; }
+interface ApplicationSteps { title: string; description: string; steps: AppStep[]; }
+interface MakerStory {
+  brandDisplayName: string; story: string;
+  certifications: Certification[];
+  storeName: string; storeUrl: string; storeShipping: string;
+  reviewTags: string[];
+}
+
+const inputStyle: React.CSSProperties = {
+  width: '100%', padding: '10px 12px', borderRadius: 'var(--radius-sm)',
+  border: '1px solid var(--border-subtle)', background: 'var(--bg-main)',
+  color: 'var(--text-primary)', fontSize: '0.875rem', fontFamily: 'inherit',
+};
+const textareaStyle: React.CSSProperties = {
+  ...inputStyle, resize: 'vertical' as const,
+};
+const labelStyle: React.CSSProperties = {
+  display: 'block', fontSize: '0.7rem', fontWeight: 800,
+  textTransform: 'uppercase' as const, color: 'var(--text-muted)', marginBottom: '6px', letterSpacing: '0.06em',
+};
+const fieldStyle: React.CSSProperties = { display: 'flex', flexDirection: 'column' as const };
 
 export default function AdminPage() {
   const [adminToken, setAdminToken] = useState('');
-  const [activeTab, setActiveTab] = useState<'basic' | 'malls' | 'editorial'>('basic');
+  const [activeTab, setActiveTab] = useState<TabId>('basic');
   const [status, setStatus] = useState<{ type: 'idle' | 'loading' | 'success' | 'error'; message?: string }>({ type: 'idle' });
   const [officialUrl, setOfficialUrl] = useState('');
   const [geminiApiKey, setGeminiApiKey] = useState('');
 
-  // 1. Basic Info & Ingredients
-  const [reportId, setReportId] = useState('046');
-  const [publishDate, setPublishDate] = useState(() => {
-    const d = new Date();
-    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  });
+  // Basic Info
+  const [reportId, setReportId] = useState('047');
+  const [publishDate, setPublishDate] = useState(() =>
+    new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+  );
   const [isActiveDaily, setIsActiveDaily] = useState(true);
   const [productName, setProductName] = useState('');
   const [brandName, setBrandName] = useState('');
@@ -32,436 +62,312 @@ export default function AdminPage() {
   const [ewgStatus, setEwgStatus] = useState('EWG Green Grade Verified');
   const [editorNote, setEditorNote] = useState('');
 
-  // 2. 5 Shopping Malls
+  // Malls
   const [malls, setMalls] = useState([
     { name: 'Amazon US Official Store', price: '13.00', url: '', variant: '50ml Single', stock: 'Prime Fulfillment', shipping: 'Free Prime Shipping', logoBg: '#FF9900', logoColor: '#000' },
-    { name: 'Olive Young Global', price: '23.80', url: '', variant: '50ml Special Twin Pack', stock: 'Official Partner', shipping: 'DHL Express 3-5 Days', logoBg: '#99E334', logoColor: '#000' },
-    { name: 'Stylevana Global', price: '18.99', url: '', variant: '50ml Twin Pack (2ea)', stock: 'In Stock', shipping: 'Free Shipping over $48', logoBg: '#111827', logoColor: '#FFF' },
-    { name: 'YesStyle Beauty', price: '19.18', url: '', variant: '50ml Twin Pack Duo', stock: 'In Stock', shipping: 'Standard Shipping', logoBg: '#FF6F61', logoColor: '#FFF' },
-    { name: 'StyleKorean', price: '23.00', url: '', variant: '50ml Twin Pack (2ea)', stock: 'In Stock', shipping: 'Global Dispatch', logoBg: '#E31B23', logoColor: '#FFF' }
+    { name: 'Olive Young Global', price: '23.80', url: '', variant: '50ml', stock: 'Official Partner', shipping: 'DHL Express 3-5 Days', logoBg: '#99E334', logoColor: '#000' },
+    { name: 'Stylevana Global', price: '18.99', url: '', variant: '50ml', stock: 'In Stock', shipping: 'Free Shipping over $48', logoBg: '#111827', logoColor: '#FFF' },
+    { name: 'YesStyle Beauty', price: '19.18', url: '', variant: '50ml', stock: 'In Stock', shipping: 'Standard Shipping', logoBg: '#FF6F61', logoColor: '#FFF' },
+    { name: 'StyleKorean', price: '23.00', url: '', variant: '50ml', stock: 'In Stock', shipping: 'Global Dispatch', logoBg: '#E31B23', logoColor: '#FFF' },
   ]);
 
-  // 3. Key Ingredients (3 items default)
+  // Key Ingredients
   const [ingredients, setIngredients] = useState([
-    { name: 'Madagascar Centella Asiatica (98,000ppm)', description: 'Harvested from untouched Madagascan micro-climates, this pure 98,000ppm extract calms UV redness and heals micro-inflammation.', tagColor: 'var(--brand-rose)' },
-    { name: 'Hyalu-Cica Golden Ratio Bio-Complex', description: 'A proprietary synergistic combination of multi-molecular Hyaluronic Acid and Centella Asiatica that quenches deep hydration.', tagColor: 'var(--brand-sage)' },
-    { name: 'Baby Green 7 Sprout Extracts', description: 'A nutrient-dense botanical complex derived from Broccoli, Alfalfa, and Wheat Sprout that defends skin cells.', tagColor: '#3B82F6' }
+    { name: '', description: '', tagColor: 'var(--brand-rose)' },
+    { name: '', description: '', tagColor: 'var(--brand-sage)' },
+    { name: '', description: '', tagColor: '#3B82F6' },
   ]);
 
-  // 4. Social Consensus Reviews (3 items default)
+  // Social Reviews
   const [reviews, setReviews] = useState([
-    { platform: 'YOUTUBE' as const, badgeColor: '#FF0000', scoreSummary: 'Consensus: 4.9 / 5.0', quote: '"If you hate traditional chemical sunscreens because they feel oily or sting your eyes, this is the absolute holy grail."', analysisMeta: 'Analyzed across 140+ video reviews' },
-    { platform: 'REDDIT' as const, badgeColor: '#FF4500', scoreSummary: 'r/AsianBeauty • u/sunscreen_obsessed', quote: '"Absorbs in 10 seconds, leaves no white cast, and sits under foundation like a luxury moisturizer."', analysisMeta: '+1,650 upvotes' },
-    { platform: 'INSTAGRAM' as const, badgeColor: '#E1306C', scoreSummary: 'Trending Tag #kbeautysunscreen', quote: '"The twin pack is such an incredible deal. Perfect hydrating sunscreen for daily morning routines."', analysisMeta: '62k Tagged Posts' }
+    { platform: 'YOUTUBE' as const, badgeColor: '#FF0000', scoreSummary: '', quote: '', analysisMeta: '' },
+    { platform: 'REDDIT' as const, badgeColor: '#FF4500', scoreSummary: '', quote: '', analysisMeta: '' },
+    { platform: 'INSTAGRAM' as const, badgeColor: '#E1306C', scoreSummary: '', quote: '', analysisMeta: '' },
   ]);
 
-  const handleMallChange = (index: number, field: string, value: string) => {
-    const updated = [...malls];
-    updated[index] = { ...updated[index], [field]: value };
-    setMalls(updated);
+  // Chapters V–VIII
+  const [dermalScience, setDermalScience] = useState<DermalScience>({
+    title: '', description: '',
+    cards: [{ icon: 'flask', title: '', body: '' }, { icon: 'microscope', title: '', body: '' }],
+  });
+  const [buyerGuide, setBuyerGuide] = useState<BuyerGuide>({
+    title: '', description: '',
+    steps: [{ step: '01', title: '', desc: '' }, { step: '02', title: '', desc: '' }, { step: '03', title: '', desc: '' }],
+  });
+  const [applicationSteps, setApplicationSteps] = useState<ApplicationSteps>({
+    title: '', description: '',
+    steps: [{ label: 'STEP 1 • PREPARATION', title: '', body: '' }, { label: 'STEP 2 • APPLICATION', title: '', body: '' }, { label: 'STEP 3 • LOCK IN', title: '', body: '' }],
+  });
+  const [makerStory, setMakerStory] = useState<MakerStory>({
+    brandDisplayName: '', story: '',
+    certifications: [{ icon: 'leaf', label: '' }, { icon: 'shield', label: '' }, { icon: 'award', label: '' }, { icon: 'check', label: '' }],
+    storeName: '', storeUrl: '', storeShipping: '',
+    reviewTags: Array(13).fill(''),
+  });
+
+  const fillDraftIntoForm = (draft: Record<string, unknown>) => {
+    if (draft.reportId) setReportId(String(draft.reportId));
+    if (draft.productName) setProductName(String(draft.productName));
+    if (draft.brandName) setBrandName(String(draft.brandName));
+    if (draft.brandDescription) setBrandDescription(String(draft.brandDescription));
+    if (draft.brandWebsite) setBrandWebsite(String(draft.brandWebsite));
+    if (draft.category) setCategory(String(draft.category));
+    if (draft.volume) setVolume(String(draft.volume));
+    if (draft.msrpUsd) setMsrpUsd(String(draft.msrpUsd));
+    if (draft.productDescription) setProductDescription(String(draft.productDescription));
+    if (draft.fullInciList) setFullInciList(String(draft.fullInciList));
+    if (draft.ewgStatus) setEwgStatus(String(draft.ewgStatus));
+    if (draft.editorNote) setEditorNote(String(draft.editorNote));
+    if (draft.ingredients && Array.isArray(draft.ingredients)) setIngredients(draft.ingredients as typeof ingredients);
+    if (draft.reviews && Array.isArray(draft.reviews)) setReviews(draft.reviews as typeof reviews);
+    if (draft.dermalScience) setDermalScience(draft.dermalScience as DermalScience);
+    if (draft.buyerGuide) setBuyerGuide(draft.buyerGuide as BuyerGuide);
+    if (draft.applicationSteps) setApplicationSteps(draft.applicationSteps as ApplicationSteps);
+    if (draft.makerStory) setMakerStory(draft.makerStory as MakerStory);
   };
 
-  const handleIngredientChange = (index: number, field: string, value: string) => {
-    const updated = [...ingredients];
-    updated[index] = { ...updated[index], [field]: value };
-    setIngredients(updated);
-  };
-
-  const handleReviewChange = (index: number, field: string, value: string) => {
-    const updated = [...reviews];
-    updated[index] = { ...updated[index], [field]: value };
-    setReviews(updated);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!adminToken) {
-      setStatus({ type: 'error', message: 'Please enter the Admin Access Token.' });
-      return;
-    }
-
+  // Local generate (only works on local dev server — bypasses WAF)
+  const generateLocalDraft = async () => {
+    if (!officialUrl) { setStatus({ type: 'error', message: 'URL을 먼저 입력해 주세요.' }); return; }
     setStatus({ type: 'loading' });
-
-    // Filter out malls that have no price or no URL to avoid empty entries in D1
-    const activeMalls = malls.filter((m) => m.price && m.url && parseFloat(m.price) > 0);
-
-    // Find the lowest price to set isLowest flag
-    const validMalls = activeMalls.map((m) => ({ ...m, parsedPrice: parseFloat(m.price) || 999 }));
-    const minPrice = validMalls.length > 0 ? Math.min(...validMalls.map((m) => m.parsedPrice)) : 999;
-
-    const priceMatrixPayload = activeMalls.map((m) => ({
-      platformName: m.name,
-      priceUsd: parseFloat(m.price) || 0,
-      buyUrl: m.url || '#',
-      variantOption: m.variant,
-      stockStatus: m.stock,
-      shippingInfo: m.shipping,
-      logoBg: m.logoBg,
-      logoColor: m.logoColor,
-      isLowest: parseFloat(m.price) === minPrice,
-      discountText: parseFloat(m.price) < parseFloat(msrpUsd) 
-        ? `${Math.round((1 - (parseFloat(m.price) / parseFloat(msrpUsd))) * 100)}% OFF`
-        : undefined
-    }));
-
-    const payload = {
-      adminToken,
-      reportId,
-      publishDate,
-      isActiveDaily,
-      fullInciList,
-      ewgStatus,
-      editorNote,
-      product: {
-        name: productName,
-        brandName,
-        brandDescription,
-        brandWebsite,
-        category,
-        description: productDescription,
-        volume,
-        msrpUsd: parseFloat(msrpUsd) || 0,
-        priceMatrix: priceMatrixPayload // pass price matrix in to help calculate lowest in createReportInDb
-      },
-      priceMatrix: priceMatrixPayload,
-      keyIngredients: ingredients,
-      socialReviews: reviews
-    };
-
     try {
-      const response = await fetch('/api/reports/create', {
+      const res = await fetch('/api/admin/local-generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: officialUrl, geminiApiKey }),
       });
-
-      const resData = await response.json();
-
-      if (!response.ok || !resData.success) {
-        throw new Error(resData.error || 'Failed to submit the report.');
-      }
-
-      setStatus({ type: 'success', message: `Edition #${reportId} has been successfully generated and deployed to the D1 Database!` });
-    } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      setStatus({ type: 'error', message: errorMsg });
-    }
-  };
-
-  const loadDraft = async () => {
-    try {
-      setStatus({ type: 'loading' });
-      const res = await fetch('/admin-draft.json');
-      if (!res.ok) {
-        throw new Error('No active AI Draft found. Please ask Antigravity to generate one first.');
-      }
       const data = await res.json();
-      
-      if (data.reportId) setReportId(data.reportId);
-      if (data.productName) setProductName(data.productName);
-      if (data.brandName) setBrandName(data.brandName);
-      if (data.brandDescription) setBrandDescription(data.brandDescription);
-      if (data.brandWebsite) setBrandWebsite(data.brandWebsite);
-      if (data.category) setCategory(data.category);
-      if (data.volume) setVolume(data.volume);
-      if (data.msrpUsd) setMsrpUsd(data.msrpUsd);
-      if (data.productDescription) setProductDescription(data.productDescription);
-      if (data.fullInciList) setFullInciList(data.fullInciList);
-      if (data.ewgStatus) setEwgStatus(data.ewgStatus);
-      if (data.editorNote) setEditorNote(data.editorNote);
-      
-      if (data.ingredients && Array.isArray(data.ingredients)) {
-        setIngredients(data.ingredients);
-      }
-      if (data.reviews && Array.isArray(data.reviews)) {
-        setReviews(data.reviews);
-      }
-      
-      setStatus({ type: 'success', message: 'Latest AI Draft successfully loaded! Review sections then proceed.' });
+      if (!res.ok || !data.success) throw new Error(data.error || 'Generation failed.');
+      fillDraftIntoForm(data.draft);
+      setStatus({ type: 'success', message: '로컬 크롤링 + AI 분석 완료! 모든 탭이 채워졌습니다. 검토 후 배포하세요.' });
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      setStatus({ type: 'error', message: errorMsg });
+      setStatus({ type: 'error', message: err instanceof Error ? err.message : String(err) });
     }
   };
 
-  const generateDraftFromUrl = async () => {
-    if (!officialUrl) {
-      setStatus({ type: 'error', message: 'Please enter the Official Store URL first.' });
-      return;
-    }
-    
+  // Cloud generate (uses Gemini Google Search — may be blocked by some stores)
+  const generateCloudDraft = async () => {
+    if (!officialUrl) { setStatus({ type: 'error', message: 'URL을 먼저 입력해 주세요.' }); return; }
     setStatus({ type: 'loading' });
     try {
       const res = await fetch('/api/reports/generate-draft', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ url: officialUrl, geminiApiKey })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: officialUrl, geminiApiKey }),
       });
-      const resText = await res.text();
-      let data;
-      try {
-        data = JSON.parse(resText);
-      } catch {
-        throw new Error(`Server returned invalid response (HTML page). This usually indicates a scraper timeout or API error: ${resText.slice(0, 150)}...`);
-      }
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Failed to generate AI draft.');
-      }
-      
-      const draft = data.draft;
-      if (draft.reportId) setReportId(draft.reportId);
-      if (draft.productName) setProductName(draft.productName);
-      if (draft.brandName) setBrandName(draft.brandName);
-      if (draft.brandDescription) setBrandDescription(draft.brandDescription);
-      if (draft.brandWebsite) setBrandWebsite(draft.brandWebsite);
-      if (draft.category) setCategory(draft.category);
-      if (draft.volume) setVolume(draft.volume);
-      if (draft.msrpUsd) setMsrpUsd(draft.msrpUsd);
-      if (draft.productDescription) setProductDescription(draft.productDescription);
-      if (draft.fullInciList) setFullInciList(draft.fullInciList);
-      if (draft.ewgStatus) setEwgStatus(draft.ewgStatus);
-      if (draft.editorNote) setEditorNote(draft.editorNote);
-      
-      if (draft.ingredients && Array.isArray(draft.ingredients)) {
-        setIngredients(draft.ingredients);
-      }
-      if (draft.reviews && Array.isArray(draft.reviews)) {
-        setReviews(draft.reviews);
-      }
-      
-      setStatus({ type: 'success', message: 'AI Draft successfully compiled and filled in the form fields! Review, adjust shopping malls, and publish.' });
+      const text = await res.text();
+      let data: Record<string, unknown>;
+      try { data = JSON.parse(text); } catch { throw new Error(`Invalid server response: ${text.slice(0, 200)}`); }
+      if (!res.ok || !data.success) throw new Error(String(data.error) || 'Failed.');
+      fillDraftIntoForm(data.draft as Record<string, unknown>);
+      setStatus({ type: 'success', message: 'AI Draft 생성 완료! 검토 후 배포하세요.' });
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      setStatus({ type: 'error', message: errorMsg });
+      setStatus({ type: 'error', message: err instanceof Error ? err.message : String(err) });
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adminToken) { setStatus({ type: 'error', message: 'Admin Access Token을 입력해 주세요.' }); return; }
+    setStatus({ type: 'loading' });
+
+    const activeMalls = malls.filter((m) => m.price && m.url && parseFloat(m.price) > 0);
+    const minPrice = activeMalls.length > 0 ? Math.min(...activeMalls.map((m) => parseFloat(m.price))) : 999;
+
+    const priceMatrixPayload = activeMalls.map((m) => ({
+      platformName: m.name, priceUsd: parseFloat(m.price) || 0, buyUrl: m.url,
+      variantOption: m.variant, stockStatus: m.stock, shippingInfo: m.shipping,
+      logoBg: m.logoBg, logoColor: m.logoColor,
+      isLowest: parseFloat(m.price) === minPrice,
+      discountText: parseFloat(m.price) < parseFloat(msrpUsd)
+        ? `${Math.round((1 - parseFloat(m.price) / parseFloat(msrpUsd)) * 100)}% OFF`
+        : undefined,
+    }));
+
+    const payload = {
+      adminToken, reportId, publishDate, isActiveDaily,
+      fullInciList, ewgStatus, editorNote,
+      product: {
+        name: productName, brandName, brandDescription, brandWebsite,
+        category, description: productDescription, volume,
+        msrpUsd: parseFloat(msrpUsd) || 0,
+        dermalScience, buyerGuide, applicationSteps, makerStory,
+      },
+      priceMatrix: priceMatrixPayload,
+      keyIngredients: ingredients,
+      socialReviews: reviews,
+    };
+
+    try {
+      const res = await fetch('/api/reports/create', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const resData = await res.json();
+      if (!res.ok || !resData.success) throw new Error(resData.error || 'Failed to submit.');
+      setStatus({ type: 'success', message: `Edition #${reportId} D1 데이터베이스에 성공적으로 배포됐습니다!` });
+    } catch (err: unknown) {
+      setStatus({ type: 'error', message: err instanceof Error ? err.message : String(err) });
+    }
+  };
+
+  const tabs: { id: TabId; label: string }[] = [
+    { id: 'basic', label: '1. Basic Info & Ingredients' },
+    { id: 'malls', label: '2. Shopping Malls' },
+    { id: 'editorial', label: '3. Editorial & Reviews' },
+    { id: 'chapters', label: '4. Chapters V–VIII' },
+  ];
+
   return (
-    <div style={{ maxWidth: '1000px', margin: '40px auto', padding: '0 20px', fontFamily: 'var(--font-pretendard)' }}>
-      {/* Header Back Button */}
+    <div style={{ maxWidth: '1040px', margin: '40px auto', padding: '0 20px', fontFamily: 'var(--font-pretendard)' }}>
       <div style={{ marginBottom: '24px' }}>
         <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', textDecoration: 'none' }}>
           <ArrowLeft size={16} /> Back to Daily Magazine
         </Link>
       </div>
 
-      {/* Admin Panel Logo Brand */}
+      {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', background: 'var(--brand-obsidian)', color: '#FFF', borderRadius: '8px', fontWeight: 800, fontSize: '1.2rem', border: '1px solid var(--border-subtle)' }}>
-          B
-        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', background: 'var(--brand-obsidian)', color: '#FFF', borderRadius: '8px', fontWeight: 800, fontSize: '1.2rem' }}>B</div>
         <div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.02em' }}>Bichae Daily Intelligence</h1>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>Curation Admin Console &amp; DB Content Generator</p>
         </div>
       </div>
 
-      {/* Access Token & Draft Action Banner */}
-      <div style={{ padding: '20px', borderRadius: 'var(--radius-md)', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+      {/* Auth Strip */}
+      <div style={{ padding: '20px', borderRadius: 'var(--radius-md)', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
         <Lock size={20} color="var(--brand-rose)" />
         <div style={{ flex: 1, minWidth: '200px' }}>
-          <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Admin Verification &amp; AI Drafts</div>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Enter token to authorize DB writes, or load the latest pre-compiled AI product draft.</div>
+          <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Admin Token</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>DB 쓰기 권한 인증 토큰을 입력하세요.</div>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <button
-            type="button"
-            onClick={loadDraft}
-            style={{
-              padding: '10px 16px', borderRadius: 'var(--radius-sm)', background: 'var(--brand-obsidian)', color: '#FFF',
-              fontSize: '0.85rem', fontWeight: 800, cursor: 'pointer', border: '1px solid var(--border-subtle)',
-              display: 'inline-flex', alignItems: 'center', gap: '6px'
-            }}
-          >
-            <Sparkles size={14} /> Load AI Draft
-          </button>
-          <input
-            type="password"
-            placeholder="Access token (e.g. bichae2026)"
-            value={adminToken}
-            onChange={(e) => setAdminToken(e.target.value)}
-            style={{ padding: '10px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.85rem', width: '200px', fontWeight: 700 }}
-          />
-        </div>
+        <input
+          type="password" placeholder="bichae2026"
+          value={adminToken} onChange={(e) => setAdminToken(e.target.value)}
+          style={{ padding: '10px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.85rem', width: '220px', fontWeight: 700 }}
+        />
       </div>
 
-      {/* AI Real-time Draft Generator Section */}
-      <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', marginBottom: '32px', boxShadow: 'var(--shadow-sm)' }}>
-        <h2 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Sparkles size={18} color="var(--brand-rose)" /> AI Curation Draft Generator (AI 초안 실시간 추출)
+      {/* AI Draft Generator */}
+      <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', marginBottom: '28px', boxShadow: 'var(--shadow-sm)' }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sparkles size={18} color="var(--brand-rose)" /> AI 초안 자동 생성
         </h2>
-        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
-          Paste a Korean official store product link. The system will crawl the page, translate key details to luxury English editorial styling, and auto-populate all tabs.
+        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
+          공식몰 URL을 붙여넣고 생성 버튼을 누르면 모든 탭이 자동으로 채워집니다.
+          <strong style={{ color: 'var(--brand-rose)' }}> 로컬 크롤링</strong>은 WAF 차단 없이 직접 접속하여 정확도가 높습니다.
         </p>
-        <p style={{ fontSize: '0.75rem', color: 'var(--brand-rose)', fontStyle: 'italic', marginBottom: '16px', fontWeight: 600 }}>
-          * Notice: Some brand stores (e.g. Cafe24/Cloudflare protected) block Cloudflare server scraper IPs. If you get a &apos;Server returned invalid response&apos; error, simply paste the URL to Antigravity in the chat, and the AI will scrape, write, and deploy the draft directly to your load queue.
-        </p>
+
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <input
-              type="text"
-              placeholder="Paste official product page URL (e.g. https://dalba.co.kr/goods/...)"
-              value={officialUrl}
-              onChange={(e) => setOfficialUrl(e.target.value)}
-              style={{ flex: 1, minWidth: '300px', padding: '12px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.85rem' }}
-            />
+          <input
+            type="text"
+            placeholder="공식 상품 페이지 URL (e.g. https://dalba.co.kr/goods/goods_view.php?goodsNo=1000000094)"
+            value={officialUrl} onChange={(e) => setOfficialUrl(e.target.value)}
+            style={{ padding: '12px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.875rem', width: '100%' }}
+          />
+
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+            {/* Local crawl button — primary */}
             <button
-              type="button"
-              onClick={generateDraftFromUrl}
-              style={{
-                padding: '12px 24px', borderRadius: 'var(--radius-sm)', background: 'var(--brand-rose)', color: '#FFF',
-                fontSize: '0.85rem', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px',
-                boxShadow: '0 4px 12px rgba(128, 0, 32, 0.15)'
-              }}
+              type="button" onClick={generateLocalDraft}
+              style={{ padding: '11px 22px', borderRadius: 'var(--radius-sm)', background: 'var(--brand-rose)', color: '#FFF', fontSize: '0.875rem', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(128,0,32,0.15)' }}
             >
-              <Sparkles size={16} /> Generate AI Draft
+              <Laptop size={16} /> 로컬 크롤링 + AI 생성 (권장)
             </button>
-          </div>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Gemini API Key (Optional if configured on server):</span>
-            <input
-              type="password"
-              placeholder="AI Studio API Key (AI Key가 서버에 없으면 여기에 입력)"
-              value={geminiApiKey}
-              onChange={(e) => setGeminiApiKey(e.target.value)}
-              style={{ padding: '8px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.8rem', width: '350px' }}
-            />
-            <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.75rem', color: 'var(--brand-rose)', fontWeight: 700, textDecoration: 'underline' }}>Get Free API Key</a>
+
+            {/* Cloud generate button — secondary */}
+            <button
+              type="button" onClick={generateCloudDraft}
+              style={{ padding: '11px 22px', borderRadius: 'var(--radius-sm)', background: 'var(--brand-obsidian)', color: '#FFF', fontSize: '0.875rem', fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+            >
+              <Sparkles size={16} /> Cloud AI 생성 (Gemini Search)
+            </button>
+
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginLeft: 'auto' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>Gemini API Key:</span>
+              <input
+                type="password" placeholder="서버에 없을 경우 입력"
+                value={geminiApiKey} onChange={(e) => setGeminiApiKey(e.target.value)}
+                style={{ padding: '8px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.8rem', width: '280px' }}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Notification Toast Alert */}
+      {/* Status Toast */}
       {status.type !== 'idle' && (
         <div style={{
-          padding: '16px 24px', borderRadius: 'var(--radius-md)', marginBottom: '32px',
+          padding: '14px 20px', borderRadius: 'var(--radius-md)', marginBottom: '24px',
           display: 'flex', alignItems: 'center', gap: '12px',
-          background: status.type === 'success' ? 'rgba(3, 199, 90, 0.08)' : status.type === 'error' ? 'rgba(128, 0, 32, 0.06)' : 'var(--bg-card)',
+          background: status.type === 'success' ? 'rgba(3,199,90,0.08)' : status.type === 'error' ? 'rgba(128,0,32,0.06)' : 'var(--bg-card)',
           border: status.type === 'success' ? '1px solid #03C75A' : status.type === 'error' ? '1px solid var(--brand-rose)' : '1px solid var(--border-subtle)',
-          color: status.type === 'success' ? '#03C75A' : status.type === 'error' ? 'var(--brand-rose)' : 'var(--text-primary)'
+          color: status.type === 'success' ? '#03C75A' : status.type === 'error' ? 'var(--brand-rose)' : 'var(--text-primary)',
         }}>
           {status.type === 'success' && <CheckCircle2 size={20} />}
           {status.type === 'error' && <ShieldAlert size={20} />}
-          {status.type === 'loading' && <div className="loading-spinner" style={{ width: '20px', height: '20px', border: '2px solid var(--border-subtle)', borderTopColor: 'var(--brand-rose)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />}
-          <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>
-            {status.type === 'loading' ? 'Processing queries to D1 database...' : status.message}
+          {status.type === 'loading' && <div style={{ width: '20px', height: '20px', border: '2px solid var(--border-subtle)', borderTopColor: 'var(--brand-rose)', borderRadius: '50%', animation: 'spin 1s linear infinite', flexShrink: 0 }} />}
+          <div style={{ fontSize: '0.875rem', fontWeight: 700 }}>
+            {status.type === 'loading' ? 'AI 분석 중... 잠시만 기다려 주세요.' : status.message}
           </div>
         </div>
       )}
 
-      {/* Tabs Row */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-subtle)', marginBottom: '32px', gap: '8px' }}>
-        {[
-          { id: 'basic', label: '1. Basic Info & Ingredients' },
-          { id: 'malls', label: '2. 5 Shopping Malls (Prices & URLs)' },
-          { id: 'editorial', label: '3. Editorial & Social reviews' }
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setActiveTab(tab.id as 'basic' | 'malls' | 'editorial')}
-            style={{
-              padding: '12px 20px', fontSize: '0.85rem', fontWeight: 800, color: activeTab === tab.id ? 'var(--brand-rose)' : 'var(--text-muted)',
-              borderBottom: activeTab === tab.id ? '2px solid var(--brand-rose)' : '2px solid transparent',
-              cursor: 'pointer', transition: 'all 0.2s', marginBottom: '-1px'
-            }}
-          >
-            {tab.label}
-          </button>
+      {/* Tabs */}
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-subtle)', marginBottom: '28px', gap: '4px' }}>
+        {tabs.map((tab) => (
+          <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)}
+            style={{ padding: '11px 18px', fontSize: '0.825rem', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', marginBottom: '-1px', background: 'none', border: 'none', color: activeTab === tab.id ? 'var(--brand-rose)' : 'var(--text-muted)', borderBottom: activeTab === tab.id ? '2px solid var(--brand-rose)' : '2px solid transparent' }}
+          >{tab.label}</button>
         ))}
       </div>
 
-      {/* Form Container */}
       <form onSubmit={handleSubmit} style={{ background: 'var(--bg-card)', padding: '32px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', boxShadow: 'var(--shadow-md)' }}>
-        
-        {/* TAB 1: BASIC INFO */}
+
+        {/* TAB 1: BASIC */}
         {activeTab === 'basic' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Report / Edition ID</label>
-                <input type="text" value={reportId} onChange={(e) => setReportId(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem', fontWeight: 700 }} required />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Publish Date</label>
-                <input type="text" value={publishDate} onChange={(e) => setPublishDate(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem', fontWeight: 700 }} required />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', paddingTop: '32px' }}>
-                <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                  <input type="checkbox" checked={isActiveDaily} onChange={(e) => setIsActiveDaily(e.target.checked)} style={{ width: '18px', height: '18px', accentColor: 'var(--brand-rose)' }} />
-                  Make featured daily report today (오늘의 데일리 리포트 지정)
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+              <div style={fieldStyle}><label style={labelStyle}>Edition ID</label><input style={inputStyle} value={reportId} onChange={(e) => setReportId(e.target.value)} required /></div>
+              <div style={fieldStyle}><label style={labelStyle}>Publish Date</label><input style={inputStyle} value={publishDate} onChange={(e) => setPublishDate(e.target.value)} required /></div>
+              <div style={{ display: 'flex', alignItems: 'center', paddingTop: '26px' }}>
+                <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 700 }}>
+                  <input type="checkbox" checked={isActiveDaily} onChange={(e) => setIsActiveDaily(e.target.checked)} style={{ width: '16px', height: '16px', accentColor: 'var(--brand-rose)' }} />
+                  오늘의 데일리 리포트로 설정
                 </label>
               </div>
             </div>
 
-            <hr style={{ border: 'none', borderTop: '1px solid var(--border-subtle)', margin: '8px 0' }} />
+            <hr style={{ border: 'none', borderTop: '1px solid var(--border-subtle)' }} />
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Product Name</label>
-                <input type="text" placeholder="e.g. Madagascar Centella Hyalu-Cica Water-Fit Sun Serum 50ml" value={productName} onChange={(e) => setProductName(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem' }} required />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Brand Name</label>
-                <input type="text" placeholder="e.g. SKIN1004 (스킨1004)" value={brandName} onChange={(e) => setBrandName(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem' }} required />
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
+              <div style={fieldStyle}><label style={labelStyle}>Product Name</label><input style={inputStyle} value={productName} onChange={(e) => setProductName(e.target.value)} required /></div>
+              <div style={fieldStyle}><label style={labelStyle}>Brand Name</label><input style={inputStyle} value={brandName} onChange={(e) => setBrandName(e.target.value)} required /></div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Category</label>
-                <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem', fontWeight: 600 }}>
-                  <option value="Sun Care">Sun Care</option>
-                  <option value="Essence &amp; Serum">Essence &amp; Serum</option>
-                  <option value="Moisturizer">Moisturizer</option>
-                  <option value="Toner &amp; Mist">Toner &amp; Mist</option>
-                  <option value="Hair Care">Hair Care</option>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
+              <div style={fieldStyle}>
+                <label style={labelStyle}>Category</label>
+                <select value={category} onChange={(e) => setCategory(e.target.value)} style={inputStyle}>
+                  {['Sun Care', 'Essence & Serum', 'Moisturizer', 'Toner & Mist', 'Hair Care'].map((c) => <option key={c}>{c}</option>)}
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Volume</label>
-                <input type="text" placeholder="e.g. 50ml Twin Pack (2ea)" value={volume} onChange={(e) => setVolume(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem' }} />
-              </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>MSRP (Retail Price USD)</label>
-                <input type="number" step="0.01" placeholder="e.g. 25.00" value={msrpUsd} onChange={(e) => setMsrpUsd(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem' }} />
-              </div>
+              <div style={fieldStyle}><label style={labelStyle}>Volume</label><input style={inputStyle} value={volume} onChange={(e) => setVolume(e.target.value)} /></div>
+              <div style={fieldStyle}><label style={labelStyle}>MSRP (USD)</label><input type="number" step="0.01" style={inputStyle} value={msrpUsd} onChange={(e) => setMsrpUsd(e.target.value)} /></div>
             </div>
+
+            <div style={fieldStyle}><label style={labelStyle}>Brand Website URL</label><input style={inputStyle} value={brandWebsite} onChange={(e) => setBrandWebsite(e.target.value)} /></div>
+            <div style={fieldStyle}><label style={labelStyle}>Brand Description</label><textarea rows={3} style={textareaStyle} value={brandDescription} onChange={(e) => setBrandDescription(e.target.value)} /></div>
+            <div style={fieldStyle}><label style={labelStyle}>Product Description</label><textarea rows={3} style={textareaStyle} value={productDescription} onChange={(e) => setProductDescription(e.target.value)} required /></div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Brand Story Website URL</label>
-              <input type="text" placeholder="e.g. Naver Store link or official website" value={brandWebsite} onChange={(e) => setBrandWebsite(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem' }} />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Brand Description Summary</label>
-              <textarea placeholder="Write a short summary about the manufacturer heritage..." value={brandDescription} onChange={(e) => setBrandDescription(e.target.value)} style={{ width: '100%', height: '80px', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem', fontFamily: 'inherit', resize: 'vertical' }} />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Product description</label>
-              <textarea placeholder="Write a brief product detail outline..." value={productDescription} onChange={(e) => setProductDescription(e.target.value)} style={{ width: '100%', height: '80px', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem', fontFamily: 'inherit', resize: 'vertical' }} required />
-            </div>
-
-            {/* Key Ingredients Sub-form */}
-            <div style={{ marginTop: '12px' }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '16px', borderLeft: '3px solid var(--brand-rose)', paddingLeft: '10px' }}>Key Ingredients &amp; Bio-Actives</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '14px', borderLeft: '3px solid var(--brand-rose)', paddingLeft: '10px' }}>Key Ingredients</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {ingredients.map((ing, i) => (
-                  <div key={i} style={{ padding: '16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', display: 'grid', gridTemplateColumns: '250px 1fr', gap: '16px' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Ingredient Name</label>
-                      <input type="text" value={ing.name} onChange={(e) => handleIngredientChange(i, 'name', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 700 }} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Scientific Efficacy / Description</label>
-                      <input type="text" value={ing.description} onChange={(e) => handleIngredientChange(i, 'description', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem' }} />
-                    </div>
+                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '12px', padding: '14px', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)' }}>
+                    <div style={fieldStyle}><label style={labelStyle}>Ingredient {i + 1}</label><input style={inputStyle} value={ing.name} onChange={(e) => { const u = [...ingredients]; u[i] = { ...u[i], name: e.target.value }; setIngredients(u); }} /></div>
+                    <div style={fieldStyle}><label style={labelStyle}>Efficacy Description</label><input style={inputStyle} value={ing.description} onChange={(e) => { const u = [...ingredients]; u[i] = { ...u[i], description: e.target.value }; setIngredients(u); }} /></div>
                   </div>
                 ))}
               </div>
@@ -469,140 +375,164 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* TAB 2: SHOPPING MALLS */}
+        {/* TAB 2: MALLS */}
         {activeTab === 'malls' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>URL이 비어있거나 가격이 0인 항목은 저장 시 제외됩니다. 최저가는 자동으로 계산됩니다.</p>
+            {malls.map((mall, i) => (
+              <div key={mall.name} style={{ padding: '20px', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)' }}>
+                <div style={{ display: 'inline-flex', padding: '5px 12px', borderRadius: '4px', background: mall.logoBg, color: mall.logoColor, fontSize: '0.75rem', fontWeight: 800, marginBottom: '14px' }}>{mall.name}</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginBottom: '12px' }}>
+                  <div style={fieldStyle}><label style={labelStyle}>Price (USD)</label><input type="number" step="0.01" style={inputStyle} value={mall.price} onChange={(e) => { const u = [...malls]; u[i] = { ...u[i], price: e.target.value }; setMalls(u); }} /></div>
+                  <div style={fieldStyle}><label style={labelStyle}>Variant</label><input style={inputStyle} value={mall.variant} onChange={(e) => { const u = [...malls]; u[i] = { ...u[i], variant: e.target.value }; setMalls(u); }} /></div>
+                  <div style={fieldStyle}><label style={labelStyle}>Stock Status</label><input style={inputStyle} value={mall.stock} onChange={(e) => { const u = [...malls]; u[i] = { ...u[i], stock: e.target.value }; setMalls(u); }} /></div>
+                  <div style={fieldStyle}><label style={labelStyle}>Shipping</label><input style={inputStyle} value={mall.shipping} onChange={(e) => { const u = [...malls]; u[i] = { ...u[i], shipping: e.target.value }; setMalls(u); }} /></div>
+                </div>
+                <div style={fieldStyle}><label style={labelStyle}>Buy URL</label><input style={inputStyle} placeholder="https://" value={mall.url} onChange={(e) => { const u = [...malls]; u[i] = { ...u[i], url: e.target.value }; setMalls(u); }} /></div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* TAB 3: EDITORIAL */}
+        {activeTab === 'editorial' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={fieldStyle}><label style={labelStyle}>EWG Status</label><input style={inputStyle} value={ewgStatus} onChange={(e) => setEwgStatus(e.target.value)} /></div>
+            <div style={fieldStyle}><label style={labelStyle}>Editor&apos;s Note</label><textarea rows={6} style={textareaStyle} value={editorNote} onChange={(e) => setEditorNote(e.target.value)} required /></div>
+            <div style={fieldStyle}><label style={labelStyle}>Full INCI List</label><textarea rows={5} style={textareaStyle} value={fullInciList} onChange={(e) => setFullInciList(e.target.value)} required /></div>
+
             <div>
-              <h3 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px', borderLeft: '3px solid var(--brand-rose)', paddingLeft: '10px' }}>5 Global K-Beauty Retailers</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '20px' }}>Input target price, checkout buy links, and details. The system automatically computes the lowest discount badge.</p>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '14px', borderLeft: '3px solid var(--brand-rose)', paddingLeft: '10px' }}>Social Consensus Reviews</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {reviews.map((rev, i) => (
+                  <div key={rev.platform} style={{ padding: '18px', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', background: 'var(--bg-main)' }}>
+                    <span style={{ display: 'inline-flex', padding: '4px 10px', borderRadius: '4px', background: rev.badgeColor, color: '#FFF', fontSize: '0.72rem', fontWeight: 800, marginBottom: '12px' }}>{rev.platform}</span>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '10px' }}>
+                      <div style={fieldStyle}><label style={labelStyle}>Source / User</label><input style={inputStyle} value={rev.scoreSummary} onChange={(e) => { const u = [...reviews]; u[i] = { ...u[i], scoreSummary: e.target.value }; setReviews(u); }} /></div>
+                      <div style={fieldStyle}><label style={labelStyle}>Metrics</label><input style={inputStyle} value={rev.analysisMeta} onChange={(e) => { const u = [...reviews]; u[i] = { ...u[i], analysisMeta: e.target.value }; setReviews(u); }} /></div>
+                    </div>
+                    <div style={fieldStyle}><label style={labelStyle}>Quote</label><textarea rows={2} style={textareaStyle} value={rev.quote} onChange={(e) => { const u = [...reviews]; u[i] = { ...u[i], quote: e.target.value }; setReviews(u); }} /></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: CHAPTERS V–VIII */}
+        {activeTab === 'chapters' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+
+            {/* Chapter V — Dermal Science */}
+            <div>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '14px', borderLeft: '3px solid var(--brand-rose)', paddingLeft: '10px' }}>Chapter V — Dermal Science</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={fieldStyle}><label style={labelStyle}>섹션 타이틀</label><input style={inputStyle} value={dermalScience.title} onChange={(e) => setDermalScience({ ...dermalScience, title: e.target.value })} /></div>
+                <div style={fieldStyle}><label style={labelStyle}>설명 (1-2문장)</label><textarea rows={2} style={textareaStyle} value={dermalScience.description} onChange={(e) => setDermalScience({ ...dermalScience, description: e.target.value })} /></div>
+                {dermalScience.cards.map((card, i) => (
+                  <div key={i} style={{ padding: '14px', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Card {i + 1}</div>
+                    <div style={fieldStyle}><label style={labelStyle}>성분명 / 타이틀</label><input style={inputStyle} value={card.title} onChange={(e) => { const u = [...dermalScience.cards]; u[i] = { ...u[i], title: e.target.value }; setDermalScience({ ...dermalScience, cards: u }); }} /></div>
+                    <div style={fieldStyle}><label style={labelStyle}>효능 설명</label><textarea rows={3} style={textareaStyle} value={card.body} onChange={(e) => { const u = [...dermalScience.cards]; u[i] = { ...u[i], body: e.target.value }; setDermalScience({ ...dermalScience, cards: u }); }} /></div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {malls.map((mall, i) => (
-                <div key={mall.name} style={{ padding: '24px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                    <span style={{ display: 'inline-flex', padding: '6px 12px', borderRadius: '4px', background: mall.logoBg, color: mall.logoColor, fontSize: '0.75rem', fontWeight: 800 }}>
-                      {mall.name}
-                    </span>
+            {/* Chapter VI — Buyer Guide */}
+            <div>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '14px', borderLeft: '3px solid var(--brand-rose)', paddingLeft: '10px' }}>Chapter VI — Buyer Guide</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={fieldStyle}><label style={labelStyle}>타이틀</label><input style={inputStyle} value={buyerGuide.title} onChange={(e) => setBuyerGuide({ ...buyerGuide, title: e.target.value })} /></div>
+                <div style={fieldStyle}><label style={labelStyle}>서브 설명</label><input style={inputStyle} value={buyerGuide.description} onChange={(e) => setBuyerGuide({ ...buyerGuide, description: e.target.value })} /></div>
+                {buyerGuide.steps.map((step, i) => (
+                  <div key={i} style={{ padding: '14px', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)' }}>Step {step.step}</div>
+                    <div style={fieldStyle}><label style={labelStyle}>기준 타이틀</label><input style={inputStyle} value={step.title} onChange={(e) => { const u = [...buyerGuide.steps]; u[i] = { ...u[i], title: e.target.value }; setBuyerGuide({ ...buyerGuide, steps: u }); }} /></div>
+                    <div style={fieldStyle}><label style={labelStyle}>설명</label><textarea rows={2} style={textareaStyle} value={step.desc} onChange={(e) => { const u = [...buyerGuide.steps]; u[i] = { ...u[i], desc: e.target.value }; setBuyerGuide({ ...buyerGuide, steps: u }); }} /></div>
                   </div>
+                ))}
+              </div>
+            </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '16px' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Target Price (USD)</label>
-                      <input type="number" step="0.01" value={mall.price} onChange={(e) => handleMallChange(i, 'price', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 700 }} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Variant Option text</label>
-                      <input type="text" value={mall.variant} onChange={(e) => handleMallChange(i, 'variant', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem' }} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Stock / Availability Status</label>
-                      <input type="text" value={mall.stock} onChange={(e) => handleMallChange(i, 'stock', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem' }} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Shipping Details</label>
-                      <input type="text" value={mall.shipping} onChange={(e) => handleMallChange(i, 'shipping', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem' }} />
-                    </div>
+            {/* Chapter VII — Application Steps */}
+            <div>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '14px', borderLeft: '3px solid var(--brand-rose)', paddingLeft: '10px' }}>Chapter VII — Application Clinic</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={fieldStyle}><label style={labelStyle}>타이틀</label><input style={inputStyle} value={applicationSteps.title} onChange={(e) => setApplicationSteps({ ...applicationSteps, title: e.target.value })} /></div>
+                <div style={fieldStyle}><label style={labelStyle}>서브 설명</label><input style={inputStyle} value={applicationSteps.description} onChange={(e) => setApplicationSteps({ ...applicationSteps, description: e.target.value })} /></div>
+                {applicationSteps.steps.map((step, i) => (
+                  <div key={i} style={{ padding: '14px', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', background: 'var(--bg-main)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-rose)' }}>{step.label}</div>
+                    <div style={fieldStyle}><label style={labelStyle}>스텝 타이틀</label><input style={inputStyle} value={step.title} onChange={(e) => { const u = [...applicationSteps.steps]; u[i] = { ...u[i], title: e.target.value }; setApplicationSteps({ ...applicationSteps, steps: u }); }} /></div>
+                    <div style={fieldStyle}><label style={labelStyle}>스텝 설명</label><textarea rows={3} style={textareaStyle} value={step.body} onChange={(e) => { const u = [...applicationSteps.steps]; u[i] = { ...u[i], body: e.target.value }; setApplicationSteps({ ...applicationSteps, steps: u }); }} /></div>
                   </div>
+                ))}
+              </div>
+            </div>
 
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Direct Buy URL (Affiliate link is highly recommended)</label>
-                    <input type="text" placeholder="https://" value={mall.url} onChange={(e) => handleMallChange(i, 'url', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem' }} />
+            {/* Chapter VIII — The Maker */}
+            <div>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '14px', borderLeft: '3px solid var(--brand-rose)', paddingLeft: '10px' }}>Chapter VIII — The Maker</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={fieldStyle}><label style={labelStyle}>브랜드 표시명 (e.g. d&apos;Alba — 달바 글로벌)</label><input style={inputStyle} value={makerStory.brandDisplayName} onChange={(e) => setMakerStory({ ...makerStory, brandDisplayName: e.target.value })} /></div>
+                <div style={fieldStyle}><label style={labelStyle}>브랜드 스토리 (2-3문장)</label><textarea rows={3} style={textareaStyle} value={makerStory.story} onChange={(e) => setMakerStory({ ...makerStory, story: e.target.value })} /></div>
+
+                <div>
+                  <label style={labelStyle}>인증 배지 4개</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                    {makerStory.certifications.map((cert, i) => (
+                      <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <select value={cert.icon} onChange={(e) => { const u = [...makerStory.certifications]; u[i] = { ...u[i], icon: e.target.value }; setMakerStory({ ...makerStory, certifications: u }); }} style={{ ...inputStyle, width: '100px', flexShrink: 0 }}>
+                          {['leaf', 'shield', 'award', 'check'].map((ic) => <option key={ic}>{ic}</option>)}
+                        </select>
+                        <input style={inputStyle} placeholder={`인증 ${i + 1}`} value={cert.label} onChange={(e) => { const u = [...makerStory.certifications]; u[i] = { ...u[i], label: e.target.value }; setMakerStory({ ...makerStory, certifications: u }); }} />
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
 
-        {/* TAB 3: EDITORIAL & SOCIAL */}
-        {activeTab === 'editorial' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>EWG Status Statement</label>
-              <input type="text" value={ewgStatus} onChange={(e) => setEwgStatus(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem' }} />
-            </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div style={fieldStyle}><label style={labelStyle}>공식 스토어명</label><input style={inputStyle} value={makerStory.storeName} onChange={(e) => setMakerStory({ ...makerStory, storeName: e.target.value })} /></div>
+                  <div style={fieldStyle}><label style={labelStyle}>공식 스토어 URL</label><input style={inputStyle} value={makerStory.storeUrl} onChange={(e) => setMakerStory({ ...makerStory, storeUrl: e.target.value })} /></div>
+                </div>
+                <div style={fieldStyle}><label style={labelStyle}>배송 정보</label><input style={inputStyle} value={makerStory.storeShipping} onChange={(e) => setMakerStory({ ...makerStory, storeShipping: e.target.value })} /></div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Editor&apos;s Note (Luxury Journal Review story)</label>
-              <textarea placeholder="Write a premium review of the product formulation, feels, and skincare experience..." value={editorNote} onChange={(e) => setEditorNote(e.target.value)} style={{ width: '100%', height: '140px', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem', fontFamily: 'inherit', resize: 'vertical' }} required />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>Full INCI Ingredients List</label>
-              <textarea placeholder="Paste full raw INCI ingredients comma-separated text..." value={fullInciList} onChange={(e) => setFullInciList(e.target.value)} style={{ width: '100%', height: '120px', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.9rem', fontFamily: 'inherit', resize: 'vertical' }} required />
-            </div>
-
-            <hr style={{ border: 'none', borderTop: '1px solid var(--border-subtle)', margin: '12px 0' }} />
-
-            {/* Social Consensus reviews inputs */}
-            <div>
-              <h3 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '16px', borderLeft: '3px solid var(--brand-rose)', paddingLeft: '10px' }}>Social Consensus (Reddit, YouTube, Instagram)</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                {reviews.map((rev, i) => (
-                  <div key={rev.platform} style={{ padding: '20px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#FFF', background: rev.badgeColor, padding: '4px 10px', borderRadius: '4px' }}>
-                        {rev.platform}
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '12px' }}>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Source / User name</label>
-                        <input type="text" value={rev.scoreSummary} onChange={(e) => handleReviewChange(i, 'scoreSummary', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 700 }} />
-                      </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Metrics / Meta summary</label>
-                        <input type="text" value={rev.analysisMeta} onChange={(e) => handleReviewChange(i, 'analysisMeta', e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem' }} />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>Viral Quote</label>
-                      <textarea value={rev.quote} onChange={(e) => handleReviewChange(i, 'quote', e.target.value)} style={{ width: '100%', height: '70px', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: '0.85rem', fontFamily: 'inherit', resize: 'vertical' }} />
-                    </div>
-                  </div>
-                ))}
+                <div>
+                  <label style={labelStyle}>리뷰 태그 (13개, 각 줄에 하나)</label>
+                  <textarea
+                    rows={7} style={textareaStyle}
+                    value={makerStory.reviewTags.join('\n')}
+                    onChange={(e) => setMakerStory({ ...makerStory, reviewTags: e.target.value.split('\n') })}
+                    placeholder={'💧 30-Hour Moisture Lock\n✨ Pink Radiance Tone-Up\n...'}
+                  />
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Footer Submit Buttons */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px', borderTop: '1px solid var(--border-subtle)', paddingTop: '28px', marginTop: '32px' }}>
-          {activeTab !== 'basic' && (
-            <button
-              type="button"
-              onClick={() => setActiveTab(activeTab === 'editorial' ? 'malls' : 'basic')}
-              style={{ padding: '12px 24px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'none', color: 'var(--text-primary)', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer' }}
-            >
-              Previous Section
-            </button>
-          )}
+        {/* Footer Buttons */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '24px', marginTop: '28px', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {activeTab !== 'basic' && (
+              <button type="button" onClick={() => setActiveTab(['basic', 'malls', 'editorial', 'chapters'][['basic', 'malls', 'editorial', 'chapters'].indexOf(activeTab) - 1] as TabId)}
+                style={{ padding: '11px 20px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'none', color: 'var(--text-primary)', fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer' }}>
+                ← 이전
+              </button>
+            )}
+            {activeTab !== 'chapters' && (
+              <button type="button" onClick={() => setActiveTab(['basic', 'malls', 'editorial', 'chapters'][['basic', 'malls', 'editorial', 'chapters'].indexOf(activeTab) + 1] as TabId)}
+                style={{ padding: '11px 20px', borderRadius: 'var(--radius-sm)', background: 'var(--brand-obsidian)', color: '#FFF', fontWeight: 800, fontSize: '0.875rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                다음 → <Sparkles size={14} />
+              </button>
+            )}
+          </div>
 
-          {activeTab !== 'editorial' ? (
-            <button
-              type="button"
-              onClick={() => setActiveTab(activeTab === 'basic' ? 'malls' : 'editorial')}
-              style={{ padding: '12px 28px', borderRadius: 'var(--radius-sm)', background: 'var(--brand-obsidian)', color: '#FFF', fontWeight: 800, fontSize: '0.9rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-            >
-              Continue Next <Sparkles size={16} />
-            </button>
-          ) : (
-            <button
-              type="submit"
-              disabled={status.type === 'loading'}
-              style={{
-                padding: '12px 36px', borderRadius: 'var(--radius-sm)',
-                background: status.type === 'loading' ? 'var(--text-muted)' : 'var(--brand-rose)',
-                color: '#FFF', fontWeight: 800, fontSize: '0.9rem',
-                cursor: status.type === 'loading' ? 'not-allowed' : 'pointer',
-                display: 'inline-flex', alignItems: 'center', gap: '8px',
-                boxShadow: '0 4px 14px rgba(128, 0, 32, 0.25)'
-              }}
-            >
-              <Save size={18} /> {status.type === 'loading' ? 'Deploying to D1...' : 'Generate & Deploy Edition'}
+          {activeTab === 'chapters' && (
+            <button type="submit" disabled={status.type === 'loading'}
+              style={{ padding: '12px 32px', borderRadius: 'var(--radius-sm)', background: status.type === 'loading' ? 'var(--text-muted)' : 'var(--brand-rose)', color: '#FFF', fontWeight: 800, fontSize: '0.9rem', cursor: status.type === 'loading' ? 'not-allowed' : 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 14px rgba(128,0,32,0.25)' }}>
+              <Save size={18} /> {status.type === 'loading' ? 'D1 배포 중...' : 'D1에 배포하기'}
             </button>
           )}
         </div>
