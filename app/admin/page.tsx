@@ -146,6 +146,42 @@ export default function AdminPage() {
     }
   };
 
+  const loadDraft = async () => {
+    try {
+      setStatus({ type: 'loading' });
+      const res = await fetch('/admin-draft.json');
+      if (!res.ok) {
+        throw new Error('No active AI Draft found. Please ask Antigravity to generate one first.');
+      }
+      const data = await res.json();
+      
+      if (data.reportId) setReportId(data.reportId);
+      if (data.productName) setProductName(data.productName);
+      if (data.brandName) setBrandName(data.brandName);
+      if (data.brandDescription) setBrandDescription(data.brandDescription);
+      if (data.brandWebsite) setBrandWebsite(data.brandWebsite);
+      if (data.category) setCategory(data.category);
+      if (data.volume) setVolume(data.volume);
+      if (data.msrpUsd) setMsrpUsd(data.msrpUsd);
+      if (data.productDescription) setProductDescription(data.productDescription);
+      if (data.fullInciList) setFullInciList(data.fullInciList);
+      if (data.ewgStatus) setEwgStatus(data.ewgStatus);
+      if (data.editorNote) setEditorNote(data.editorNote);
+      
+      if (data.ingredients && Array.isArray(data.ingredients)) {
+        setIngredients(data.ingredients);
+      }
+      if (data.reviews && Array.isArray(data.reviews)) {
+        setReviews(data.reviews);
+      }
+      
+      setStatus({ type: 'success', message: 'Latest AI Draft successfully loaded! Review sections then proceed.' });
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      setStatus({ type: 'error', message: errorMsg });
+    }
+  };
+
   return (
     <div style={{ maxWidth: '1000px', margin: '40px auto', padding: '0 20px', fontFamily: 'var(--font-pretendard)' }}>
       {/* Header Back Button */}
@@ -166,20 +202,33 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Access Token Banner */}
+      {/* Access Token & Draft Action Banner */}
       <div style={{ padding: '20px', borderRadius: 'var(--radius-md)', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
         <Lock size={20} color="var(--brand-rose)" />
         <div style={{ flex: 1, minWidth: '200px' }}>
-          <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Admin Verification Required</div>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Enter the Cloudflare edge access token to authorize writes to D1 Database.</div>
+          <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Admin Verification &amp; AI Drafts</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Enter token to authorize DB writes, or load the latest pre-compiled AI product draft.</div>
         </div>
-        <input
-          type="password"
-          placeholder="Access token (e.g. bichae2026)"
-          value={adminToken}
-          onChange={(e) => setAdminToken(e.target.value)}
-          style={{ padding: '10px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.85rem', width: '220px', fontWeight: 700 }}
-        />
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={loadDraft}
+            style={{
+              padding: '10px 16px', borderRadius: 'var(--radius-sm)', background: 'var(--brand-obsidian)', color: '#FFF',
+              fontSize: '0.85rem', fontWeight: 800, cursor: 'pointer', border: '1px solid var(--border-subtle)',
+              display: 'inline-flex', alignItems: 'center', gap: '6px'
+            }}
+          >
+            <Sparkles size={14} /> Load AI Draft
+          </button>
+          <input
+            type="password"
+            placeholder="Access token (e.g. bichae2026)"
+            value={adminToken}
+            onChange={(e) => setAdminToken(e.target.value)}
+            style={{ padding: '10px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', background: 'var(--bg-main)', color: 'var(--text-primary)', fontSize: '0.85rem', width: '200px', fontWeight: 700 }}
+          />
+        </div>
       </div>
 
       {/* Notification Toast Alert */}

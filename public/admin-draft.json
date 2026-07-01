@@ -1,0 +1,54 @@
+{
+  "reportId": "046",
+  "productName": "Waterfull Tone-Up Sun Cream SPF50+ PA++++",
+  "brandName": "d'Alba (달바)",
+  "brandDescription": "A premium Korean skincare label celebrated for infusing high-grade Italian White Truffles into clean, vegan-certified formulations. Renowned globally for its iconic spray serums, the brand specializes in delivering a luxurious, lit-from-within dewy glow.",
+  "brandWebsite": "https://dalba.co.kr/goods/goods_view.php?goodsNo=1000000094",
+  "category": "Sun Care",
+  "volume": "50ml",
+  "msrpUsd": "28.00",
+  "productDescription": "A premium vegan hybrid sunscreen that combines strong UV protection with a natural, glowing pink tone-up effect. Formulated with Italian White Truffles, Peach Extract, and Hyaluronic Acid, it delivers deep hydration, corrects skin dullness, and creates a smooth, luminous canvas for makeup.",
+  "fullInciList": "Water, Dibutyl Adipate, Propanediol, Titanium Dioxide, Caprylic/Capric Triglyceride, C12-15 Alkyl Benzoate, Diethylamino Hydroxybenzoyl Hexyl Benzoate, Caprylyl Methicone, Ethylhexyl Triazone, Niacinamide, Glycerin, Diethylhexyl Butamido Triazone, 1,2-Hexanediol, Pentylene Glycol, Portulaca Oleracea Extract, Epilobium Angustifolium Flower/Leaf/Stem Extract, Rhododendron Ferrugineum Extract, Centella Asiatica Extract, Prunus Persica (Peach) Flower Extract, Prunus Persica (Peach) Fruit Extract, Prunus Serrulata Flower Extract, Aloe Barbadensis Leaf Extract, Houttuynia Cordata Extract, Tuber Magnatum (White Truffle) Extract, Citrus Orange Oil, Mandarin Orange Peel Oil, Sodium Hyaluronate, Tocopherol, Hydrolyzed Hyaluronic Acid, Allantoin, Butylene Glycol, Ethylhexylglycerin, Adenosine",
+  "ewgStatus": "EWG Green Grade Verified (Safe & Clean Filters)",
+  "editorNote": "d'Alba Waterfull Tone-Up Sun Cream is a masterpiece of modern hybrid sun protection. By pairing robust chemical and physical mineral UV filters with their signature Piedmontese White Truffles, d'Alba has created a sunscreen that acts like an ultra-hydrating makeup base. Its sweat-proof pink fluid texture melts into the skin to instantly neutralize yellow undertones, leaving a dewy, non-greasy glow. Tested by ophthalmologists and dermatologists, it ensures zero eye-sting and zero pore-clogging, making it the perfect foundation prep for sensitive, dehydrated skin.",
+  "ingredients": [
+    {
+      "name": "Italian White Truffle (Tuber Magnatum Extract)",
+      "description": "Rich in antioxidants, vitamins, and minerals that nourish the skin barrier, boost elasticity, and deliver premium anti-aging care.",
+      "tagColor": "var(--brand-rose)"
+    },
+    {
+      "name": "Phyto-Pink Tone-Up Matrix",
+      "description": "A natural brightening complex powered by Prunus Persica (Peach) Fruit Extract to correct skin dullness and restore a healthy pink glow.",
+      "tagColor": "var(--brand-sage)"
+    },
+    {
+      "name": "Trufferol (White Truffle + Tocopherol)",
+      "description": "d'Alba's proprietary clinical complex that works synergistically to defend skin cells against free-radical damage and environmental stress.",
+      "tagColor": "#3B82F6"
+    }
+  ],
+  "reviews": [
+    {
+      "platform": "YOUTUBE",
+      "badgeColor": "#FF0000",
+      "scoreSummary": "Dermatology & K-Beauty Creators",
+      "quote": "\"Unlike other tone-up sunscreens that dry out and leave a white, chalky mask, d'Alba's water-fit pink formula provides a natural glass-skin radiance that lasts all day without cracking.\"",
+      "analysisMeta": "1.2M Combined Views"
+    },
+    {
+      "platform": "REDDIT",
+      "badgeColor": "#FF4500",
+      "scoreSummary": "r/AsianBeauty • u/glass_skin_journey",
+      "quote": "\"I have dry, sensitive skin and most sunscreens sting my eyes. This hybrid tone-up cream is incredibly mild, hydrates deeply, and cancels out my sallow skin tone. Highly recommend under foundation.\"",
+      "analysisMeta": "+980 Upvotes"
+    },
+    {
+      "platform": "INSTAGRAM",
+      "badgeColor": "#E1306C",
+      "scoreSummary": "Trending Tag #dalbatoneup",
+      "quote": "\"My absolute holy grail daily base. It looks so natural that I can skip foundation entirely and just head out with a clean, glowing complexion.\"",
+      "analysisMeta": "45k Tagged Reels"
+    }
+  ]
+}
