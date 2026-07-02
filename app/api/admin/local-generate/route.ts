@@ -118,9 +118,18 @@ export async function POST(request: NextRequest) {
           .replace(/<style[\s\S]*?<\/style>/gi, '')
           .replace(/<!--[\s\S]*?-->/g, '')
           .slice(0, 60000);
+      } else {
+        return NextResponse.json({
+          success: false,
+          error: `Failed to fetch target product page. Retailer site returned status: ${pageRes.status} ${pageRes.statusText}`
+        }, { status: 400 });
       }
     } catch (fetchErr) {
-      pageHtml = `[Could not fetch page directly. Error: ${fetchErr}]`;
+      const msg = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
+      return NextResponse.json({
+        success: false,
+        error: `Connection error trying to crawl the product page: ${msg}`
+      }, { status: 500 });
     }
 
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
@@ -143,9 +152,16 @@ export async function POST(request: NextRequest) {
     }
 
     const geminiData = await geminiRes.json();
+    console.log('[Gemini API Debug Response]:', JSON.stringify(geminiData, null, 2));
     const resultText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!resultText) {
-      return NextResponse.json({ success: false, error: 'Gemini returned no content.' }, { status: 502 });
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Gemini returned no content.', 
+        finishReason: geminiData.candidates?.[0]?.finishReason,
+        promptFeedback: geminiData.promptFeedback,
+        debugData: geminiData
+      }, { status: 502 });
     }
 
     // Extract JSON from response (may be wrapped in ```json ... ``` fences)
