@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // LOCAL DEV ONLY — blocked in production builds
 // This endpoint fetches the product page HTML directly (no WAF issues locally)
 // then passes the full HTML context to Gemini for accurate extraction.
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 
 const SCHEMA_PROMPT = `You are a high-end global K-beauty expert editor.
 
@@ -81,7 +81,9 @@ Generate a JSON object strictly matching the following schema. Do not output any
 `;
 
 export async function POST(request: NextRequest) {
-  if (process.env.NODE_ENV !== 'development') {
+  const hostname = request.nextUrl.hostname;
+  const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+  if (!isLocalhost && process.env.NODE_ENV !== 'development') {
     return NextResponse.json({ success: false, error: 'This endpoint is only available in local development.' }, { status: 403 });
   }
 
